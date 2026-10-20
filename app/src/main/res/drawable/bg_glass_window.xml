@@ -41,6 +41,21 @@
     </item>
 
     <item
+        android:width="760dp"
+        android:height="460dp"
+        android:gravity="top|center_horizontal">
+        <shape android:shape="rectangle">
+            <gradient
+                android:endColor="@android:color/transparent"
+                android:centerX="0.5"
+                android:centerY="0"
+                android:gradientRadius="380dp"
+                android:startColor="@color/glass_blob_pink"
+                android:type="radial" />
+        </shape>
+    </item>
+
+    <item
         android:width="520dp"
         android:height="520dp"
         android:gravity="bottom|right">
