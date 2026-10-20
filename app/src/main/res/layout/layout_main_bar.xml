@@ -19,8 +19,12 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@android:color/transparent"
+            android:layout_marginHorizontal="12dp"
+            android:layout_marginTop="6dp"
+            android:layout_marginBottom="6dp"
+            android:background="@drawable/bg_glass_toolbar_card"
             android:elevation="0dp"
+            android:minHeight="?attr/actionBarSize"
             app:navigationIconTint="@color/dn_black"
             app:subtitleTextColor="@color/text_gray"
             app:titleTextColor="@color/dn_black" />
