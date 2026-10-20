@@ -52,7 +52,7 @@ HOST = 0.0.0.0
 | `zhenxun-release.jks` | release keystore |
 | `keystore.properties` | keystore 路径、密码、别名等配置 |
 
-当前签名别名与证书 CN 均为 `me.huli.zhenxun.webui`。Gradle 在检测到 `keystore.properties` 且 keystore 文件存在时，会自动为 release 包签名；未检测到签名材料时，产物文件名会追加 `-unsigned` 后缀。
+当前签名别名与证书 CN 均为 `me.kbai.zhenxunui`。Gradle 在检测到 `keystore.properties` 且 keystore 文件存在时，会自动为 release 包签名；未检测到签名材料时，产物文件名会追加 `-unsigned` 后缀。
 
 更换签名时，替换 `zhenxun-release.jks` 并同步更新 `keystore.properties` 中的 `storeFile`、`storePassword`、`keyAlias`、`keyPassword`。
 

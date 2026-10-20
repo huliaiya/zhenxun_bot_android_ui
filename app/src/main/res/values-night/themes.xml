@@ -19,8 +19,6 @@
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>
         <item name="android:windowLightStatusBar">false</item>
         <item name="android:windowLightNavigationBar">false</item>
-        <item name="android:windowTranslucentNavigation">true</item>
-        <item name="android:windowTranslucentStatus">true</item>
         <!-- Customize your theme here. -->
         <item name="android:textSize">@dimen/text_size_normal</item>
         <item name="colorControlActivated">?attr/colorPrimaryDark</item>
