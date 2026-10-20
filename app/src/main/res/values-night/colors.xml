@@ -35,4 +35,5 @@
     <color name="glass_scrim_bottom">#CC000000</color>
     <color name="glass_shadow">#66000000</color>
     <color name="glass_row_base">#FF14141C</color>
+    <color name="glass_bar_scrim_top">#D91E1E28</color>
 </resources>
