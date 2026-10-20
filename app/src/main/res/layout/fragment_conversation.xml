@@ -11,7 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:background="@color/dn_white_gray">
+        android:background="@drawable/bg_glass_bar_top">
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btn_send"

@@ -10,15 +10,20 @@
         <item name="colorSecondary">@color/teal_200</item>
         <item name="colorSecondaryVariant">@color/teal_200</item>
         <item name="colorOnSecondary">@color/black</item>
-        <!-- Status bar color. -->
-        <!--        <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>-->
-        <!--        <item name="colorSurface">@color/gray_dark</item>-->
-        <!--        <item name="colorOnSurface">@color/gray_dark</item>-->
-        <!-- Customize your theme here. -->
-        <item name="android:textSize">@dimen/text_size_normal</item>
+        <!-- Glass surfaces. -->
+        <item name="colorSurface">@color/glass_surface_soft</item>
+        <item name="colorOnSurface">@color/dn_black</item>
+        <item name="android:windowBackground">@drawable/bg_glass_window</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:navigationBarColor">@android:color/transparent</item>
+        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+        <item name="android:windowLightStatusBar">false</item>
+        <item name="android:windowLightNavigationBar">false</item>
         <item name="android:windowTranslucentNavigation">true</item>
         <item name="android:windowTranslucentStatus">true</item>
-
+        <!-- Customize your theme here. -->
+        <item name="android:textSize">@dimen/text_size_normal</item>
         <item name="colorControlActivated">?attr/colorPrimaryDark</item>
+        <item name="materialButtonStyle">@style/Widget.Glass.Button</item>
     </style>
 </resources>

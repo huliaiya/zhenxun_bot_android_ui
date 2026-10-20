@@ -85,7 +85,6 @@ class FileExplorerFragment : BaseFragment<FragmentFileExplorerBinding>() {
     ): FragmentFileExplorerBinding = FragmentFileExplorerBinding.inflate(inflater, container, false)
 
     override fun initView(): Unit = viewBinding.run {
-        icError.root.setBackgroundResource(R.color.dn_white)
         root.setOnRefreshListener {
             mViewModel.readDir()
         }

@@ -53,7 +53,7 @@
     <string name="error_no_data">好像没有数据呢</string>
     <string name="enabled_task_format">已开启被动: %s</string>
     <string name="group_level_format">群权限: %d</string>
-    <string name="member_num_format">人数: %d / %d</string>
+    <string name="member_num_format">人数: %1$d / %2$d</string>
     <string name="group_id_format">群号: %s</string>
     <string name="enable">启用</string>
     <string name="disable">禁用</string>
@@ -71,7 +71,7 @@
     <string name="tab_request_group">群组请求</string>
     <string name="tab_request_private">好友请求</string>
     <string name="prompt">提示</string>
-    <string name="confirm_handle_request">%sid为 %s 的请求?</string>
+    <string name="confirm_handle_request">%1$sid为 %2$s 的请求?</string>
     <string name="change_api_tips">
         · App与真寻本体通常<u><b>不在</b></u>同一个机器上, 需要先通过服务器代理或将<u><b>.env.dev</b></u>(如果为dev环境)中的<u><b>HOST</b></u>修改为本机地址<u><b>0.0.0.0</b></u>来对外开放接口
         \n\n· 这里一般都是填入<u><b>http://服务器地址:真寻的端口</b></u>
@@ -84,7 +84,7 @@
     <string name="group_information">群组信息</string>
     <string name="friends_label">好友数量:</string>
     <string name="group_label">群组数量:</string>
-    <string name="connected_duration_format">已连接 %d天%d时%d分%d秒</string>
+    <string name="connected_duration_format">已连接 %1$d天%2$d时%3$d分%4$d秒</string>
     <string name="plugin_status">插件状态</string>
     <string name="message_count">消息接收</string>
     <string name="active_group">活跃群聊</string>
@@ -92,11 +92,11 @@
     <string name="save_password">保存密码</string>
     <string name="message_count_data_format">
         [
-        {\"name\":\"一日内\",\"count\":%d},
-        {\"name\":\"一周内\",\"count\":%d},
-        {\"name\":\"一月内\",\"count\":%d},
-        {\"name\":\"一年内\",\"count\":%d},
-        {\"name\":\"总数\",\"count\":%d}
+        {\"name\":\"一日内\",\"count\":%1$d},
+        {\"name\":\"一周内\",\"count\":%2$d},
+        {\"name\":\"一月内\",\"count\":%3$d},
+        {\"name\":\"一年内\",\"count\":%4$d},
+        {\"name\":\"总数\",\"count\":%5$d}
         ]
     </string>
     <string name="bot_logs">后台日志</string>

@@ -16,8 +16,13 @@
         android:id="@+id/nav_view"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
+        android:background="@drawable/bg_glass_nav"
         android:layout_gravity="start"
         android:fitsSystemWindows="true"
+        app:elevation="0dp"
         app:headerLayout="@layout/layout_main_nav_header"
+        app:itemBackground="@drawable/bg_glass_nav_item"
+        app:itemIconTint="@color/nav_item_icon"
+        app:itemTextColor="@color/nav_item_text"
         app:menu="@menu/main_navigation_items" />
 </androidx.drawerlayout.widget.DrawerLayout>

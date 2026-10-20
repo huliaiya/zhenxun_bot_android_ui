@@ -9,7 +9,7 @@
         android:id="@+id/ll_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/dn_white"
+        android:background="@drawable/bg_glass_bar"
         android:paddingVertical="3dp"
         app:layout_constraintTop_toTopOf="parent">
 

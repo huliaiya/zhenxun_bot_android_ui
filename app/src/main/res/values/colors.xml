@@ -17,11 +17,40 @@
     <color name="text_gray">#999999</color>
     <color name="mahiro_silver">#F1EDEE</color>
     <color name="switch_unchecked">#EBEBEB</color>
-    <color name="window_background">#F2F2F2</color>
+    <color name="window_background">@color/glass_divider</color>
 
     <color name="dn_trans_white_75">@color/trans_white_75</color>
     <color name="dn_black">@color/black</color>
     <color name="dn_white">@color/white</color>
     <color name="dn_white_gray">@color/white</color>
     <color name="dn_app_bar">@color/pink_A100</color>
+
+    <!-- Glass design tokens. Night mode overrides these in values-night/colors.xml. -->
+    <color name="glass_backdrop_top">#FFF4F6FB</color>
+    <color name="glass_backdrop_bottom">#FFE6EDF7</color>
+    <color name="glass_blob_pink">#66FF80AB</color>
+    <color name="glass_blob_teal">#4D03DAC5</color>
+    <color name="glass_blob_violet">#4D7C4DFF</color>
+    <color name="glass_blob_blue">#40FF80AB</color>
+    <color name="glass_surface_top">#D9FFFFFF</color>
+    <color name="glass_surface_bottom">#A6FFFFFF</color>
+    <color name="glass_surface_strong_top">#F2FFFFFF</color>
+    <color name="glass_surface_strong_bottom">#D9FFFFFF</color>
+    <color name="glass_surface_soft">#80FFFFFF</color>
+    <color name="glass_border">#99FFFFFF</color>
+    <color name="glass_divider">#1F000000</color>
+    <color name="glass_input">#B3FFFFFF</color>
+    <color name="glass_input_stroke">#80FFFFFF</color>
+    <color name="glass_button_tint">#D9FF80AB</color>
+    <color name="glass_button_text">#FFFFFFFF</color>
+    <color name="glass_bubble_send_top">#E6FF80AB</color>
+    <color name="glass_bubble_send_bottom">#CCF48FB1</color>
+    <color name="glass_bubble_receive_top">#E6FFFFFF</color>
+    <color name="glass_bubble_receive_bottom">#B3FFFFFF</color>
+    <color name="glass_ripple">#40FF80AB</color>
+    <color name="glass_nav_item">#26FF80AB</color>
+    <color name="glass_logs">#CC101018</color>
+    <color name="glass_scrim_top">#1A000000</color>
+    <color name="glass_scrim_bottom">#8C000000</color>
+    <color name="glass_shadow">#33000000</color>
 </resources>

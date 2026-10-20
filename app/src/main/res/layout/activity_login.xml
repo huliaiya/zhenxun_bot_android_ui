@@ -13,6 +13,12 @@
         android:scaleType="centerCrop"
         tools:src="@drawable/bg_login" />
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/bg_glass_scrim"
+        android:importantForAccessibility="no" />
+
     <me.kbai.zhenxunui.widget.ClipAreaImageView
         android:id="@+id/ca_background"
         android:layout_width="match_parent"
@@ -26,7 +32,7 @@
         android:id="@id/iv_form_background"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:src="@color/dn_trans_white_75"
+        android:src="@drawable/bg_glass_surface_large"
         app:cornerRadius="@dimen/box_round_radius"
         app:layout_constraintBottom_toBottomOf="@+id/ll_button"
         app:layout_constraintEnd_toEndOf="@id/tv_title"
