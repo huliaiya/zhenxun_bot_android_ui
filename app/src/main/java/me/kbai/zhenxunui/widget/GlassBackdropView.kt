@@ -59,11 +59,10 @@ class GlassBackdropView @JvmOverloads constructor(
 
         val maxSize = maxOf(width, height)
         blobs = listOf(
-            blob(width * 0.08f, height * 0.04f, maxSize * 0.52f, R.color.glass_blob_pink),
-            blob(width * 0.96f, height * 0.12f, maxSize * 0.46f, R.color.glass_blob_teal),
-            blob(width * 0.92f, height * 0.88f, maxSize * 0.56f, R.color.glass_blob_violet),
-            blob(width * 0.06f, height * 0.92f, maxSize * 0.42f, R.color.glass_blob_blue),
-            blob(width * 0.5f, -height * 0.08f, maxSize * 0.7f, R.color.glass_blob_pink)
+            blob(width * 0.10f, height * 0.26f, maxSize * 0.50f, R.color.glass_blob_pink),
+            blob(width * 0.95f, height * 0.34f, maxSize * 0.44f, R.color.glass_blob_teal),
+            blob(width * 0.92f, height * 0.80f, maxSize * 0.45f, R.color.glass_blob_violet),
+            blob(width * 0.05f, height * 0.94f, maxSize * 0.40f, R.color.glass_blob_blue)
         )
     }
 

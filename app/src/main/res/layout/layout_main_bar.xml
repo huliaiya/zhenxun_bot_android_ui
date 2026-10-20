@@ -14,7 +14,9 @@
         android:layout_height="wrap_content"
         android:background="@android:color/transparent"
         android:elevation="0dp"
-        android:fitsSystemWindows="true">
+        android:stateListAnimator="@null"
+        android:fitsSystemWindows="true"
+        app:liftOnScroll="false">
 
         <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/toolbar"
