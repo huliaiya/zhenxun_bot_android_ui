@@ -170,4 +170,7 @@
     <string name="update_history_load_failed">Failed to load release history</string>
     <string name="install_this_version">Install this version</string>
     <string name="install_version_format">Install version %1$s?</string>
+    <string name="crash_log">View crash logs</string>
+    <string name="crash_log_empty">No crash logs yet</string>
+    <string name="action_failed">Action failed</string>
 </resources>

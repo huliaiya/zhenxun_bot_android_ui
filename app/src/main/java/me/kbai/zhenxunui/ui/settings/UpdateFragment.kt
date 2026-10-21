@@ -9,6 +9,7 @@ import me.kbai.zhenxunui.base.BaseFragment
 import me.kbai.zhenxunui.databinding.FragmentUpdateBinding
 import me.kbai.zhenxunui.extends.runWithoutReturn
 import me.kbai.zhenxunui.extends.setOnDebounceClickListener
+import me.kbai.zhenxunui.extends.logE
 import me.kbai.zhenxunui.tool.UpdateChecker
 
 /**
@@ -20,16 +21,20 @@ class UpdateFragment : BaseFragment<FragmentUpdateBinding>() {
         FragmentUpdateBinding.inflate(inflater, container, false)
 
     override fun initView() = viewBinding.runWithoutReturn {
-        llCheckUpdate.setOnDebounceClickListener {
-            activity?.let { UpdateChecker.check(it, manual = true) }
-        }
-        llHistory.setOnDebounceClickListener {
-            findNavController().navigate(R.id.action_update_to_history)
-        }
-        switchAutoUpdate.isChecked = UpdateChecker.isAutoUpdateEnabled(requireContext())
-        switchAutoUpdate.setOnCheckedChangeListener { _, checked ->
-            UpdateChecker.setAutoUpdateEnabled(requireContext(), checked)
-        }
+        runCatching {
+            llCheckUpdate.setOnDebounceClickListener {
+                activity?.let { UpdateChecker.check(it, manual = true) }
+            }
+            llHistory.setOnDebounceClickListener {
+                runCatching {
+                    findNavController().navigate(R.id.action_update_to_history)
+                }.onFailure { logE(it) }
+            }
+            switchAutoUpdate.isChecked = UpdateChecker.isAutoUpdateEnabled(requireContext())
+            switchAutoUpdate.setOnCheckedChangeListener { _, checked ->
+                UpdateChecker.setAutoUpdateEnabled(requireContext(), checked)
+            }
+        }.onFailure { logE(it) }
     }
 
     override fun onResume() {

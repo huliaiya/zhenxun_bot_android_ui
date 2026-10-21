@@ -11,6 +11,7 @@ import me.kbai.zhenxunui.R
 import me.kbai.zhenxunui.base.BaseFragment
 import me.kbai.zhenxunui.databinding.FragmentReleaseHistoryBinding
 import me.kbai.zhenxunui.databinding.ItemReleaseBinding
+import me.kbai.zhenxunui.extends.logE
 import me.kbai.zhenxunui.extends.runWithoutReturn
 import me.kbai.zhenxunui.extends.setOnDebounceClickListener
 import me.kbai.zhenxunui.tool.GlobalToast.showToast
@@ -25,10 +26,12 @@ class ReleaseHistoryFragment : BaseFragment<FragmentReleaseHistoryBinding>() {
         FragmentReleaseHistoryBinding.inflate(inflater, container, false)
 
     override fun initView() = viewBinding.runWithoutReturn {
-        recyclerView.layoutManager = LinearLayoutManager(requireContext())
-        recyclerView.adapter = ReleaseHistoryAdapter { release ->
-            activity?.let { UpdateChecker.showInstallDialog(it, release) }
-        }
+        runCatching {
+            recyclerView.layoutManager = LinearLayoutManager(requireContext())
+            recyclerView.adapter = ReleaseHistoryAdapter { release ->
+                activity?.let { UpdateChecker.showInstallDialog(it, release) }
+            }
+        }.onFailure { logE(it) }
     }
 
     override fun initData() {

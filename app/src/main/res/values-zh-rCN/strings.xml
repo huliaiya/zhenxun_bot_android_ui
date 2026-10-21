@@ -166,4 +166,7 @@
     <string name="update_history_load_failed">历史版本加载失败</string>
     <string name="install_this_version">安装此版本</string>
     <string name="install_version_format">安装版本 %1$s？</string>
+    <string name="crash_log">崩溃日志</string>
+    <string name="crash_log_empty">暂无崩溃日志</string>
+    <string name="action_failed">操作失败</string>
 </resources>
