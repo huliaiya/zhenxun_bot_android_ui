@@ -157,4 +157,13 @@
     <string name="update_download_failed">下载失败，请重试</string>
     <string name="grant_install_permission">请先授予“安装未知应用”权限，再重新点击更新</string>
     <string name="bot_list_retry_hint">获取 Bot 列表失败，正在自动重试…</string>
+    <string name="check_for_updates">检查更新</string>
+    <string name="auto_update">自动更新</string>
+    <string name="auto_update_desc">启动时自动检查并提示更新</string>
+    <string name="update_history">历史版本</string>
+    <string name="update_history_desc">查看 GitHub 上已发布的历史版本</string>
+    <string name="update_history_empty">暂无历史版本</string>
+    <string name="update_history_load_failed">历史版本加载失败</string>
+    <string name="install_this_version">安装此版本</string>
+    <string name="install_version_format">安装版本 %1$s？</string>
 </resources>

@@ -94,6 +94,9 @@
         <action
             android:id="@+id/action_settings_to_theme"
             app:destination="@id/nav_settings_theme" />
+        <action
+            android:id="@+id/action_settings_to_update"
+            app:destination="@id/nav_settings_update" />
     </fragment>
 
     <fragment
@@ -101,4 +104,20 @@
         android:name="me.kbai.zhenxunui.ui.settings.SettingsThemeFragment"
         android:label="@string/settings_theme_title"
         tools:layout="@layout/fragment_settings_theme" />
+
+    <fragment
+        android:id="@+id/nav_settings_update"
+        android:name="me.kbai.zhenxunui.ui.settings.UpdateFragment"
+        android:label="@string/settings_update"
+        tools:layout="@layout/fragment_update">
+        <action
+            android:id="@+id/action_update_to_history"
+            app:destination="@id/nav_release_history" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/nav_release_history"
+        android:name="me.kbai.zhenxunui.ui.settings.ReleaseHistoryFragment"
+        android:label="@string/update_history"
+        tools:layout="@layout/fragment_release_history" />
 </navigation>

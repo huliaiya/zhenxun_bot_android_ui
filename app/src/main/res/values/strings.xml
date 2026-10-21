@@ -161,4 +161,13 @@
     <string name="update_download_failed">Download failed, please try again</string>
     <string name="grant_install_permission">Grant "Install unknown apps" permission, then tap Update again</string>
     <string name="bot_list_retry_hint">Failed to load bot list, retrying automatically…</string>
+    <string name="check_for_updates">Check for updates</string>
+    <string name="auto_update">Auto update</string>
+    <string name="auto_update_desc">Check for updates automatically on launch</string>
+    <string name="update_history">Version history</string>
+    <string name="update_history_desc">Browse releases published on GitHub</string>
+    <string name="update_history_empty">No releases yet</string>
+    <string name="update_history_load_failed">Failed to load release history</string>
+    <string name="install_this_version">Install this version</string>
+    <string name="install_version_format">Install version %1$s?</string>
 </resources>

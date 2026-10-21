@@ -5,6 +5,7 @@ import android.app.Application;
 import me.kbai.zhenxunui.tool.CrashHandler;
 import me.kbai.zhenxunui.tool.GlobalToast;
 import me.kbai.zhenxunui.tool.ThemeMode;
+import me.kbai.zhenxunui.tool.UpdateChecker;
 
 /**
  * @author Sean on 2023/5/31
@@ -20,6 +21,7 @@ public class ZxApplication extends Application {
         GlobalToast.init(this);
         ThemeMode.INSTANCE.init();
         CrashHandler.INSTANCE.init(this);
+        UpdateChecker.INSTANCE.cleanApkDir(this);
     }
 
     public static Application getApplication() {

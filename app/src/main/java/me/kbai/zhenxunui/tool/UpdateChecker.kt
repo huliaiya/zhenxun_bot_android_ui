@@ -1,5 +1,6 @@
 package me.kbai.zhenxunui.tool
 
+import android.content.Context
 import android.content.Intent
 import android.content.res.ColorStateList
 import android.net.Uri
@@ -21,24 +22,37 @@ import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import me.kbai.zhenxunui.BuildConfig
+import me.kbai.zhenxunui.Constants
 import me.kbai.zhenxunui.R
 import me.kbai.zhenxunui.tool.GlobalToast.showToast
 import okhttp3.OkHttpClient
 import okhttp3.Request
+import org.json.JSONArray
 import org.json.JSONObject
 import java.io.File
 import java.io.IOException
 import java.util.concurrent.TimeUnit
 
 /**
- * Checks the rolling "latest" GitHub release, prompts the user to update and,
- * once confirmed, downloads the APK in-app and launches the package installer.
+ * Checks GitHub releases, prompts the user to update and, once confirmed,
+ * downloads the APK in-app and launches the package installer. Also exposes
+ * release history browsing and stale APK cleanup.
  */
 object UpdateChecker {
-    private const val RELEASE_API =
+    private const val LATEST_RELEASE_API =
         "https://api.github.com/repos/huliaiya/zhenxun_bot_android_ui/releases/latest"
+    private const val RELEASE_LIST_API =
+        "https://api.github.com/repos/huliaiya/zhenxun_bot_android_ui/releases?per_page=30"
+    private const val PREF_AUTO_UPDATE = "auto_update"
 
-    private class ReleaseInfo(val version: String, val downloadUrl: String, val notes: String)
+    data class ReleaseInfo(
+        val version: String,
+        val downloadUrl: String,
+        val notes: String,
+        val tagName: String,
+        val publishedAt: String,
+        val prerelease: Boolean
+    )
 
     private val client by lazy {
         OkHttpClient.Builder()
@@ -49,7 +63,30 @@ object UpdateChecker {
 
     private var downloadJob: Job? = null
 
+    fun isAutoUpdateEnabled(context: Context): Boolean =
+        context.getSharedPreferences(Constants.SP_NAME_CONFIG, Context.MODE_PRIVATE)
+            .getBoolean(PREF_AUTO_UPDATE, true)
+
+    fun setAutoUpdateEnabled(context: Context, enabled: Boolean) {
+        context.getSharedPreferences(Constants.SP_NAME_CONFIG, Context.MODE_PRIVATE)
+            .edit().putBoolean(PREF_AUTO_UPDATE, enabled).apply()
+    }
+
+    /**
+     * Deletes leftover downloaded APKs. Called on app start so the package of a
+     * finished update is removed automatically, and before each new download so
+     * stale or corrupted files can never break the next install.
+     */
+    fun cleanApkDir(context: Context) {
+        if (downloadJob?.isActive == true) return
+        runCatching {
+            (context.getExternalFilesDir("apk") ?: context.filesDir)
+                .listFiles()?.forEach { it.delete() }
+        }
+    }
+
     fun check(activity: FragmentActivity, manual: Boolean) = activity.lifecycleScope.launch {
+        if (!manual && !isAutoUpdateEnabled(activity)) return@launch
         val result = withContext(Dispatchers.IO) {
             runCatching { fetchLatestRelease() }
         }
@@ -64,10 +101,46 @@ object UpdateChecker {
         }
     }
 
+    suspend fun fetchReleases(): List<ReleaseInfo> = withContext(Dispatchers.IO) {
+        val body = getJson(RELEASE_LIST_API)
+        val array = JSONArray(body)
+        val result = ArrayList<ReleaseInfo>(array.length())
+        for (i in 0 until array.length()) {
+            val release = array.getJSONObject(i)
+            parseApkAsset(release)?.let { asset ->
+                result.add(
+                    ReleaseInfo(
+                        version = asset.second,
+                        downloadUrl = asset.first,
+                        notes = release.optString("body"),
+                        tagName = release.optString("tag_name"),
+                        publishedAt = release.optString("published_at").take(10),
+                        prerelease = release.optBoolean("prerelease")
+                    )
+                )
+            }
+        }
+        result
+    }
+
     private fun fetchLatestRelease(): ReleaseInfo {
-        val body = client.newCall(
+        val json = JSONObject(getJson(LATEST_RELEASE_API))
+        val (url, version) = parseApkAsset(json)
+            ?: throw IOException("no apk asset")
+        return ReleaseInfo(
+            version = version,
+            downloadUrl = url,
+            notes = json.optString("body"),
+            tagName = json.optString("tag_name"),
+            publishedAt = json.optString("published_at").take(10),
+            prerelease = json.optBoolean("prerelease")
+        )
+    }
+
+    private fun getJson(url: String): String =
+        client.newCall(
             Request.Builder()
-                .url(RELEASE_API)
+                .url(url)
                 .header("Accept", "application/vnd.github+json")
                 .header("User-Agent", "zhenxun-bot-android-ui")
                 .build()
@@ -75,21 +148,19 @@ object UpdateChecker {
             require(resp.isSuccessful) { "HTTP ${resp.code}" }
             resp.body?.string().orEmpty()
         }
-        val json = JSONObject(body)
-        val assets = json.getJSONArray("assets")
-        var downloadUrl = ""
-        var version = ""
+
+    /** Returns (downloadUrl, version) of the first release asset we recognize. */
+    private fun parseApkAsset(release: JSONObject): Pair<String, String>? {
+        val assets = release.optJSONArray("assets") ?: return null
         for (i in 0 until assets.length()) {
             val asset = assets.getJSONObject(i)
             val name = asset.optString("name")
             if (name.endsWith(".apk") && name.startsWith("zxbot-release-")) {
-                downloadUrl = asset.optString("browser_download_url")
-                version = name.removePrefix("zxbot-release-").removeSuffix(".apk")
-                break
+                return asset.optString("browser_download_url") to
+                        name.removePrefix("zxbot-release-").removeSuffix(".apk")
             }
         }
-        require(downloadUrl.isNotBlank()) { "no apk asset" }
-        return ReleaseInfo(version, downloadUrl, json.optString("body"))
+        return null
     }
 
     private fun showUpdateDialog(activity: FragmentActivity, release: ReleaseInfo) {
@@ -100,6 +171,25 @@ object UpdateChecker {
             .setTitle(R.string.update_found_title)
             .setMessage(message)
             .setPositiveButton(R.string.update_now, null)
+            .setNegativeButton(R.string.later, null)
+            .show()
+        dialog.getButton(AlertDialog.BUTTON_POSITIVE)?.let { button ->
+            stylePrimaryButton(activity, button)
+            button.setOnClickListener { downloadAndInstall(activity, release) }
+        }
+        dialog.getButton(AlertDialog.BUTTON_NEGATIVE)?.let { button ->
+            button.setTextColor(ContextCompat.getColor(activity, R.color.dn_black))
+        }
+    }
+
+    fun showInstallDialog(activity: FragmentActivity, release: ReleaseInfo) {
+        val message = activity.getString(
+            R.string.install_version_format, release.version
+        ) + "\n\n" + release.notes.take(300).trim()
+        val dialog = MaterialAlertDialogBuilder(activity)
+            .setTitle(release.tagName)
+            .setMessage(message)
+            .setPositiveButton(R.string.install_this_version, null)
             .setNegativeButton(R.string.later, null)
             .show()
         dialog.getButton(AlertDialog.BUTTON_POSITIVE)?.let { button ->
@@ -126,7 +216,8 @@ object UpdateChecker {
         }
     }
 
-    private fun downloadAndInstall(activity: FragmentActivity, release: ReleaseInfo) {
+    fun downloadAndInstall(activity: FragmentActivity, release: ReleaseInfo) {
+        cleanApkDir(activity)
         val progress = MaterialAlertDialogBuilder(activity)
             .setTitle(R.string.downloading_update)
             .setMessage("0%")
@@ -139,7 +230,7 @@ object UpdateChecker {
         downloadJob = activity.lifecycleScope.launch {
             try {
                 val file = withContext(Dispatchers.IO) {
-                    downloadApk(activity, release.downloadUrl) { percent ->
+                    downloadApk(activity, release.downloadUrl, release.version) { percent ->
                         activity.runOnUiThread {
                             if (progress.isShowing) progress.setMessage("$percent%")
                         }
@@ -159,11 +250,12 @@ object UpdateChecker {
     private suspend fun downloadApk(
         activity: FragmentActivity,
         url: String,
+        version: String,
         onProgress: (Int) -> Unit
     ): File =
         withContext(Dispatchers.IO) {
             val dir = activity.getExternalFilesDir("apk") ?: activity.filesDir
-            val file = File(dir, "zxbot-update.apk")
+            val file = File(dir, "zxbot-$version.apk")
             if (file.exists()) file.delete()
 
             client.newCall(

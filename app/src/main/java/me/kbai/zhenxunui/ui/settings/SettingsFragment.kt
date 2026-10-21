@@ -10,7 +10,6 @@ import me.kbai.zhenxunui.databinding.FragmentSettingsBinding
 import me.kbai.zhenxunui.extends.runWithoutReturn
 import me.kbai.zhenxunui.extends.setOnDebounceClickListener
 import me.kbai.zhenxunui.tool.ThemeMode
-import me.kbai.zhenxunui.tool.UpdateChecker
 
 /**
  * @author Sean on 2026/10/21
@@ -25,7 +24,7 @@ class SettingsFragment : BaseFragment<FragmentSettingsBinding>() {
             findNavController().navigate(R.id.action_settings_to_theme)
         }
         llUpdate.setOnDebounceClickListener {
-            activity?.let { UpdateChecker.check(it, manual = true) }
+            findNavController().navigate(R.id.action_settings_to_update)
         }
     }
 
