@@ -160,4 +160,5 @@
     <string name="downloading_update">Downloading update</string>
     <string name="update_download_failed">Download failed, please try again</string>
     <string name="grant_install_permission">Grant "Install unknown apps" permission, then tap Update again</string>
+    <string name="bot_list_retry_hint">Failed to load bot list, retrying automatically…</string>
 </resources>

@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import me.kbai.zhenxunui.Constants
@@ -21,33 +22,34 @@ class MainViewModel : ViewModel() {
     private val _currentBot: MutableLiveData<BotBaseInfo> = MutableLiveData()
     val currentBot: LiveData<BotBaseInfo> = _currentBot
 
-    fun requestBotList() = viewModelScope.launch {
-        val maxAttempts = 4
-        repeat(maxAttempts) { attempt ->
-            val res = ApiRepository.getBotList().apiCollect()
+    private var botListJob: Job? = null
 
-            if (res.status == Resource.Status.SUCCESS && !res.data.isNullOrEmpty()) {
-                val list = res.data!!
-                _botList.value = list
-                val selected = list.find { it.isSelect } ?: list.first()
-                _currentBot.value = selected
-                Constants.currentBot = selected
-                return@launch
-            }
+    fun requestBotList() {
+        botListJob?.cancel()
+        botListJob = viewModelScope.launch {
+            var attempt = 0
+            while (true) {
+                val res = ApiRepository.getBotList().apiCollect()
 
-            if (res.status == Resource.Status.FAIL && res.httpStatusCode in 400..401) {
-                return@launch
-            }
-
-            if (attempt == maxAttempts - 1) {
-                if (res.status == Resource.Status.FAIL && res.message.isNotBlank()) {
-                    GlobalToast.showToast(res.message)
-                } else {
-                    GlobalToast.showToast(R.string.no_connected_bot)
+                if (res.status == Resource.Status.FAIL && res.httpStatusCode in 400..401) {
+                    return@launch
                 }
-                return@launch
+
+                if (res.status == Resource.Status.SUCCESS && !res.data.isNullOrEmpty()) {
+                    val list = res.data!!
+                    _botList.value = list
+                    val selected = list.find { it.isSelect } ?: list.first()
+                    _currentBot.value = selected
+                    Constants.currentBot = selected
+                    return@launch
+                }
+
+                if (attempt == 0) {
+                    GlobalToast.showToast(R.string.bot_list_retry_hint)
+                }
+                attempt++
+                delay(minOf(2000L * attempt, 10000L))
             }
-            delay(2000L * (attempt + 1))
         }
     }
 

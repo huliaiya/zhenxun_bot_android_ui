@@ -1,6 +1,5 @@
 package me.kbai.zhenxunui.ui.group
 
-import android.animation.ValueAnimator
 import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -44,36 +43,26 @@ class FriendListAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     var expandGroup = true
     var expandFriend = true
 
-    private var mRecyclerView: RecyclerView? = null
-
     class ItemViewHolder(val binding: ItemFriendListBinding) :
-        RecyclerView.ViewHolder(binding.root) {
-
-        fun setVisible(visible: Boolean) {
-            itemView.layoutParams = (itemView.layoutParams ?: RecyclerView.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT
-            )).apply {
-                if (visible) {
-                    width = ViewGroup.LayoutParams.MATCH_PARENT
-                    height = ViewGroup.LayoutParams.WRAP_CONTENT
-                } else {
-                    width = 0
-                    height = 0
-                }
-            }
-        }
-    }
+        RecyclerView.ViewHolder(binding.root)
 
     class ClassifyViewHolder(val binding: ItemFriendListClassifyBinding) :
         RecyclerView.ViewHolder(binding.root)
 
-    override fun onAttachedToRecyclerView(recyclerView: RecyclerView) {
-        mRecyclerView = recyclerView
-    }
+    private fun friendClassifyPosition() = (if (expandGroup) groupData.size else 0) + 1
 
-    override fun onDetachedFromRecyclerView(recyclerView: RecyclerView) {
-        mRecyclerView = null
+    override fun getItemCount() = 2 +
+            (if (expandGroup) groupData.size else 0) +
+            (if (expandFriend) friendData.size else 0)
+
+    override fun getItemViewType(position: Int): Int {
+        val friendClassifyPos = friendClassifyPosition()
+        return when {
+            position == 0 -> TYPE_GROUP_CLASSIFY
+            position < friendClassifyPos -> TYPE_GROUP
+            position == friendClassifyPos -> TYPE_FRIEND_CLASSIFY
+            else -> TYPE_FRIEND
+        }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = when (viewType) {
@@ -90,79 +79,35 @@ class FriendListAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         )
     }
 
-    override fun getItemCount() = 2 + groupData.size + friendData.size
-
-    override fun getItemViewType(position: Int) = when (position) {
-        0 -> TYPE_GROUP_CLASSIFY
-        in 1..groupData.size -> TYPE_GROUP
-        groupData.size + 1 -> TYPE_FRIEND_CLASSIFY
-        else -> TYPE_FRIEND
-    }
-
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (getItemViewType(position)) {
             TYPE_GROUP_CLASSIFY -> (holder as ClassifyViewHolder).onBindGroup()
             TYPE_FRIEND_CLASSIFY -> (holder as ClassifyViewHolder).onBindFriend()
             TYPE_GROUP -> (holder as ItemViewHolder).onBindGroup(groupData[position - 1])
-            TYPE_FRIEND -> (holder as ItemViewHolder).onBindFriend(friendData[position - 2 - groupData.size])
+            TYPE_FRIEND -> (holder as ItemViewHolder).onBindFriend(
+                friendData[position - friendClassifyPosition() - 1]
+            )
         }
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     private fun ClassifyViewHolder.onBindGroup() = binding.run {
         tvClassify.setText(R.string.groups)
         root.setOnClickListener {
             expandGroup = !expandGroup
-
-            if (expandGroup) {
-                ValueAnimator.ofFloat(-90f, 0f)
-            } else {
-                ValueAnimator.ofFloat(0f, -90f)
-            }.apply {
-                duration = 250
-
-                addUpdateListener {
-                    ivArrow.rotation = it.animatedValue as Float
-                }
-            }.start()
-
-            mRecyclerView?.run {
-                for (i in 1..groupData.size) {
-                    val holder = findViewHolderForAdapterPosition(i) ?: break
-
-                    (holder as ItemViewHolder).setVisible(expandGroup)
-                }
-            }
+            ivArrow.rotation = if (expandGroup) 0f else -90f
+            notifyDataSetChanged()
         }
         ivArrow.rotation = if (expandGroup) 0f else -90f
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     private fun ClassifyViewHolder.onBindFriend() = binding.run {
         tvClassify.setText(R.string.friends)
         root.setOnClickListener {
             expandFriend = !expandFriend
-
-            if (expandFriend) {
-                ValueAnimator.ofFloat(-90f, 0f)
-            } else {
-                ValueAnimator.ofFloat(0f, -90f)
-            }.apply {
-                duration = 250
-
-                addUpdateListener {
-                    ivArrow.rotation = it.animatedValue as Float
-                }
-            }.start()
-
-            mRecyclerView?.run {
-                val begin = groupData.size + 2
-                val end = begin + friendData.size
-
-                for (i in begin..<end) {
-                    val holder = findViewHolderForAdapterPosition(i) ?: break
-
-                    (holder as ItemViewHolder).setVisible(expandFriend)
-                }
-            }
+            ivArrow.rotation = if (expandFriend) 0f else -90f
+            notifyDataSetChanged()
         }
         ivArrow.rotation = if (expandFriend) 0f else -90f
     }
@@ -174,8 +119,6 @@ class FriendListAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         tvNickname.text = item.groupName
         tvId.text = item.groupId
         root.setOnDebounceClickListener { onGroupClickListener?.invoke(item) }
-
-        setVisible(expandGroup)
     }
 
     private fun ItemViewHolder.onBindFriend(item: FriendListItem) = binding.run {
@@ -185,7 +128,5 @@ class FriendListAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         tvNickname.text = item.nickname
         tvId.text = item.userId
         root.setOnDebounceClickListener { onFriendClickListener?.invoke(item) }
-
-        setVisible(expandFriend)
     }
 }
