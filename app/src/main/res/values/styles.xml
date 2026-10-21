@@ -78,4 +78,15 @@
         <item name="android:windowEnterAnimation">@anim/anim_top_enter</item>
         <item name="android:windowExitAnimation">@anim/anim_top_exit</item>
     </style>
+
+    <style name="ThemeOverlay.Glass.Dialog" parent="ThemeOverlay.MaterialComponents.MaterialAlertDialog">
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="colorSurface">@color/glass_dialog</item>
+        <item name="buttonBarButtonStyle">@style/Widget.Glass.Dialog.Button</item>
+    </style>
+
+    <style name="Widget.Glass.Dialog.Button" parent="Widget.MaterialComponents.Button.TextButton.Dialog">
+        <item name="android:textColor">?attr/colorPrimary</item>
+        <item name="rippleColor">@color/glass_ripple</item>
+    </style>
 </resources>

@@ -23,5 +23,6 @@
         <item name="android:textSize">@dimen/text_size_normal</item>
         <item name="colorControlActivated">?attr/colorPrimaryDark</item>
         <item name="materialButtonStyle">@style/Widget.Glass.Button</item>
+        <item name="materialAlertDialogTheme">@style/ThemeOverlay.Glass.Dialog</item>
     </style>
 </resources>
