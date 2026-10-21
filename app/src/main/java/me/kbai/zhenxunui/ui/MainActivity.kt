@@ -15,6 +15,7 @@ import me.kbai.zhenxunui.extends.findNavControllerByManager
 import me.kbai.zhenxunui.extends.setOnDebounceClickListener
 import me.kbai.zhenxunui.model.BotBaseInfo
 import me.kbai.zhenxunui.tool.glide.GlideApp
+import me.kbai.zhenxunui.tool.UpdateChecker
 import me.kbai.zhenxunui.viewmodel.MainViewModel
 
 /**
@@ -50,6 +51,9 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
         mNavHeaderBinding.tvChange.setOnDebounceClickListener {
             SelectAccountDialogFragment().show(supportFragmentManager)
         }
+        mNavHeaderBinding.root.setOnDebounceClickListener {
+            mViewModel.requestBotList()
+        }
     }
 
     override fun initData() {
@@ -61,6 +65,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
         }
 
         mViewModel.requestBotList()
+        UpdateChecker.check(this, manual = false)
     }
 
     private fun LayoutMainNavHeaderBinding.bindNavHeaderData(info: BotBaseInfo) {

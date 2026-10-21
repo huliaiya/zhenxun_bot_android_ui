@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.settings.SettingsThemeFragment">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingHorizontal="@dimen/activity_horizontal_margin"
+        android:paddingTop="@dimen/margin_widest"
+        android:paddingBottom="@dimen/activity_vertical_margin">
+
+        <RadioGroup
+            android:id="@+id/rg_theme"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_list_item_round"
+            android:orientation="vertical"
+            android:paddingHorizontal="@dimen/list_item_padding"
+            android:paddingVertical="@dimen/margin_narrow">
+
+            <RadioButton
+                android:id="@+id/rb_light"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:buttonTint="?attr/colorPrimary"
+                android:minHeight="48dp"
+                android:text="@string/theme_light"
+                android:textColor="@color/dn_black"
+                android:textSize="@dimen/text_size_large" />
+
+            <RadioButton
+                android:id="@+id/rb_dark"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:buttonTint="?attr/colorPrimary"
+                android:minHeight="48dp"
+                android:text="@string/theme_dark"
+                android:textColor="@color/dn_black"
+                android:textSize="@dimen/text_size_large" />
+
+            <RadioButton
+                android:id="@+id/rb_auto"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:buttonTint="?attr/colorPrimary"
+                android:minHeight="48dp"
+                android:text="@string/theme_auto"
+                android:textColor="@color/dn_black"
+                android:textSize="@dimen/text_size_large" />
+        </RadioGroup>
+    </LinearLayout>
+</androidx.core.widget.NestedScrollView>

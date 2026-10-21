@@ -22,7 +22,7 @@ class MainViewModel : ViewModel() {
     val currentBot: LiveData<BotBaseInfo> = _currentBot
 
     fun requestBotList() = viewModelScope.launch {
-        val maxAttempts = 3
+        val maxAttempts = 4
         repeat(maxAttempts) { attempt ->
             val res = ApiRepository.getBotList().apiCollect()
 
@@ -43,7 +43,7 @@ class MainViewModel : ViewModel() {
                 }
                 return@launch
             }
-            delay(1500)
+            delay(2000L * (attempt + 1))
         }
     }
 

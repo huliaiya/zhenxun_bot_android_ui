@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -13,53 +14,89 @@
         android:paddingTop="@dimen/margin_widest"
         android:paddingBottom="@dimen/activity_vertical_margin">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/margin_narrow"
-            android:layout_marginBottom="@dimen/margin_normal"
-            android:text="@string/settings_theme_title"
-            android:textColor="@color/dn_black"
-            android:textSize="@dimen/title_size_small" />
-
-        <RadioGroup
-            android:id="@+id/rg_theme"
+        <LinearLayout
+            android:id="@+id/ll_appearance"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/bg_list_item_round"
-            android:orientation="vertical"
+            android:gravity="center_vertical"
+            android:minHeight="64dp"
+            android:orientation="horizontal"
             android:paddingHorizontal="@dimen/list_item_padding"
-            android:paddingVertical="@dimen/margin_narrow">
+            android:paddingVertical="@dimen/list_item_padding">
 
-            <RadioButton
-                android:id="@+id/rb_light"
-                android:layout_width="match_parent"
+            <LinearLayout
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:buttonTint="?attr/colorPrimary"
-                android:minHeight="48dp"
-                android:text="@string/theme_light"
-                android:textColor="@color/dn_black"
-                android:textSize="@dimen/text_size_large" />
+                android:layout_weight="1"
+                android:orientation="vertical">
 
-            <RadioButton
-                android:id="@+id/rb_dark"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:buttonTint="?attr/colorPrimary"
-                android:minHeight="48dp"
-                android:text="@string/theme_dark"
-                android:textColor="@color/dn_black"
-                android:textSize="@dimen/text_size_large" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/settings_theme_title"
+                    android:textColor="@color/dn_black"
+                    android:textSize="@dimen/title_size_normal"
+                    android:textStyle="bold" />
 
-            <RadioButton
-                android:id="@+id/rb_auto"
-                android:layout_width="match_parent"
+                <TextView
+                    android:id="@+id/tv_appearance_value"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="3dp"
+                    android:textColor="@color/text_gray"
+                    android:textSize="@dimen/text_size_small" />
+            </LinearLayout>
+
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:contentDescription="@null"
+                android:src="@drawable/ic_arrow_right"
+                app:tint="@color/text_gray" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ll_update"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_normal"
+            android:background="@drawable/bg_list_item_round"
+            android:gravity="center_vertical"
+            android:minHeight="64dp"
+            android:orientation="horizontal"
+            android:paddingHorizontal="@dimen/list_item_padding"
+            android:paddingVertical="@dimen/list_item_padding">
+
+            <LinearLayout
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:buttonTint="?attr/colorPrimary"
-                android:minHeight="48dp"
-                android:text="@string/theme_auto"
-                android:textColor="@color/dn_black"
-                android:textSize="@dimen/text_size_large" />
-        </RadioGroup>
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/settings_update"
+                    android:textColor="@color/dn_black"
+                    android:textSize="@dimen/title_size_normal"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/tv_update_value"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="3dp"
+                    android:textColor="@color/text_gray"
+                    android:textSize="@dimen/text_size_small" />
+            </LinearLayout>
+
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:contentDescription="@null"
+                android:src="@drawable/ic_arrow_right"
+                app:tint="@color/text_gray" />
+        </LinearLayout>
     </LinearLayout>
 </androidx.core.widget.NestedScrollView>

@@ -23,7 +23,7 @@ android {
         minSdk 23
         targetSdk 34
         versionCode 5
-        versionName versionNameOverride ?: "1.2.2"
+        versionName versionNameOverride ?: "beta-dev"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
@@ -94,7 +94,7 @@ android {
         variant.outputs.configureEach { output ->
             def outputFile = output.outputFile
             if (outputFile != null && outputFile.name.endsWith('.apk')) {
-                def fileName = "zxbot" + "-" + buildType.name + "-v" + defaultConfig.versionName +
+                def fileName = "zxbot" + "-" + buildType.name + "-" + defaultConfig.versionName +
                         (hasReleaseKeystore ? "" : "-unsigned") + ".apk"
                 outputFileName = fileName
             }

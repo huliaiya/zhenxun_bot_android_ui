@@ -78,7 +78,7 @@ jobs:
           if [[ "$GITHUB_REF" == refs/tags/v* ]]; then
             echo "value=${GITHUB_REF_NAME#v}" >> "$GITHUB_OUTPUT"
           else
-            echo "value=" >> "$GITHUB_OUTPUT"
+            echo "value=beta-$(date -u +%y%m%d.%H%M)" >> "$GITHUB_OUTPUT"
           fi
 
       - name: Grant execute permission for gradlew
@@ -88,11 +88,7 @@ jobs:
         env:
           VERSION_NAME: ${{ steps.version.outputs.value }}
         run: |
-          if [ -n "$VERSION_NAME" ]; then
-            ./gradlew assembleRelease -PversionName="$VERSION_NAME" --stacktrace
-          else
-            ./gradlew assembleRelease --stacktrace
-          fi
+          ./gradlew assembleRelease -PversionName="$VERSION_NAME" --stacktrace
 
       - name: Upload release APK
         uses: actions/upload-artifact@v4

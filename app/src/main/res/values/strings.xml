@@ -149,4 +149,12 @@
     <string name="theme_light">Light mode</string>
     <string name="theme_dark">Dark mode</string>
     <string name="theme_auto">Follow system</string>
+    <string name="settings_update">Update</string>
+    <string name="current_version_format">Current version: %1$s</string>
+    <string name="update_found_title">Update available</string>
+    <string name="update_now">Update now</string>
+    <string name="later">Later</string>
+    <string name="already_latest_version">Already up to date</string>
+    <string name="update_check_failed">Update check failed, please try again later</string>
+    <string name="update_found_format">New version %1$s available (current: %2$s)</string>
 </resources>
