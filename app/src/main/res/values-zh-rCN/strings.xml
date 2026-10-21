@@ -85,6 +85,7 @@
     <string name="friends_label">好友数量:</string>
     <string name="group_label">群组数量:</string>
     <string name="connected_duration_format">已连接 %1$d天%2$d时%3$d分%4$d秒</string>
+    <string name="connected_unknown">已连接</string>
     <string name="plugin_status">插件状态</string>
     <string name="message_count">消息接收</string>
     <string name="active_group">活跃群聊</string>

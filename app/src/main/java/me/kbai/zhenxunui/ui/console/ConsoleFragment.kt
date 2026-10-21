@@ -213,9 +213,15 @@ class ConsoleFragment : BaseFragment<FragmentConsoleBinding>() {
 
     private fun startUpdateConnectedDuration(connectTime: Long) {
         mCountdownJob?.cancel()
+        if (connectTime <= 0L) {
+            viewBinding.icInformation.tvConnectionDuration.setText(R.string.connected_unknown)
+            return
+        }
+        val connectSeconds = if (connectTime > 1_000_000_000_000L) connectTime / 1000 else connectTime
         mCountdownJob = viewLifecycleScope.launch {
             while (isActive) {
-                var diff = System.currentTimeMillis() / 1000 - connectTime
+                var diff = System.currentTimeMillis() / 1000 - connectSeconds
+                if (diff < 0) diff = 0
                 val days = diff / 86400
                 diff %= 86400
                 val hours = diff / 3600
