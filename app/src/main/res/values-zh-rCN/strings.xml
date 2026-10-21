@@ -101,6 +101,7 @@
         ]
     </string>
     <string name="bot_logs">后台日志</string>
+    <string name="bot_logs_fullscreen">全屏查看</string>
     <string name="default_state">默认开关</string>
     <string name="version">版本</string>
     <string name="menu_type">菜单类型</string>

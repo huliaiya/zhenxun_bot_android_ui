@@ -164,6 +164,7 @@ object UpdateChecker {
     }
 
     private fun showUpdateDialog(activity: FragmentActivity, release: ReleaseInfo) {
+        if (activity.isFinishing || activity.isDestroyed) return
         val message = activity.getString(
             R.string.update_found_format, release.version, BuildConfig.VERSION_NAME
         ) + "\n\n" + release.notes.take(500).trim()
@@ -177,12 +178,13 @@ object UpdateChecker {
             stylePrimaryButton(activity, button)
             button.setOnClickListener { downloadAndInstall(activity, release) }
         }
-        dialog.getButton(AlertDialog.BUTTON_NEGATIVE)?.let { button ->
-            button.setTextColor(ContextCompat.getColor(activity, R.color.dn_black))
+        dialog.getButton(AlertDialog.BUTTON_NEGATIVE)?.let {
+            styleSecondaryButton(activity, it)
         }
     }
 
     fun showInstallDialog(activity: FragmentActivity, release: ReleaseInfo) {
+        if (activity.isFinishing || activity.isDestroyed) return
         val message = activity.getString(
             R.string.install_version_format, release.version
         ) + "\n\n" + release.notes.take(300).trim()
@@ -196,52 +198,85 @@ object UpdateChecker {
             stylePrimaryButton(activity, button)
             button.setOnClickListener { downloadAndInstall(activity, release) }
         }
-        dialog.getButton(AlertDialog.BUTTON_NEGATIVE)?.let { button ->
-            button.setTextColor(ContextCompat.getColor(activity, R.color.dn_black))
+        dialog.getButton(AlertDialog.BUTTON_NEGATIVE)?.let {
+            styleSecondaryButton(activity, it)
         }
     }
 
     private fun stylePrimaryButton(activity: FragmentActivity, button: View) {
-        val density = activity.resources.displayMetrics.density
-        (button as MaterialButton).apply {
-            cornerRadius = (22 * density).toInt()
-            backgroundTintList =
-                ColorStateList.valueOf(ContextCompat.getColor(activity, R.color.glass_button_tint))
-            setTextColor(ContextCompat.getColor(activity, R.color.glass_button_text))
-            rippleColor =
-                ColorStateList.valueOf(ContextCompat.getColor(activity, R.color.glass_ripple))
-            minWidth = 0
-            minHeight = (38 * density).toInt()
-            setPadding((24 * density).toInt(), 0, (24 * density).toInt(), 0)
+        runCatching {
+            val density = activity.resources.displayMetrics.density
+            (button as MaterialButton).apply {
+                cornerRadius = (22 * density).toInt()
+                backgroundTintList = ColorStateList.valueOf(
+                    ContextCompat.getColor(activity, R.color.glass_button_tint)
+                )
+                setTextColor(ContextCompat.getColor(activity, R.color.glass_button_text))
+                rippleColor = ColorStateList.valueOf(
+                    ContextCompat.getColor(activity, R.color.glass_ripple)
+                )
+                minWidth = 0
+                minHeight = (38 * density).toInt()
+                setPadding((24 * density).toInt(), 0, (24 * density).toInt(), 0)
+            }
+        }
+    }
+
+    private fun styleSecondaryButton(activity: FragmentActivity, button: View) {
+        runCatching {
+            val density = activity.resources.displayMetrics.density
+            (button as MaterialButton).apply {
+                cornerRadius = (22 * density).toInt()
+                backgroundTintList = ColorStateList.valueOf(
+                    ContextCompat.getColor(activity, R.color.glass_dialog)
+                )
+                setTextColor(ContextCompat.getColor(activity, R.color.dialog_secondary_text))
+                rippleColor = ColorStateList.valueOf(
+                    ContextCompat.getColor(activity, R.color.glass_ripple)
+                )
+                minWidth = 0
+                minHeight = (38 * density).toInt()
+                setPadding((24 * density).toInt(), 0, (24 * density).toInt(), 0)
+            }
         }
     }
 
     fun downloadAndInstall(activity: FragmentActivity, release: ReleaseInfo) {
+        if (activity.isFinishing || activity.isDestroyed) return
         cleanApkDir(activity)
-        val progress = MaterialAlertDialogBuilder(activity)
-            .setTitle(R.string.downloading_update)
-            .setMessage("0%")
-            .setNegativeButton(R.string.cancel, null)
-            .show()
-        progress.getButton(AlertDialog.BUTTON_NEGATIVE).setOnClickListener {
-            downloadJob?.cancel()
-            progress.dismiss()
+        val progress = try {
+            MaterialAlertDialogBuilder(activity)
+                .setTitle(R.string.downloading_update)
+                .setMessage("0%")
+                .setNegativeButton(R.string.cancel, null)
+                .show()
+        } catch (e: Exception) {
+            return
+        }
+        progress.getButton(AlertDialog.BUTTON_NEGATIVE)?.let { button ->
+            styleSecondaryButton(activity, button)
+            button.setOnClickListener {
+                downloadJob?.cancel()
+                runCatching { progress.dismiss() }
+            }
         }
         downloadJob = activity.lifecycleScope.launch {
             try {
                 val file = withContext(Dispatchers.IO) {
                     downloadApk(activity, release.downloadUrl, release.version) { percent ->
                         activity.runOnUiThread {
-                            if (progress.isShowing) progress.setMessage("$percent%")
+                            runCatching {
+                                if (progress.isShowing) progress.setMessage("$percent%")
+                            }
                         }
                     }
                 }
-                progress.dismiss()
+                runCatching { progress.dismiss() }
                 installApk(activity, file)
             } catch (e: CancellationException) {
                 throw e
             } catch (e: Exception) {
-                progress.dismiss()
+                runCatching { progress.dismiss() }
                 showToast(R.string.update_download_failed)
             }
         }
@@ -293,23 +328,29 @@ object UpdateChecker {
         }
 
     private fun installApk(activity: FragmentActivity, file: File) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O &&
-            !activity.packageManager.canRequestPackageInstalls()
-        ) {
-            activity.startActivity(
-                Intent(
-                    Settings.ACTION_MANAGE_UNKNOWN_APP_SOURCES,
-                    Uri.parse("package:" + activity.packageName)
+        try {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O &&
+                !activity.packageManager.canRequestPackageInstalls()
+            ) {
+                activity.startActivity(
+                    Intent(
+                        Settings.ACTION_MANAGE_UNKNOWN_APP_SOURCES,
+                        Uri.parse("package:" + activity.packageName)
+                    )
                 )
+                showToast(R.string.grant_install_permission)
+                return
+            }
+            val uri = FileProvider.getUriForFile(
+                activity, activity.packageName + ".fileprovider", file
             )
-            showToast(R.string.grant_install_permission)
-            return
+            activity.startActivity(
+                Intent(Intent.ACTION_INSTALL_PACKAGE)
+                    .setDataAndType(uri, "application/vnd.android.package-archive")
+                    .addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+            )
+        } catch (e: Exception) {
+            showToast(R.string.update_download_failed)
         }
-        val uri = FileProvider.getUriForFile(activity, activity.packageName + ".fileprovider", file)
-        activity.startActivity(
-            Intent(Intent.ACTION_INSTALL_PACKAGE)
-                .setDataAndType(uri, "application/vnd.android.package-archive")
-                .addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-        )
     }
 }

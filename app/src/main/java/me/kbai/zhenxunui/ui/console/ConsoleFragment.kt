@@ -13,6 +13,7 @@ import android.webkit.WebSettings
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import androidx.webkit.WebViewAssetLoader
 import androidx.webkit.WebViewAssetLoader.AssetsPathHandler
 import kotlinx.coroutines.Job
@@ -27,6 +28,7 @@ import me.kbai.zhenxunui.extends.isNightMode
 import me.kbai.zhenxunui.extends.launchAndCollectIn
 import me.kbai.zhenxunui.extends.logI
 import me.kbai.zhenxunui.extends.runWithoutReturn
+import me.kbai.zhenxunui.extends.setOnDebounceClickListener
 import me.kbai.zhenxunui.extends.viewLifecycleScope
 import me.kbai.zhenxunui.tool.glide.GlideApp
 import me.kbai.zhenxunui.viewmodel.ConsoleViewModel
@@ -113,6 +115,9 @@ class ConsoleFragment : BaseFragment<FragmentConsoleBinding>() {
                 }
                 false
             }
+        }
+        llLogsCard.setOnDebounceClickListener {
+            findNavController().navigate(R.id.action_console_to_backend_log)
         }
     }
 

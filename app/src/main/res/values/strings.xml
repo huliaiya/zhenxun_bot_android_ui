@@ -104,6 +104,7 @@
         ]
     </string>
     <string name="bot_logs">Bot Logs</string>
+    <string name="bot_logs_fullscreen">View full screen</string>
     <string name="default_state">Default State</string>
     <string name="plugin_author_format" translatable="false">\@%s</string>
     <string name="version">Version</string>

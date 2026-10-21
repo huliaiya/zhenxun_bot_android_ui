@@ -15,7 +15,17 @@
         android:id="@+id/nav_console"
         android:name="me.kbai.zhenxunui.ui.console.ConsoleFragment"
         android:label="@string/nav_console"
-        tools:layout="@layout/fragment_console" />
+        tools:layout="@layout/fragment_console">
+        <action
+            android:id="@+id/action_console_to_backend_log"
+            app:destination="@id/nav_backend_log" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/nav_backend_log"
+        android:name="me.kbai.zhenxunui.ui.console.BackendLogFragment"
+        android:label="@string/bot_logs"
+        tools:layout="@layout/fragment_backend_log" />
 
     <fragment
         android:id="@+id/nav_plugin"

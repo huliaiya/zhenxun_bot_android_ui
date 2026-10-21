@@ -55,5 +55,6 @@
     <color name="glass_shadow">#33000000</color>
     <color name="glass_row_base">#FFF6F7FB</color>
     <color name="glass_dialog">#E6FFFFFF</color>
+    <color name="dialog_secondary_text">#FF1D1D27</color>
     <color name="glass_bar_scrim_top">#F2FFFFFF</color>
 </resources>
