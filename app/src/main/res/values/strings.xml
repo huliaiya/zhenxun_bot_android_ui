@@ -162,7 +162,6 @@
     <string name="update_download_failed">Download failed, please try again</string>
     <string name="grant_install_permission">Grant "Install unknown apps" permission, then tap Update again</string>
     <string name="bot_list_retry_hint">Failed to load bot list, retrying automatically…</string>
-    <string name="check_for_updates">Check for updates</string>
     <string name="auto_update">Auto update</string>
     <string name="auto_update_desc">Check for updates automatically on launch</string>
     <string name="update_history">Version history</string>
