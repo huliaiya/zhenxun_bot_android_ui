@@ -173,4 +173,8 @@
     <string name="crash_log">View crash logs</string>
     <string name="crash_log_empty">No crash logs yet</string>
     <string name="action_failed">Action failed</string>
+    <string name="copy_all">Copy all</string>
+    <string name="export_log">Export</string>
+    <string name="copied">Copied to clipboard</string>
+    <string name="close">Close</string>
 </resources>

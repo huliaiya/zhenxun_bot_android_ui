@@ -13,6 +13,7 @@ import me.kbai.zhenxunui.extends.runWithoutReturn
 import me.kbai.zhenxunui.extends.setOnDebounceClickListener
 import me.kbai.zhenxunui.tool.GlobalToast.showToast
 import me.kbai.zhenxunui.tool.ThemeMode
+import me.kbai.zhenxunui.tool.UpdateChecker
 import java.io.File
 
 /**
@@ -43,7 +44,8 @@ class SettingsFragment : BaseFragment<FragmentSettingsBinding>() {
     }
 
     private fun showCrashLog() {
-        val logs = requireContext().getExternalFilesDir(null)
+        val context = requireContext()
+        val logs = context.getExternalFilesDir(null)
             ?.listFiles { file -> file.name.endsWith(".log") }
             ?.sortedByDescending { it.name }
             .orEmpty()
@@ -53,14 +55,43 @@ class SettingsFragment : BaseFragment<FragmentSettingsBinding>() {
         }
         val latest = logs.first()
         val text = runCatching { latest.readText() }.getOrDefault("")
-        MaterialAlertDialogBuilder(requireContext())
+        if (text.isBlank()) {
+            showToast(R.string.crash_log_empty)
+            return
+        }
+        val dialog = MaterialAlertDialogBuilder(context)
             .setTitle(latest.name)
-            .setMessage(
-                if (text.isBlank()) getString(R.string.crash_log_empty)
-                else text.takeLast(4000)
-            )
-            .setPositiveButton(R.string.cancel, null)
+            .setMessage(text.takeLast(4000))
+            .setPositiveButton(R.string.copy_all, null)
+            .setNegativeButton(R.string.export_log, null)
+            .setNeutralButton(R.string.close, null)
             .show()
+        dialog.getButton(androidx.appcompat.app.AlertDialog.BUTTON_POSITIVE)?.let { button ->
+            UpdateChecker.styleSecondaryButton(context, button)
+            button.setOnClickListener {
+                val clipboard = context.getSystemService(android.content.Context.CLIPBOARD_SERVICE)
+                        as android.content.ClipboardManager
+                clipboard.setPrimaryClip(
+                    android.content.ClipData.newPlainText("crash_log", text)
+                )
+                showToast(R.string.copied)
+            }
+        }
+        dialog.getButton(androidx.appcompat.app.AlertDialog.BUTTON_NEGATIVE)?.let { button ->
+            UpdateChecker.styleSecondaryButton(context, button)
+            button.setOnClickListener {
+                val send = android.content.Intent(android.content.Intent.ACTION_SEND)
+                    .setType("text/plain")
+                    .putExtra(android.content.Intent.EXTRA_SUBJECT, latest.name)
+                    .putExtra(android.content.Intent.EXTRA_TEXT, text)
+                runCatching {
+                    startActivity(android.content.Intent.createChooser(send, latest.name))
+                }.onFailure { logE(it) }
+            }
+        }
+        dialog.getButton(androidx.appcompat.app.AlertDialog.BUTTON_NEUTRAL)?.let {
+            UpdateChecker.styleSecondaryButton(context, it)
+        }
     }
 
     override fun onResume() {

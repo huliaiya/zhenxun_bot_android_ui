@@ -169,4 +169,8 @@
     <string name="crash_log">崩溃日志</string>
     <string name="crash_log_empty">暂无崩溃日志</string>
     <string name="action_failed">操作失败</string>
+    <string name="copy_all">复制全部</string>
+    <string name="export_log">导出</string>
+    <string name="copied">已复制到剪贴板</string>
+    <string name="close">关闭</string>
 </resources>

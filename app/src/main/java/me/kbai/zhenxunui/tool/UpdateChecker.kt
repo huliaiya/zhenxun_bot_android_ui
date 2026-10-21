@@ -222,17 +222,17 @@ object UpdateChecker {
         }
     }
 
-    private fun styleSecondaryButton(activity: FragmentActivity, button: View) {
+    fun styleSecondaryButton(context: Context, button: View) {
         runCatching {
-            val density = activity.resources.displayMetrics.density
+            val density = context.resources.displayMetrics.density
             (button as MaterialButton).apply {
                 cornerRadius = (22 * density).toInt()
                 backgroundTintList = ColorStateList.valueOf(
-                    ContextCompat.getColor(activity, R.color.glass_dialog)
+                    ContextCompat.getColor(context, R.color.glass_dialog)
                 )
-                setTextColor(ContextCompat.getColor(activity, R.color.dialog_secondary_text))
+                setTextColor(ContextCompat.getColor(context, R.color.dialog_secondary_text))
                 rippleColor = ColorStateList.valueOf(
-                    ContextCompat.getColor(activity, R.color.glass_ripple)
+                    ContextCompat.getColor(context, R.color.glass_ripple)
                 )
                 minWidth = 0
                 minHeight = (38 * density).toInt()
