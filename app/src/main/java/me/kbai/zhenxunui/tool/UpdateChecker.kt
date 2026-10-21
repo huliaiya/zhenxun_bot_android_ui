@@ -1,12 +1,17 @@
 package me.kbai.zhenxunui.tool
 
 import android.content.Intent
+import android.content.res.ColorStateList
 import android.net.Uri
 import android.os.Build
 import android.provider.Settings
+import android.view.View
+import androidx.appcompat.app.AlertDialog
+import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.lifecycleScope
+import com.google.android.material.button.MaterialButton
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
@@ -91,14 +96,34 @@ object UpdateChecker {
         val message = activity.getString(
             R.string.update_found_format, release.version, BuildConfig.VERSION_NAME
         ) + "\n\n" + release.notes.take(500).trim()
-        MaterialAlertDialogBuilder(activity)
+        val dialog = MaterialAlertDialogBuilder(activity)
             .setTitle(R.string.update_found_title)
             .setMessage(message)
-            .setPositiveButton(R.string.update_now) { _, _ ->
-                downloadAndInstall(activity, release)
-            }
+            .setPositiveButton(R.string.update_now, null)
             .setNegativeButton(R.string.later, null)
             .show()
+        dialog.getButton(AlertDialog.BUTTON_POSITIVE)?.let { button ->
+            stylePrimaryButton(activity, button)
+            button.setOnClickListener { downloadAndInstall(activity, release) }
+        }
+        dialog.getButton(AlertDialog.BUTTON_NEGATIVE)?.let { button ->
+            button.setTextColor(ContextCompat.getColor(activity, R.color.dn_black))
+        }
+    }
+
+    private fun stylePrimaryButton(activity: FragmentActivity, button: View) {
+        val density = activity.resources.displayMetrics.density
+        (button as MaterialButton).apply {
+            cornerRadius = (22 * density).toInt()
+            backgroundTintList =
+                ColorStateList.valueOf(ContextCompat.getColor(activity, R.color.glass_button_tint))
+            setTextColor(ContextCompat.getColor(activity, R.color.glass_button_text))
+            rippleColor =
+                ColorStateList.valueOf(ContextCompat.getColor(activity, R.color.glass_ripple))
+            minWidth = 0
+            minHeight = (38 * density).toInt()
+            setPadding((24 * density).toInt(), 0, (24 * density).toInt(), 0)
+        }
     }
 
     private fun downloadAndInstall(activity: FragmentActivity, release: ReleaseInfo) {
@@ -107,7 +132,7 @@ object UpdateChecker {
             .setMessage("0%")
             .setNegativeButton(R.string.cancel, null)
             .show()
-        progress.getButton(androidx.appcompat.app.AlertDialog.BUTTON_NEGATIVE).setOnClickListener {
+        progress.getButton(AlertDialog.BUTTON_NEGATIVE).setOnClickListener {
             downloadJob?.cancel()
             progress.dismiss()
         }
