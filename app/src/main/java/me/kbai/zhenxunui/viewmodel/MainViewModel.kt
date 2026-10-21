@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import me.kbai.zhenxunui.Constants
 import me.kbai.zhenxunui.R
@@ -21,28 +22,29 @@ class MainViewModel : ViewModel() {
     val currentBot: LiveData<BotBaseInfo> = _currentBot
 
     fun requestBotList() = viewModelScope.launch {
-        ApiRepository.getBotList()
-            .apiCollect { res ->
-                if (res.status == Resource.Status.LOADING) return@apiCollect
+        val maxAttempts = 3
+        repeat(maxAttempts) { attempt ->
+            val res = ApiRepository.getBotList().apiCollect()
 
-                val list: List<BotBaseInfo> = res.data ?: run {
-                    if (res.status == Resource.Status.FAIL) {
-                        GlobalToast.showToast(res.message)
-                    } else {
-                        GlobalToast.showToast(R.string.no_connected_bot)
-                    }
-                    return@apiCollect
-                }
-                if (list.isEmpty()) {
-                    GlobalToast.showToast(R.string.no_connected_bot)
-                    return@apiCollect
-                }
-
+            if (res.status == Resource.Status.SUCCESS && !res.data.isNullOrEmpty()) {
+                val list = res.data!!
                 _botList.value = list
                 val selected = list.find { it.isSelect } ?: list.first()
                 _currentBot.value = selected
                 Constants.currentBot = selected
+                return@launch
             }
+
+            if (attempt == maxAttempts - 1) {
+                if (res.status == Resource.Status.FAIL && res.message.isNotBlank()) {
+                    GlobalToast.showToast(res.message)
+                } else {
+                    GlobalToast.showToast(R.string.no_connected_bot)
+                }
+                return@launch
+            }
+            delay(1500)
+        }
     }
 
     fun selectBot(id: String) {
