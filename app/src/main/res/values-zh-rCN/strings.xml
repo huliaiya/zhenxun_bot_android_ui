@@ -134,6 +134,7 @@
     <string name="rename">重命名</string>
     <string name="loading">加载中…</string>
     <string name="prompt_delete_file">确认删除文件吗?</string>
+    <string name="delete_success_format">%1$s已删除成功欧尼酱！</string>
     <string name="error_input_text">请输入文字</string>
     <string name="new_file">创建文件</string>
     <string name="new_folder">新建文件夹</string>

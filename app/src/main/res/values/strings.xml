@@ -138,6 +138,7 @@
     <string name="rename">Rename</string>
     <string name="loading">Loading…</string>
     <string name="prompt_delete_file">Delete this file?</string>
+    <string name="delete_success_format">%1$s deleted successfully</string>
     <string name="error_input_text">Please enter text</string>
     <string name="new_file">New File</string>
     <string name="new_folder">New Folder</string>

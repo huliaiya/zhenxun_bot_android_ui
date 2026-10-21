@@ -251,7 +251,11 @@ class FileExplorerFragment : BaseFragment<FragmentFileExplorerBinding>() {
                 .setOnConfirmClickListener { button, dialog ->
                     mViewModel.deleteFile(file).launchAndApiCollectIn(viewLifecycleOwner, button) {
                         if (it.status == Resource.Status.LOADING) return@launchAndApiCollectIn
-                        GlobalToast.showToast(it.data ?: it.message)
+                        if (it.status == Resource.Status.SUCCESS) {
+                            GlobalToast.showToast(getString(R.string.delete_success_format, file.name))
+                        } else {
+                            GlobalToast.showToast(it.data ?: it.message)
+                        }
                         dialog.dismiss()
                         viewBinding.root.isRefreshing = true
                         mViewModel.readDir()
