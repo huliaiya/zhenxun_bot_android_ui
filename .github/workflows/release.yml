@@ -104,11 +104,15 @@ jobs:
           files: app/build/outputs/apk/release/*.apk
           generate_release_notes: true
 
-      - name: Publish latest pre-release
+      - name: Publish formal release
         if: github.event_name == 'push' && (github.ref == 'refs/heads/master' || github.ref == 'refs/heads/main')
         env:
           GH_TOKEN: ${{ github.token }}
+          VERSION: ${{ steps.version.outputs.value }}
         run: |
           gh release delete latest --yes --cleanup-tag || true
-          gh release create latest --prerelease --title "Latest build" --generate-notes
-          gh release upload latest app/build/outputs/apk/release/*.apk --clobber
+          gh release create "r$VERSION" app/build/outputs/apk/release/*.apk \
+            --title "zhenxun r$VERSION" \
+            --latest \
+            --generate-notes \
+          || gh release upload "r$VERSION" app/build/outputs/apk/release/*.apk --clobber

@@ -36,7 +36,7 @@ import java.util.concurrent.TimeUnit
  */
 object UpdateChecker {
     private const val RELEASE_API =
-        "https://api.github.com/repos/huliaiya/zhenxun_bot_android_ui/releases/tags/latest"
+        "https://api.github.com/repos/huliaiya/zhenxun_bot_android_ui/releases/latest"
 
     private class ReleaseInfo(val version: String, val downloadUrl: String, val notes: String)
 
