@@ -157,4 +157,7 @@
     <string name="already_latest_version">Already up to date</string>
     <string name="update_check_failed">Update check failed, please try again later</string>
     <string name="update_found_format">New version %1$s available (current: %2$s)</string>
+    <string name="downloading_update">Downloading update</string>
+    <string name="update_download_failed">Download failed, please try again</string>
+    <string name="grant_install_permission">Grant "Install unknown apps" permission, then tap Update again</string>
 </resources>
