@@ -128,6 +128,7 @@
     <string name="group_switch">Group Function</string>
     <string name="banned">Banned</string>
     <string name="select_account">Select Account</string>
+    <string name="no_connected_bot">No connected bot account</string>
     <string name="user_information">User Information</string>
     <string name="type_format">Type: %s</string>
     <string name="max_length_format">Max Length: %s</string>

@@ -124,6 +124,7 @@
     <string name="group_switch">群功能开关</string>
     <string name="banned">封禁</string>
     <string name="select_account">切换账号</string>
+    <string name="no_connected_bot">暂无在线的Bot账号</string>
     <string name="user_information">用户信息</string>
     <string name="type_format">类型: %s</string>
     <string name="max_length_format">最大长度: %s</string>

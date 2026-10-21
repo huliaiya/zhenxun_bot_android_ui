@@ -8,12 +8,14 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.RecyclerView
+import me.kbai.zhenxunui.R
 import me.kbai.zhenxunui.base.BaseDialogFragment
 import me.kbai.zhenxunui.databinding.DialogSelectAccountBinding
 import me.kbai.zhenxunui.databinding.ItemSelectAccountBinding
 import me.kbai.zhenxunui.extends.dp
 import me.kbai.zhenxunui.extends.setOnDebounceClickListener
 import me.kbai.zhenxunui.model.Consumable
+import me.kbai.zhenxunui.tool.GlobalToast
 import me.kbai.zhenxunui.tool.glide.GlideApp
 import me.kbai.zhenxunui.viewmodel.MainViewModel
 
@@ -42,7 +44,12 @@ class SelectAccountDialogFragment : BaseDialogFragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        val list = mMainViewModel.botList.value ?: return
+        val list = mMainViewModel.botList.value
+        if (list.isNullOrEmpty()) {
+            GlobalToast.showToast(R.string.no_connected_bot)
+            dismiss()
+            return
+        }
 
         mBinding.root.adapter = object : RecyclerView.Adapter<ViewHolder>() {
             override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = ViewHolder(

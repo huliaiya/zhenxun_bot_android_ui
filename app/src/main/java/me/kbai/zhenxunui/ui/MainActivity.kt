@@ -46,6 +46,10 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
         )
         setupActionBarWithNavController(navController, mAppBarConfiguration)
         viewBinding.navView.setupWithNavController(navController)
+
+        mNavHeaderBinding.tvChange.setOnDebounceClickListener {
+            SelectAccountDialogFragment().show(supportFragmentManager)
+        }
     }
 
     override fun initData() {
@@ -65,9 +69,6 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
             .into(ivAvatar)
         tvName.text = info.nickname
         tvId.text = info.selfId
-        tvChange.setOnDebounceClickListener {
-            SelectAccountDialogFragment().show(supportFragmentManager)
-        }
     }
 
     override fun onSupportNavigateUp() =
