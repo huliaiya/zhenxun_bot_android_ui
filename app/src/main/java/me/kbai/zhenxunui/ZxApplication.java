@@ -4,6 +4,7 @@ import android.app.Application;
 
 import me.kbai.zhenxunui.tool.CrashHandler;
 import me.kbai.zhenxunui.tool.GlobalToast;
+import me.kbai.zhenxunui.tool.ThemeMode;
 
 /**
  * @author Sean on 2023/5/31
@@ -17,6 +18,7 @@ public class ZxApplication extends Application {
         mApp = this;
         Constants.init(this);
         GlobalToast.init(this);
+        ThemeMode.INSTANCE.init();
         CrashHandler.INSTANCE.init(this);
     }
 

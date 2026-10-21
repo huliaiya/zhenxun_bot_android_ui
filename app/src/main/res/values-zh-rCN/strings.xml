@@ -140,4 +140,9 @@
     <string name="new_folder">新建文件夹</string>
     <string name="edit_file">编辑文件</string>
     <string name="text_too_long">文本过长，暂不支持编辑</string>
+    <string name="nav_settings">设置</string>
+    <string name="settings_theme_title">外观</string>
+    <string name="theme_light">浅色模式</string>
+    <string name="theme_dark">深色模式</string>
+    <string name="theme_auto">跟随系统</string>
 </resources>

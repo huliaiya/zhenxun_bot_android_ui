@@ -85,4 +85,10 @@
             android:id="@+id/action_fileExplorerFragment_self"
             app:destination="@id/nav_file_explorer" />
     </fragment>
+
+    <fragment
+        android:id="@+id/nav_settings"
+        android:name="me.kbai.zhenxunui.ui.settings.SettingsFragment"
+        android:label="@string/nav_settings"
+        tools:layout="@layout/fragment_settings" />
 </navigation>
