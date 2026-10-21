@@ -35,6 +35,10 @@ class MainViewModel : ViewModel() {
                 return@launch
             }
 
+            if (res.status == Resource.Status.FAIL && res.httpStatusCode in 400..401) {
+                return@launch
+            }
+
             if (attempt == maxAttempts - 1) {
                 if (res.status == Resource.Status.FAIL && res.message.isNotBlank()) {
                     GlobalToast.showToast(res.message)

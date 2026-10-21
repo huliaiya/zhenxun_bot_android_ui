@@ -12,6 +12,15 @@ if (keystorePropertiesFile.exists()) {
 def hasReleaseKeystore = keystoreProperties.containsKey('storeFile') &&
         rootProject.file(keystoreProperties['storeFile']).exists()
 def versionNameOverride = project.findProperty('versionName')
+def gitSha = {
+    try {
+        def out = "git rev-parse --short HEAD".execute(null, rootDir).text.trim()
+        return out.isEmpty() ? null : out
+    } catch (Exception ignored) {
+        return null
+    }
+}()
+def fallbackVersionName = gitSha ?: "dev"
 
 android {
     namespace 'me.kbai.zhenxunui'
@@ -23,7 +32,7 @@ android {
         minSdk 23
         targetSdk 34
         versionCode 5
-        versionName versionNameOverride ?: "beta-dev"
+        versionName versionNameOverride ?: fallbackVersionName
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
