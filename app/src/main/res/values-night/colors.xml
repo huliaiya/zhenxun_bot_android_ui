@@ -35,7 +35,7 @@
     <color name="glass_scrim_top">#66000000</color>
     <color name="glass_scrim_bottom">#CC000000</color>
     <color name="glass_shadow">#66000000</color>
-    <color name="glass_row_base">#FF14141C</color>
+    <color name="glass_row_base">#B314141C</color>
     <color name="glass_dialog">#E61D1D27</color>
     <color name="dialog_secondary_text">#FFF8F9FD</color>
     <color name="glass_bar_scrim_top">#D91E1E28</color>
