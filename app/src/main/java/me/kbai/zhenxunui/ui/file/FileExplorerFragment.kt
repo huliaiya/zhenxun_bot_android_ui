@@ -1,16 +1,12 @@
 package me.kbai.zhenxunui.ui.file
 
-import android.animation.Animator
-import android.animation.ValueAnimator
 import android.annotation.SuppressLint
-import android.graphics.PointF
 import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
-import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.MenuProvider
@@ -18,13 +14,11 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
-import androidx.recyclerview.widget.RecyclerView.OnItemTouchListener
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import me.kbai.zhenxunui.R
 import me.kbai.zhenxunui.base.BaseFragment
 import me.kbai.zhenxunui.databinding.FragmentFileExplorerBinding
-import me.kbai.zhenxunui.databinding.ItemFileExplorerLineBinding
 import me.kbai.zhenxunui.databinding.LayoutErrorPageBinding
-import me.kbai.zhenxunui.extends.dp
 import me.kbai.zhenxunui.extends.launchAndApiCollectIn
 import me.kbai.zhenxunui.extends.setOnDebounceClickListener
 import me.kbai.zhenxunui.model.RemoteFile
@@ -33,10 +27,6 @@ import me.kbai.zhenxunui.tool.GlobalToast
 import me.kbai.zhenxunui.ui.common.EditTextDialogFragment
 import me.kbai.zhenxunui.ui.common.PromptDialog
 import me.kbai.zhenxunui.viewmodel.FileExplorerViewModel
-import java.util.ArrayDeque
-import java.util.Deque
-import kotlin.math.abs
-import kotlin.math.max
 
 /**
  * @author Sean on 2023/5/30
@@ -51,9 +41,6 @@ class FileExplorerFragment : BaseFragment<FragmentFileExplorerBinding>() {
     }
 
     private val mViewModel by viewModels<FileExplorerViewModel>()
-
-    private val mSwipedViews: Deque<ItemFileExplorerLineBinding> = ArrayDeque()
-    private val mSwipeAnimators: Deque<Animator> = ArrayDeque()
 
     private var mMenuProvider = object : MenuProvider {
         override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
@@ -88,7 +75,6 @@ class FileExplorerFragment : BaseFragment<FragmentFileExplorerBinding>() {
         root.setOnRefreshListener {
             mViewModel.readDir()
         }
-        rvDirs.setItemSwipe()
     }
 
     override fun initData() {
@@ -238,147 +224,49 @@ class FileExplorerFragment : BaseFragment<FragmentFileExplorerBinding>() {
 
         onBackPressClickListener = { findNavController().popBackStack() }
 
-        onItemRenameListener = { file ->
-            mRenamingFile = file
-            EditTextDialogFragment
-                .newInstance(R.string.rename, file.name, EditTextDialogFragment.RENAME)
-                .show(childFragmentManager)
-        }
-
-        onItemDeleteListener = { file ->
-            PromptDialog(requireContext())
-                .setText(R.string.prompt_delete_file)
-                .setOnConfirmClickListener { button, dialog ->
-                    mViewModel.deleteFile(file).launchAndApiCollectIn(viewLifecycleOwner, button) {
-                        if (it.status == Resource.Status.LOADING) return@launchAndApiCollectIn
-                        if (it.status == Resource.Status.SUCCESS) {
-                            GlobalToast.showToast(getString(R.string.delete_success_format, file.name))
-                        } else {
-                            GlobalToast.showToast(it.data ?: it.message)
-                        }
-                        dialog.dismiss()
-                        viewBinding.root.isRefreshing = true
-                        mViewModel.readDir()
+        onItemLongClickListener = { file ->
+            MaterialAlertDialogBuilder(requireContext())
+                .setTitle(file.name)
+                .setItems(
+                    arrayOf(getString(R.string.rename), getString(R.string.delete))
+                ) { _, which ->
+                    when (which) {
+                        0 -> showRenameDialog(file)
+                        1 -> showDeleteDialog(file)
                     }
                 }
                 .show()
         }
     }
 
-    private fun RecyclerView.setItemSwipe() = post {
-        setOnScrollChangeListener { _, _, _, _, _ ->
-            while (mSwipeAnimators.isNotEmpty()) {
-                mSwipeAnimators.poll()?.end()
-            }
-            while (mSwipedViews.isNotEmpty()) {
-                mSwipedViews.poll()?.resetTranslationX()
-            }
-        }
+    private fun showRenameDialog(file: RemoteFile) {
+        mRenamingFile = file
+        EditTextDialogFragment
+            .newInstance(R.string.rename, file.name, EditTextDialogFragment.RENAME)
+            .show(childFragmentManager)
+    }
 
-        addOnItemTouchListener(object : OnItemTouchListener {
-            private var disallowIntercept = false
-            private var downPoint = PointF()
-            private var dx = 0f
-            private var dy = 0f
-            private var mSelectedHolder: RecyclerView.ViewHolder? = null
-
-            override fun onInterceptTouchEvent(rv: RecyclerView, e: MotionEvent): Boolean {
-                if (disallowIntercept || e.actionIndex != 0) return false
-                when (e.actionMasked) {
-                    MotionEvent.ACTION_DOWN -> downPoint.set(e.x, e.y)
-                    MotionEvent.ACTION_MOVE -> {
-                        updateDistance(e)
-
-                        if (abs(dx) > abs(dy) && dx < -(5.dp)) {
-                            mSelectedHolder = rv.findChildViewUnder(e.x, e.y)
-                                ?.let { rv.getChildViewHolder(it) }
-                                ?.also {
-                                    mSwipedViews.offerLast((it as FileListLineAdapter.ItemViewHolder).binding)
-                                    viewBinding.root.isEnabled = false
-                                }
-                            return true
-                        }
+    private fun showDeleteDialog(file: RemoteFile) {
+        PromptDialog(requireContext())
+            .setText(R.string.prompt_delete_file)
+            .setOnConfirmClickListener { button, dialog ->
+                mViewModel.deleteFile(file).launchAndApiCollectIn(viewLifecycleOwner, button) {
+                    if (it.status == Resource.Status.LOADING) return@launchAndApiCollectIn
+                    if (it.status == Resource.Status.SUCCESS) {
+                        GlobalToast.showToast(getString(R.string.delete_success_format, file.name))
+                    } else {
+                        GlobalToast.showToast(it.data ?: it.message)
                     }
-
-                    MotionEvent.ACTION_UP -> clear()
-                }
-                return false
-            }
-
-            override fun onTouchEvent(rv: RecyclerView, e: MotionEvent) {
-                val finalHolder = mSelectedHolder ?: return
-                val binding = (finalHolder as FileListLineAdapter.ItemViewHolder).binding
-
-                //返回按钮不能swipe
-                if (mViewModel.file != null && finalHolder.adapterPosition == 0) {
-                    return
-                }
-
-                when (e.actionMasked) {
-                    MotionEvent.ACTION_MOVE -> {
-                        updateDistance(e)
-
-                        val transX =
-                            max(dx, -(binding.tvDelete.width + binding.tvRename.width).toFloat())
-
-                        binding.tvFile.translationX = transX
-                        binding.tvRename.translationX = binding.tvRename.width + transX
-                        binding.tvRename.isVisible = transX < 0f
-                        binding.tvDelete.isVisible = transX < 0f
-                    }
-
-                    MotionEvent.ACTION_UP -> {
-                        val buttonWidth =
-                            (binding.tvDelete.width + binding.tvRename.width).toFloat()
-
-                        val applyAnimatorParams: ValueAnimator.() -> Unit = {
-                            duration = 200
-                            mSwipeAnimators.offerLast(this)
-                            addUpdateListener {
-                                val value = it.animatedValue as Float
-                                binding.tvFile.translationX = value
-                                binding.tvRename.translationX =
-                                    binding.tvRename.width + value
-                                binding.tvRename.isVisible = value < 0f
-                                binding.tvDelete.isVisible = value < 0f
-                            }
-                        }
-                        if (buttonWidth / 2 + dx > 1e-5) {
-                            ValueAnimator.ofFloat(binding.tvFile.translationX, 0f)
-                                .apply { applyAnimatorParams(this) }
-                                .start()
-                        } else {
-                            ValueAnimator.ofFloat(binding.tvFile.translationX, -buttonWidth)
-                                .apply { applyAnimatorParams(this) }
-                                .start()
-                        }
-                        clear()
-                    }
+                    dialog.dismiss()
+                    viewBinding.root.isRefreshing = true
+                    mViewModel.readDir()
                 }
             }
-
-            override fun onRequestDisallowInterceptTouchEvent(disallowIntercept: Boolean) {
-                this.disallowIntercept = disallowIntercept
-            }
-
-            private fun updateDistance(e: MotionEvent) {
-                dx = e.x - downPoint.x
-                dy = e.y - downPoint.y
-            }
-
-            private fun clear() {
-                dx = 0f
-                dy = 0f
-                mSelectedHolder = null
-                viewBinding.root.isEnabled = true
-            }
-        })
+            .show()
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
-        mSwipedViews.clear()
-        mSwipeAnimators.clear()
         requireActivity().removeMenuProvider(mMenuProvider)
     }
 
@@ -403,12 +291,5 @@ class FileExplorerFragment : BaseFragment<FragmentFileExplorerBinding>() {
 
     private fun LayoutErrorPageBinding.success() {
         root.isVisible = false
-    }
-
-    private fun ItemFileExplorerLineBinding.resetTranslationX() {
-        tvFile.translationX = 0f
-        tvRename.translationX = 0f
-        tvRename.isVisible = false
-        tvDelete.isVisible = false
     }
 }

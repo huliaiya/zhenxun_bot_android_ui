@@ -3,7 +3,6 @@ package me.kbai.zhenxunui.ui.file
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.content.res.ResourcesCompat
-import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import me.kbai.zhenxunui.R
 import me.kbai.zhenxunui.databinding.ItemFileExplorerLineBinding
@@ -16,8 +15,7 @@ class FileListLineAdapter(
 ) : RecyclerView.Adapter<FileListLineAdapter.ItemViewHolder>() {
     var onItemClickListener: ((RemoteFile) -> Unit)? = null
     var onBackPressClickListener: (() -> Unit)? = null
-    var onItemDeleteListener: ((RemoteFile) -> Unit)? = null
-    var onItemRenameListener: ((RemoteFile) -> Unit)? = null
+    var onItemLongClickListener: ((RemoteFile) -> Unit)? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = ItemViewHolder(
         ItemFileExplorerLineBinding.inflate(LayoutInflater.from(parent.context), parent, false)
@@ -26,12 +24,6 @@ class FileListLineAdapter(
     override fun getItemCount() = data.size + if (showBack) 1 else 0
 
     override fun onBindViewHolder(holder: ItemViewHolder, position: Int) {
-        holder.binding.run {
-            tvFile.translationX = 0f
-            tvRename.translationX = 0f
-            tvRename.isVisible = false
-            tvDelete.isVisible = false
-        }
         if (showBack && position == 0) {
             holder.binding.run {
                 val bounds = tvFile.compoundDrawables[0].bounds
@@ -69,12 +61,9 @@ class FileListLineAdapter(
                 onItemClickListener?.invoke(item)
             }
 
-            tvDelete.setOnDebounceClickListener {
-                onItemDeleteListener?.invoke(item)
-            }
-
-            tvRename.setOnDebounceClickListener {
-                onItemRenameListener?.invoke(item)
+            tvFile.setOnLongClickListener {
+                onItemLongClickListener?.invoke(item)
+                true
             }
         }
     }

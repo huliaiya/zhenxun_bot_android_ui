@@ -1,10 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="dn_trans_white_75">@color/trans_black_25</color>
     <color name="dn_black">@color/white</color>
     <color name="dn_white">@color/black</color>
-    <color name="dn_white_gray">@color/gray</color>
-    <color name="dn_app_bar">@color/gray_dark</color>
 
     <!-- Glass design tokens for dark mode. -->
     <color name="glass_backdrop_top">#FF0B0B10</color>
@@ -34,7 +31,6 @@
     <color name="glass_logs">#D90A0A10</color>
     <color name="glass_scrim_top">#66000000</color>
     <color name="glass_scrim_bottom">#CC000000</color>
-    <color name="glass_shadow">#66000000</color>
     <color name="glass_row_base">#B314141C</color>
     <color name="glass_dialog">#E61D1D27</color>
     <color name="dialog_secondary_text">#FFF8F9FD</color>
