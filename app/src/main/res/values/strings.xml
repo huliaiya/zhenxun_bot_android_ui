@@ -176,6 +176,8 @@
     <string name="wallpaper_fetching">Fetching today\'s wallpaper…</string>
     <string name="wallpaper_fetch_success">Today\'s wallpaper fetched (%1$d)\napi.huliaiya.icu/API/zhenxun.php</string>
     <string name="wallpaper_fetch_failed">Wallpaper fetch failed (%1$d), keeping previous</string>
+    <string name="settings_scrim_title">Wallpaper scrim opacity</string>
+    <string name="scrim_percent_format">%1$d%%</string>
     <string name="copy_all">Copy all</string>
     <string name="export_log">Export</string>
     <string name="copied">Copied to clipboard</string>

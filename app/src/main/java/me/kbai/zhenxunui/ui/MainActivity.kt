@@ -73,6 +73,12 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
                 }
             }
         }
+
+        lifecycleScope.launch {
+            WallpaperStore.scrimAlpha.collect { alpha ->
+                viewBinding.icBar.glassBackdrop.setScrimAlpha(alpha)
+            }
+        }
     }
 
     override fun initData() {

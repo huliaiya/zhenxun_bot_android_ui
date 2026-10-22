@@ -24,6 +24,7 @@ public class ZxApplication extends Application {
         CrashHandler.INSTANCE.init(this);
         UpdateChecker.INSTANCE.cleanApkDir(this);
         WallpaperStore.INSTANCE.loadCached(this);
+        WallpaperStore.INSTANCE.loadPrefs(this);
     }
 
     public static Application getApplication() {

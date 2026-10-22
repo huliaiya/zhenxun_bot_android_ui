@@ -24,6 +24,7 @@ class GlassBackdropView @JvmOverloads constructor(
     private var baseShader: Shader? = null
     private var blobs: List<Blob> = emptyList()
     private var wallpaperActive = false
+    private var scrimAlphaOverride = -1
 
     /**
      * In wallpaper mode the gradient and blobs are skipped and a translucent scrim
@@ -33,6 +34,16 @@ class GlassBackdropView @JvmOverloads constructor(
         if (wallpaperActive == active) return
         wallpaperActive = active
         invalidate()
+    }
+
+    /**
+     * Overrides the scrim alpha (0-255) used in wallpaper mode. -1 restores the
+     * default from resources.
+     */
+    fun setScrimAlpha(alpha: Int) {
+        if (scrimAlphaOverride == alpha) return
+        scrimAlphaOverride = alpha
+        if (wallpaperActive) invalidate()
     }
 
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
@@ -48,7 +59,12 @@ class GlassBackdropView @JvmOverloads constructor(
 
         if (wallpaperActive) {
             paint.shader = null
-            paint.color = context.getColor(R.color.wallpaper_scrim)
+            val base = context.getColor(R.color.wallpaper_scrim)
+            paint.color = if (scrimAlphaOverride in 0..255) {
+                (scrimAlphaOverride shl 24) or (base and 0x00FFFFFF)
+            } else {
+                base
+            }
             canvas.drawRect(0f, 0f, widthF, heightF, paint)
             return
         }

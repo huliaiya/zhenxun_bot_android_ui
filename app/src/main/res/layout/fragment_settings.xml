@@ -127,5 +127,47 @@
                 android:src="@drawable/ic_arrow_right"
                 app:tint="@color/text_gray" />
         </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ll_scrim"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_normal"
+            android:background="@drawable/bg_list_item_round"
+            android:orientation="vertical"
+            android:paddingHorizontal="@dimen/list_item_padding"
+            android:paddingVertical="@dimen/list_item_padding">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/settings_scrim_title"
+                    android:textColor="@color/dn_black"
+                    android:textSize="@dimen/title_size_normal"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/tv_scrim_value"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/margin_normal"
+                    android:textColor="@color/text_gray"
+                    android:textSize="@dimen/text_size_small" />
+            </LinearLayout>
+
+            <SeekBar
+                android:id="@+id/sb_wallpaper_scrim"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:max="100" />
+        </LinearLayout>
     </LinearLayout>
 </androidx.core.widget.NestedScrollView>

@@ -11,6 +11,7 @@ import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.withTimeoutOrNull
+import me.kbai.zhenxunui.Constants
 import me.kbai.zhenxunui.extends.logE
 import okhttp3.Call
 import okhttp3.Callback
@@ -34,6 +35,9 @@ object WallpaperStore {
     private const val FILE_NAME = "today_wallpaper.jpg"
     private const val MAX_DIM = 2048
     private const val FETCH_TIMEOUT_MS = 20_000L
+    private const val SP_KEY_SCRIM_ALPHA = "wallpaper_scrim_alpha"
+
+    const val DEFAULT_SCRIM_ALPHA = 192
 
     private val mClient = OkHttpClient.Builder()
         .connectTimeout(5, TimeUnit.SECONDS)
@@ -43,7 +47,35 @@ object WallpaperStore {
     private val _bitmap = MutableStateFlow<Bitmap?>(null)
     val bitmap: StateFlow<Bitmap?> = _bitmap
 
+    private val _scrimAlpha = MutableStateFlow(DEFAULT_SCRIM_ALPHA)
+    val scrimAlpha: StateFlow<Int> = _scrimAlpha
+
     private var mCacheLoaded = false
+    private var mPrefsLoaded = false
+
+    /**
+     * Loads the persisted wallpaper scrim alpha (once).
+     */
+    fun loadPrefs(context: Context) {
+        if (mPrefsLoaded) return
+        mPrefsLoaded = true
+        val sp = context.applicationContext
+            .getSharedPreferences(Constants.SP_NAME_CONFIG, Context.MODE_PRIVATE)
+        _scrimAlpha.value = sp.getInt(SP_KEY_SCRIM_ALPHA, DEFAULT_SCRIM_ALPHA)
+    }
+
+    /**
+     * Updates the wallpaper scrim alpha (0-255) and persists it.
+     */
+    fun setScrimAlpha(context: Context, alpha: Int) {
+        val clamped = alpha.coerceIn(0, 255)
+        _scrimAlpha.value = clamped
+        context.applicationContext
+            .getSharedPreferences(Constants.SP_NAME_CONFIG, Context.MODE_PRIVATE)
+            .edit()
+            .putInt(SP_KEY_SCRIM_ALPHA, clamped)
+            .apply()
+    }
 
     /**
      * Loads the last successfully fetched wallpaper from cache (once).
