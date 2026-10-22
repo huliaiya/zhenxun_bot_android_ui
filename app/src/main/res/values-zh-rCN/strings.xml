@@ -23,6 +23,7 @@
     <string name="error_input_password">不会有人忘记密码了吧!</string>
     <string name="error_not_set_api">还没有设置小真寻的api地址哦</string>
     <string name="error_wrong_api_address">api地址不正确哦</string>
+    <string name="error_api_unreachable">服务器连不上, 检查下地址对不对</string>
     <string name="tab_normal">普通插件</string>
     <string name="tab_admin">管理员插件</string>
     <string name="tab_superuser">超级用户插件</string>

@@ -26,6 +26,7 @@
     <string name="error_input_password">Please input password</string>
     <string name="error_not_set_api">The api address has not been set yet</string>
     <string name="error_wrong_api_address">The api address is wrong</string>
+    <string name="error_api_unreachable">Server unreachable, check the address</string>
     <string name="tab_normal">Normal</string>
     <string name="tab_admin">Admin</string>
     <string name="tab_superuser">Superuser</string>
