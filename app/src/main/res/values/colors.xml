@@ -35,13 +35,13 @@
     <color name="glass_surface_top">#D9FFFFFF</color>
     <color name="glass_surface_bottom">#A6FFFFFF</color>
     <color name="glass_surface_strong_top">#F2FFFFFF</color>
-    <color name="glass_surface_strong_bottom">#D9FFFFFF</color>
+    <color name="glass_surface_strong_bottom">#F2FFFFFF</color>
     <color name="glass_surface_soft">#80FFFFFF</color>
     <color name="glass_border">#99FFFFFF</color>
     <color name="glass_divider">#1F000000</color>
     <color name="glass_input">#B3FFFFFF</color>
     <color name="glass_input_stroke">#80FFFFFF</color>
-    <color name="glass_button_tint">#D9FF80AB</color>
+    <color name="glass_button_tint">#FFFF80AB</color>
     <color name="glass_button_text">#FFFFFFFF</color>
     <color name="glass_bubble_send_top">#E6FF80AB</color>
     <color name="glass_bubble_send_bottom">#CCF48FB1</color>
