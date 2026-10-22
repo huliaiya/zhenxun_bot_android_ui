@@ -35,6 +35,7 @@
     <style name="Widget.Glass.Button" parent="Widget.MaterialComponents.Button">
         <item name="backgroundTint">@color/glass_button_tint</item>
         <item name="android:textColor">@color/glass_button_text</item>
+        <item name="rippleColor">@color/glass_ripple</item>
         <item name="cornerRadius">20dp</item>
         <item name="strokeWidth">0dp</item>
         <item name="android:minHeight">42dp</item>

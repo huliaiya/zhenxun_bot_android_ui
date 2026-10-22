@@ -15,6 +15,7 @@ import me.kbai.zhenxunui.R
 import me.kbai.zhenxunui.base.BaseFragment
 import me.kbai.zhenxunui.databinding.FragmentConversationBinding
 import me.kbai.zhenxunui.extends.launchAndApiCollectIn
+import me.kbai.zhenxunui.extends.logE
 import me.kbai.zhenxunui.extends.setOnDebounceClickListener
 import me.kbai.zhenxunui.tool.GlobalToast
 import me.kbai.zhenxunui.viewmodel.ConversationViewModel
@@ -55,12 +56,17 @@ class ConversationFragment : BaseFragment<FragmentConversationBinding>() {
 
             mViewModel.sendMessage(mUserId, mGroupId, message)
                 .launchAndApiCollectIn(this@ConversationFragment, btn) {
-                    if (it.success()) {
-                        mMessageAdapter.addData(
-                            mViewModel.insertSentMessage(mGroupId, mUserId, message)
-                        )
-                    } else {
-                        GlobalToast.showToast(it.message)
+                    runCatching {
+                        if (it.success()) {
+                            mMessageAdapter.addData(
+                                mViewModel.insertSentMessage(mGroupId, mUserId, message)
+                            )
+                        } else {
+                            GlobalToast.showToast(it.message)
+                        }
+                    }.onFailure { e ->
+                        logE(e)
+                        GlobalToast.showToast(getString(R.string.action_failed))
                     }
                 }
         }
@@ -76,12 +82,12 @@ class ConversationFragment : BaseFragment<FragmentConversationBinding>() {
         if (!groupId.isNullOrBlank()) {
             mMessageAdapter.setData(mViewModel.getGroupHistory(groupId))
             mViewModel.getGroupConversation(groupId).observe(this) {
-                mMessageAdapter.addData(it)
+                runCatching { mMessageAdapter.addData(it) }.onFailure { e -> logE(e) }
             }
         } else if (!userId.isNullOrBlank()) {
             mMessageAdapter.setData(mViewModel.getFriendHistory(userId))
             mViewModel.getUserConversation(userId).observe(this) {
-                mMessageAdapter.addData(it)
+                runCatching { mMessageAdapter.addData(it) }.onFailure { e -> logE(e) }
             }
         }
 

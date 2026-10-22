@@ -11,6 +11,7 @@ import me.kbai.zhenxunui.base.BaseDialogFragment
 import me.kbai.zhenxunui.databinding.DialogChangeApiBinding
 import me.kbai.zhenxunui.extends.dp
 import me.kbai.zhenxunui.extends.hideSoftInputWhenInputDone
+import me.kbai.zhenxunui.tool.UpdateChecker
 
 /**
  * @author Sean on 2023/6/1
@@ -32,6 +33,7 @@ class ChangeApiDialogFragment : BaseDialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         mBinding.run {
+            UpdateChecker.styleSecondaryButton(root.context, btnBack)
             etApi.run {
                 setText(Constants.apiBaseUrl.value)
                 hideSoftInputWhenInputDone(btnConfirm)

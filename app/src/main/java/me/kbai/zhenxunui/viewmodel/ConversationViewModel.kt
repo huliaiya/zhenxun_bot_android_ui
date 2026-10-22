@@ -30,8 +30,17 @@ class ConversationViewModel : ViewModel() {
                 logE(exception!!)
                 return@newChatWebSocket
             }
-            getConversationInner(message).add(message)
-            _currentMessage.value = message
+            runCatching {
+                val list = getConversationInner(message)
+                val last = list.lastOrNull()
+                if (last != null && last.userId == message.userId && last.message == message.message) {
+                    return@newChatWebSocket
+                }
+                list.add(message)
+                _currentMessage.value = message
+            }.onFailure {
+                logE(it)
+            }
         }
 
     private fun getConversationInner(obj: ChatMessage): MutableList<ChatMessage> =

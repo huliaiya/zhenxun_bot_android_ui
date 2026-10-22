@@ -6,20 +6,26 @@
     android:padding="@dimen/margin_normal"
     tools:context=".ui.console.BackendLogFragment">
 
-    <HorizontalScrollView
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/nsv_log"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@drawable/bg_console_logs"
         android:fillViewport="true"
-        android:scrollbars="horizontal">
+        android:scrollbars="vertical">
 
-        <TextView
-            android:id="@+id/tv_logs"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:padding="@dimen/margin_normal"
-            android:scrollbars="vertical"
-            android:textColor="@color/white"
-            android:textIsSelectable="true" />
-    </HorizontalScrollView>
+        <HorizontalScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fillViewport="true"
+            android:scrollbars="horizontal">
+
+            <TextView
+                android:id="@+id/tv_logs"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/margin_normal"
+                android:textColor="@color/white" />
+        </HorizontalScrollView>
+    </androidx.core.widget.NestedScrollView>
 </FrameLayout>

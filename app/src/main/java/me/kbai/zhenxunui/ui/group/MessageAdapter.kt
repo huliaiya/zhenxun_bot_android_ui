@@ -12,7 +12,6 @@ import me.kbai.zhenxunui.R
 import me.kbai.zhenxunui.databinding.ItemMessageReceiveBinding
 import me.kbai.zhenxunui.databinding.ItemMessageTextBinding
 import me.kbai.zhenxunui.model.ChatMessage
-import me.kbai.zhenxunui.model.MessageType
 import me.kbai.zhenxunui.tool.glide.GlideApp
 
 class MessageViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -58,19 +57,16 @@ class MessageAdapter : RecyclerView.Adapter<MessageViewHolder>() {
                 var needMargin = false
 
                 for (msg in item.message) {
-                    when (msg.type) {
-                        MessageType.TEXT -> ItemMessageTextBinding.inflate(
-                            LayoutInflater.from(context), this, true
-                        ).apply {
-                            root.text = msg.msg
-                            if (needMargin) {
-                                root.updateLayoutParams<MarginLayoutParams> {
-                                    topMargin =
-                                        resources.getDimensionPixelSize(R.dimen.margin_normal)
-                                }
+                    ItemMessageTextBinding.inflate(
+                        LayoutInflater.from(context), this, true
+                    ).apply {
+                        root.text = msg.msg
+                        if (needMargin) {
+                            root.updateLayoutParams<MarginLayoutParams> {
+                                topMargin =
+                                    resources.getDimensionPixelSize(R.dimen.margin_normal)
                             }
                         }
-
                     }
                     needMargin = true
                 }
