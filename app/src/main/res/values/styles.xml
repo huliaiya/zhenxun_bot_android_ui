@@ -35,13 +35,16 @@
     <style name="Widget.Glass.Button" parent="Widget.MaterialComponents.Button">
         <item name="backgroundTint">@color/glass_button_tint</item>
         <item name="android:textColor">@color/glass_button_text</item>
-        <item name="cornerRadius">999dp</item>
-        <item name="strokeWidth">1dp</item>
-        <item name="strokeColor">@color/glass_border</item>
-        <item name="android:minHeight">40dp</item>
+        <item name="cornerRadius">20dp</item>
+        <item name="strokeWidth">0dp</item>
+        <item name="android:minHeight">42dp</item>
         <item name="android:insetTop">0dp</item>
         <item name="android:insetBottom">0dp</item>
         <item name="android:elevation">0dp</item>
+        <item name="android:paddingStart">20dp</item>
+        <item name="android:paddingEnd">20dp</item>
+        <item name="android:paddingTop">10dp</item>
+        <item name="android:paddingBottom">10dp</item>
     </style>
 
     <style name="AutoSizeButton">
