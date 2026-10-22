@@ -25,6 +25,11 @@ class FileListLineAdapter(
     override fun getItemCount() = data.size + if (showBack) 1 else 0
 
     override fun onBindViewHolder(holder: ItemViewHolder, position: Int) {
+        holder.binding.run {
+            tvFile.translationX = 0f
+            tvRename.translationX = 0f
+            tvDelete.translationX = 0f
+        }
         if (showBack && position == 0) {
             holder.binding.run {
                 val bounds = tvFile.compoundDrawables[0].bounds
