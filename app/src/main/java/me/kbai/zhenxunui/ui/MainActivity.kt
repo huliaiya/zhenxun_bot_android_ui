@@ -3,10 +3,13 @@ package me.kbai.zhenxunui.ui
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import androidx.activity.viewModels
+import androidx.core.view.isVisible
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
+import kotlinx.coroutines.launch
 import me.kbai.zhenxunui.R
 import me.kbai.zhenxunui.base.BaseActivity
 import me.kbai.zhenxunui.databinding.ActivityMainBinding
@@ -14,6 +17,7 @@ import me.kbai.zhenxunui.databinding.LayoutMainNavHeaderBinding
 import me.kbai.zhenxunui.extends.findNavControllerByManager
 import me.kbai.zhenxunui.extends.setOnDebounceClickListener
 import me.kbai.zhenxunui.model.BotBaseInfo
+import me.kbai.zhenxunui.tool.WallpaperStore
 import me.kbai.zhenxunui.tool.glide.GlideApp
 import me.kbai.zhenxunui.tool.UpdateChecker
 import me.kbai.zhenxunui.viewmodel.MainViewModel
@@ -53,6 +57,21 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
         }
         mNavHeaderBinding.root.setOnDebounceClickListener {
             mViewModel.requestBotList()
+        }
+
+        lifecycleScope.launch {
+            WallpaperStore.bitmap.collect { bmp ->
+                viewBinding.icBar.run {
+                    if (bmp == null) {
+                        ivWallpaper.isVisible = false
+                        glassBackdrop.setWallpaperActive(false)
+                    } else {
+                        ivWallpaper.setImageBitmap(bmp)
+                        ivWallpaper.isVisible = true
+                        glassBackdrop.setWallpaperActive(true)
+                    }
+                }
+            }
         }
     }
 

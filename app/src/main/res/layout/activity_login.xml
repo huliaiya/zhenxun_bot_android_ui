@@ -157,4 +157,31 @@
             android:layout_weight="1"
             android:text="@string/login" />
     </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/ll_wallpaper_loading"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_glass_surface_large"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:padding="20dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ProgressBar
+            android:layout_width="28dp"
+            android:layout_height="28dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="@string/wallpaper_fetching"
+            android:textColor="@color/dn_black"
+            android:textSize="@dimen/text_size_small" />
+    </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

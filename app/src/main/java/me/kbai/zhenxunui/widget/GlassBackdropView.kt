@@ -23,6 +23,17 @@ class GlassBackdropView @JvmOverloads constructor(
     private val paint = Paint(Paint.ANTI_ALIAS_FLAG)
     private var baseShader: Shader? = null
     private var blobs: List<Blob> = emptyList()
+    private var wallpaperActive = false
+
+    /**
+     * In wallpaper mode the gradient and blobs are skipped and a translucent scrim
+     * is drawn over the photo for glass readability.
+     */
+    fun setWallpaperActive(active: Boolean) {
+        if (wallpaperActive == active) return
+        wallpaperActive = active
+        invalidate()
+    }
 
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
         super.onSizeChanged(w, h, oldw, oldh)
@@ -34,6 +45,13 @@ class GlassBackdropView @JvmOverloads constructor(
         val widthF = width.toFloat()
         val heightF = height.toFloat()
         if (widthF <= 0f || heightF <= 0f) return
+
+        if (wallpaperActive) {
+            paint.shader = null
+            paint.color = context.getColor(R.color.wallpaper_scrim)
+            canvas.drawRect(0f, 0f, widthF, heightF, paint)
+            return
+        }
 
         baseShader?.let {
             paint.shader = it

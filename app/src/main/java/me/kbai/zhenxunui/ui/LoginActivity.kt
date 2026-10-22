@@ -16,6 +16,7 @@ import me.kbai.zhenxunui.extends.apiCollect
 import me.kbai.zhenxunui.extends.hideSoftInputWhenInputDone
 import me.kbai.zhenxunui.extends.setOnDebounceClickListener
 import me.kbai.zhenxunui.tool.GlobalToast
+import me.kbai.zhenxunui.tool.WallpaperStore
 import me.kbai.zhenxunui.tool.glide.GlideApp
 import me.kbai.zhenxunui.viewmodel.LoginViewModel
 
@@ -28,15 +29,19 @@ class LoginActivity : BaseActivity<ActivityLoginBinding>() {
     override fun getViewBinding(inflater: LayoutInflater) = ActivityLoginBinding.inflate(inflater)
 
     override fun initView(): Unit = viewBinding.run {
-        GlideApp.with(this@LoginActivity)
-            .load(R.drawable.bg_login)
-            .format(DecodeFormat.PREFER_RGB_565)
-            .into(ivBackground)
-
-        GlideApp.with(this@LoginActivity)
-            .load(R.drawable.bg_login)
-            .blur(25)
-            .into(caBackground)
+        lifecycleScope.launch {
+            WallpaperStore.bitmap.collect { bmp ->
+                val model: Any = bmp ?: R.drawable.bg_login
+                GlideApp.with(this@LoginActivity)
+                    .load(model)
+                    .format(DecodeFormat.PREFER_RGB_565)
+                    .into(ivBackground)
+                GlideApp.with(this@LoginActivity)
+                    .load(model)
+                    .blur(25)
+                    .into(caBackground)
+            }
+        }
 
         btnApi.setOnDebounceClickListener {
             ChangeApiDialogFragment().show(supportFragmentManager)
@@ -92,6 +97,20 @@ class LoginActivity : BaseActivity<ActivityLoginBinding>() {
 
     override fun initData() {
         readSavedAccount()
+        fetchTodayWallpaper()
+    }
+
+    private fun fetchTodayWallpaper() = viewBinding.run {
+        llWallpaperLoading.isVisible = true
+        lifecycleScope.launch {
+            val result = WallpaperStore.fetchToday(applicationContext)
+            llWallpaperLoading.isVisible = false
+            if (result.success) {
+                GlobalToast.showToast(getString(R.string.wallpaper_fetch_success, result.code))
+            } else {
+                GlobalToast.showToast(getString(R.string.wallpaper_fetch_failed, result.code))
+            }
+        }
     }
 
     private fun savePasswordIfChecked(username: String, password: String) {

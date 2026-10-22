@@ -6,6 +6,7 @@ import me.kbai.zhenxunui.tool.CrashHandler;
 import me.kbai.zhenxunui.tool.GlobalToast;
 import me.kbai.zhenxunui.tool.ThemeMode;
 import me.kbai.zhenxunui.tool.UpdateChecker;
+import me.kbai.zhenxunui.tool.WallpaperStore;
 
 /**
  * @author Sean on 2023/5/31
@@ -22,6 +23,7 @@ public class ZxApplication extends Application {
         ThemeMode.INSTANCE.init();
         CrashHandler.INSTANCE.init(this);
         UpdateChecker.INSTANCE.cleanApkDir(this);
+        WallpaperStore.INSTANCE.loadCached(this);
     }
 
     public static Application getApplication() {

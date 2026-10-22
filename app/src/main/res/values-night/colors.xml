@@ -13,6 +13,7 @@
     <color name="glass_blob_teal">#4003DAC5</color>
     <color name="glass_blob_violet">#407C4DFF</color>
     <color name="glass_blob_blue">#3380B8FF</color>
+    <color name="wallpaper_scrim">#C01D1D27</color>
     <color name="glass_surface_top">#B31E1E28</color>
     <color name="glass_surface_bottom">#8C14141A</color>
     <color name="glass_surface_strong_top">#D91E1E28</color>
