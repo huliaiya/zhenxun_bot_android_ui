@@ -102,7 +102,7 @@ interface ApiService {
     @GET("main/get_base_info")
     suspend fun getBotList(): ApiResponse<List<BotBaseInfo>>
 
-    @GET("main/get_all_ch_count")
+    @GET("main/get_all_chat_count")
     suspend fun getBotMessageCount(@Query("bot_id") botId: String): ApiResponse<BotMessageCount>
 
     @GET("main/get_active_group")
