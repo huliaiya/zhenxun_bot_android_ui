@@ -31,13 +31,20 @@ class LoginActivity : BaseActivity<ActivityLoginBinding>() {
     override fun initView(): Unit = viewBinding.run {
         lifecycleScope.launch {
             WallpaperStore.bitmap.collect { bmp ->
-                val model: Any = bmp ?: R.drawable.bg_login
+                if (bmp == null) {
+                    //背景图只能来自API, 拉取失败时不再回退到内置图
+                    ivBackground.isVisible = false
+                    caBackground.isVisible = false
+                    return@collect
+                }
+                ivBackground.isVisible = true
+                caBackground.isVisible = true
                 GlideApp.with(this@LoginActivity)
-                    .load(model)
+                    .load(bmp)
                     .format(DecodeFormat.PREFER_RGB_565)
                     .into(ivBackground)
                 GlideApp.with(this@LoginActivity)
-                    .load(model)
+                    .load(bmp)
                     .blur(25)
                     .into(caBackground)
             }

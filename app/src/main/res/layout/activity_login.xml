@@ -11,7 +11,7 @@
         android:layout_height="match_parent"
         android:importantForAccessibility="no"
         android:scaleType="centerCrop"
-        tools:src="@drawable/bg_login" />
+        tools:src="@tools:sample/backgrounds" />
 
     <View
         android:layout_width="match_parent"
