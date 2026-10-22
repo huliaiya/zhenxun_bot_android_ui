@@ -16,7 +16,8 @@
         android:paddingHorizontal="@dimen/margin_normal"
         android:text="@string/rename"
         android:textColor="@color/white"
-        android:textStyle="bold" />
+        android:textStyle="bold"
+        android:visibility="invisible" />
 
     <TextView
         android:id="@+id/tv_delete"
@@ -28,7 +29,8 @@
         android:paddingHorizontal="@dimen/margin_normal"
         android:text="@string/delete"
         android:textColor="@color/white"
-        android:textStyle="bold" />
+        android:textStyle="bold"
+        android:visibility="invisible" />
 
     <TextView
         android:id="@+id/tv_file"

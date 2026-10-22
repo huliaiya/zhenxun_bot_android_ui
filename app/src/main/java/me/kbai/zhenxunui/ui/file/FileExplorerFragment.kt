@@ -323,6 +323,8 @@ class FileExplorerFragment : BaseFragment<FragmentFileExplorerBinding>() {
 
                         binding.tvFile.translationX = transX
                         binding.tvRename.translationX = binding.tvRename.width + transX
+                        binding.tvRename.isVisible = transX < 0f
+                        binding.tvDelete.isVisible = transX < 0f
                     }
 
                     MotionEvent.ACTION_UP -> {
@@ -333,9 +335,12 @@ class FileExplorerFragment : BaseFragment<FragmentFileExplorerBinding>() {
                             duration = 200
                             mSwipeAnimators.offerLast(this)
                             addUpdateListener {
-                                binding.tvFile.translationX = it.animatedValue as Float
+                                val value = it.animatedValue as Float
+                                binding.tvFile.translationX = value
                                 binding.tvRename.translationX =
-                                    binding.tvRename.width + it.animatedValue as Float
+                                    binding.tvRename.width + value
+                                binding.tvRename.isVisible = value < 0f
+                                binding.tvDelete.isVisible = value < 0f
                             }
                         }
                         if (buttonWidth / 2 + dx > 1e-5) {
@@ -403,5 +408,7 @@ class FileExplorerFragment : BaseFragment<FragmentFileExplorerBinding>() {
     private fun ItemFileExplorerLineBinding.resetTranslationX() {
         tvFile.translationX = 0f
         tvRename.translationX = 0f
+        tvRename.isVisible = false
+        tvDelete.isVisible = false
     }
 }

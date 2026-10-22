@@ -3,6 +3,7 @@ package me.kbai.zhenxunui.ui.file
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.content.res.ResourcesCompat
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import me.kbai.zhenxunui.R
 import me.kbai.zhenxunui.databinding.ItemFileExplorerLineBinding
@@ -28,7 +29,8 @@ class FileListLineAdapter(
         holder.binding.run {
             tvFile.translationX = 0f
             tvRename.translationX = 0f
-            tvDelete.translationX = 0f
+            tvRename.isVisible = false
+            tvDelete.isVisible = false
         }
         if (showBack && position == 0) {
             holder.binding.run {
