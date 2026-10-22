@@ -105,6 +105,9 @@ interface ApiService {
     @GET("main/get_all_chat_count")
     suspend fun getBotMessageCount(@Query("bot_id") botId: String): ApiResponse<BotMessageCount>
 
+    @GET("main/get_all_ch_count")
+    suspend fun getBotMessageCountLegacy(@Query("bot_id") botId: String): ApiResponse<BotMessageCount>
+
     @GET("main/get_active_group")
     suspend fun getActiveGroup(): RawApiResponse
 

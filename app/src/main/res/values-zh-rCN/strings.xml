@@ -160,6 +160,10 @@
     <string name="wallpaper_fetching">正在获取今日壁纸…</string>
     <string name="wallpaper_fetch_success">请求今日壁纸成功(%1$d)\napi.huliaiya.icu/API/zhenxun.php</string>
     <string name="wallpaper_fetch_failed">请求今日壁纸失败(%1$d)，已沿用上次壁纸</string>
+    <string name="settings_clear_cache">清除缓存</string>
+    <string name="clear_cache_summary_format">图片缓存: %1$s · 安装包: %2$s</string>
+    <string name="clear_cache_done_format">已清除 %1$s</string>
+    <string name="clear">清除</string>
     <string name="settings_scrim_title">壁纸遮罩透明度</string>
     <string name="scrim_percent_format">%1$d%%</string>
     <string name="copy_all">复制全部</string>

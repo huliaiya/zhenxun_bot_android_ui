@@ -23,7 +23,6 @@ public class ZxApplication extends Application {
         ThemeMode.INSTANCE.init();
         CrashHandler.INSTANCE.init(this);
         UpdateChecker.INSTANCE.cleanApkDir(this);
-        WallpaperStore.INSTANCE.loadCached(this);
         WallpaperStore.INSTANCE.loadPrefs(this);
     }
 

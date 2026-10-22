@@ -9,6 +9,7 @@ import me.kbai.zhenxunui.api.BotApi
 import me.kbai.zhenxunui.api.RawApiResponse
 import me.kbai.zhenxunui.api.TypedWebSocketHolder
 import me.kbai.zhenxunui.api.WebSocketHolder
+import me.kbai.zhenxunui.extends.logE
 import me.kbai.zhenxunui.model.ChatMessage
 import me.kbai.zhenxunui.model.DeleteRemoteFile
 import me.kbai.zhenxunui.model.EditRemoteFile
@@ -82,6 +83,9 @@ object ApiRepository {
     fun getBotList() = networkFlow { BotApi.service.getBotList() }
 
     fun getMessageCount(botId: String) = networkFlow { BotApi.service.getBotMessageCount(botId) }
+
+    fun getMessageCountLegacy(botId: String) =
+        networkFlow { BotApi.service.getBotMessageCountLegacy(botId) }
 
     fun getActiveGroup() = rawNetworkFlow { BotApi.service.getActiveGroup() }
 
@@ -165,6 +169,7 @@ object ApiRepository {
         try {
             resp = f.invoke()
         } catch (e: Exception) {
+            e.logE("networkFlow: ${e.javaClass.simpleName}: ${e.message}")
             when (e.also { it.printStackTrace() }) {
 //                is SocketTimeoutException ->
 //                is ConnectException ->

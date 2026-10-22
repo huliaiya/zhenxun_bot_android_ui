@@ -4,9 +4,6 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import kotlinx.coroutines.CancellableContinuation
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -32,7 +29,6 @@ import kotlin.coroutines.resume
  */
 object WallpaperStore {
     private const val HOST = "api.huliaiya.icu/API/zhenxun.php"
-    private const val FILE_NAME = "today_wallpaper.jpg"
     private const val MAX_DIM = 2048
     private const val FETCH_TIMEOUT_MS = 20_000L
     private const val SP_KEY_SCRIM_ALPHA = "wallpaper_scrim_alpha"
@@ -50,8 +46,14 @@ object WallpaperStore {
     private val _scrimAlpha = MutableStateFlow(DEFAULT_SCRIM_ALPHA)
     val scrimAlpha: StateFlow<Int> = _scrimAlpha
 
-    private var mCacheLoaded = false
     private var mPrefsLoaded = false
+
+    /**
+     * Appends a timestamp query param so neither the endpoint nor any
+     * intermediary cache can serve a stale (deleted) image.
+     */
+    private fun cacheBust(url: String) =
+        url + (if (url.contains('?')) '&' else '?') + "t=" + System.currentTimeMillis()
 
     /**
      * Loads the persisted wallpaper scrim alpha (once).
@@ -77,50 +79,33 @@ object WallpaperStore {
             .apply()
     }
 
-    /**
-     * Loads the last successfully fetched wallpaper from cache (once).
-     */
-    fun loadCached(context: Context) {
-        if (mCacheLoaded) return
-        mCacheLoaded = true
-        val file = File(context.cacheDir, FILE_NAME)
-        if (!file.exists()) return
-        CoroutineScope(Dispatchers.IO).launch {
-            runCatching { decodeFile(file) }
-                .onSuccess { if (it != null) _bitmap.value = it }
-                .onFailure { logE(it) }
-        }
-    }
-
     data class FetchResult(val success: Boolean, val code: Int)
 
     /**
      * Fetches today's wallpaper. Tries HTTPS first, then HTTP.
-     * On success the bitmap and the cache file are replaced.
+     * Always hits the network - nothing is persisted locally.
      */
     suspend fun fetchToday(context: Context): FetchResult {
         val result = withTimeoutOrNull(FETCH_TIMEOUT_MS) {
             var lastCode = -1
             for (scheme in listOf("https://", "http://")) {
-                val (code, bytes) = callForImage(scheme + HOST)
+                val (code, bytes) = callForImage(cacheBust(scheme + HOST))
                 if (code > 0) lastCode = code
                 if (code in 200..299 && bytes != null) {
                     // case 1: endpoint returns the image directly
                     val bmp = decodeBytes(bytes)
                     if (bmp != null) {
-                        saveToCache(context, bytes)
                         _bitmap.value = bmp
                         return@withTimeoutOrNull FetchResult(true, code)
                     }
                     // case 2: endpoint returns JSON carrying the real image url
                     val imageUrl = parseImageUrl(bytes)
                     if (imageUrl != null) {
-                        val (imgCode, imgBytes) = fetchImage(imageUrl, scheme)
+                        val (imgCode, imgBytes) = fetchImage(cacheBust(imageUrl), scheme)
                         if (imgCode > 0) lastCode = imgCode
                         if (imgCode in 200..299 && imgBytes != null) {
                             val imgBmp = decodeBytes(imgBytes)
                             if (imgBmp != null) {
-                                saveToCache(context, imgBytes)
                                 _bitmap.value = imgBmp
                                 return@withTimeoutOrNull FetchResult(true, imgCode)
                             }
@@ -176,10 +161,13 @@ object WallpaperStore {
             })
         }
 
-    private fun saveToCache(context: Context, bytes: ByteArray) {
+    /**
+     * Removes any legacy on-disk wallpaper cache and the scrim pref stays untouched.
+     */
+    fun clearLegacyCache(context: Context) {
         runCatching {
-            File(context.cacheDir, FILE_NAME).writeBytes(bytes)
-        }.onFailure { logE(it) }
+            File(context.cacheDir, "today_wallpaper.jpg").delete()
+        }
     }
 
     private fun decodeBytes(bytes: ByteArray): Bitmap? = runCatching {
@@ -188,13 +176,6 @@ object WallpaperStore {
         if (bounds.outWidth <= 0 || bounds.outHeight <= 0) return null
         BitmapFactory.decodeByteArray(bytes, 0, bytes.size, sampleOptions(bounds))
     }.getOrNull()
-
-    private fun decodeFile(file: File): Bitmap? {
-        val bounds = BitmapFactory.Options().apply { inJustDecodeBounds = true }
-        BitmapFactory.decodeFile(file.absolutePath, bounds)
-        if (bounds.outWidth <= 0 || bounds.outHeight <= 0) return null
-        return BitmapFactory.decodeFile(file.absolutePath, sampleOptions(bounds))
-    }
 
     private fun sampleOptions(bounds: BitmapFactory.Options) = BitmapFactory.Options().apply {
         var sample = 1

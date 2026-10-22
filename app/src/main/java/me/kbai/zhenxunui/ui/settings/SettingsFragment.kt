@@ -5,6 +5,9 @@ import android.view.ViewGroup
 import android.widget.SeekBar
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import me.kbai.zhenxunui.BuildConfig
 import me.kbai.zhenxunui.R
 import me.kbai.zhenxunui.base.BaseFragment
@@ -12,11 +15,14 @@ import me.kbai.zhenxunui.databinding.FragmentSettingsBinding
 import me.kbai.zhenxunui.extends.logE
 import me.kbai.zhenxunui.extends.runWithoutReturn
 import me.kbai.zhenxunui.extends.setOnDebounceClickListener
+import me.kbai.zhenxunui.extends.viewLifecycleScope
 import me.kbai.zhenxunui.tool.GlobalToast.showToast
 import me.kbai.zhenxunui.tool.ThemeMode
 import me.kbai.zhenxunui.tool.UpdateChecker
 import me.kbai.zhenxunui.tool.WallpaperStore
+import me.kbai.zhenxunui.tool.glide.GlideApp
 import java.io.File
+import java.util.Locale
 
 /**
  * @author Sean on 2026/10/21
@@ -44,6 +50,7 @@ class SettingsFragment : BaseFragment<FragmentSettingsBinding>() {
             runCatching { showCrashLog() }.onFailure { logE(it) }
         }
         initScrimSeekBar()
+        initClearCache()
     }
 
     private fun initScrimSeekBar() = viewBinding.runWithoutReturn {
@@ -64,6 +71,72 @@ class SettingsFragment : BaseFragment<FragmentSettingsBinding>() {
 
             override fun onStopTrackingTouch(seekBar: SeekBar) {}
         })
+    }
+
+    private fun initClearCache() {
+        viewBinding.llClearCache.setOnDebounceClickListener {
+            runCatching { showClearCacheDialog() }.onFailure { logE(it) }
+        }
+    }
+
+    private fun showClearCacheDialog() {
+        val context = requireContext().applicationContext
+        viewLifecycleScope.launch {
+            val imgSize = withContext(Dispatchers.IO) {
+                cacheDirSize(context.cacheDir) + cacheDirSize(File(context.cacheDir, "image_manager_disk_cache"))
+            }
+            val apkSize = withContext(Dispatchers.IO) {
+                cacheDirSize(context.getExternalFilesDir("apk"))
+            }
+            MaterialAlertDialogBuilder(requireContext())
+                .setTitle(R.string.settings_clear_cache)
+                .setMessage(
+                    getString(
+                        R.string.clear_cache_summary_format,
+                        formatSize(imgSize),
+                        formatSize(apkSize)
+                    )
+                )
+                .setNegativeButton(R.string.cancel, null)
+                .setPositiveButton(R.string.clear) { _, _ ->
+                    viewLifecycleScope.launch {
+                        val cleared = withContext(Dispatchers.IO) {
+                            runCatching { GlideApp.get(requireContext()).clearDiskCache() }
+                                .onFailure { logE(it) }
+                            var total = 0L
+                            total += cacheDirSize(context.cacheDir)
+                            deleteDirContents(File(context.cacheDir, "image_manager_disk_cache"))
+                            WallpaperStore.clearLegacyCache(context)
+                            total += cacheDirSize(context.getExternalFilesDir("apk"))
+                            deleteDirContents(context.getExternalFilesDir("apk"))
+                            total
+                        }
+                        withContext(Dispatchers.Main) {
+                            showToast(getString(R.string.clear_cache_done_format, formatSize(cleared)))
+                        }
+                    }
+                }
+                .show()
+        }
+    }
+
+    private fun cacheDirSize(dir: File?): Long {
+        if (dir == null || !dir.exists()) return 0L
+        return dir.walkTopDown().filter { it.isFile }.sumOf { it.length() }
+    }
+
+    private fun deleteDirContents(dir: File?) {
+        if (dir == null || !dir.exists()) return
+        dir.listFiles()?.forEach { file ->
+            if (file.isDirectory) file.deleteRecursively() else file.delete()
+        }
+    }
+
+    private fun formatSize(bytes: Long): String = when {
+        bytes >= 1024L * 1024 * 1024 -> String.format(Locale.getDefault(), "%.2f GB", bytes / 1024.0 / 1024 / 1024)
+        bytes >= 1024L * 1024 -> String.format(Locale.getDefault(), "%.1f MB", bytes / 1024.0 / 1024)
+        bytes >= 1024L -> String.format(Locale.getDefault(), "%.1f KB", bytes / 1024.0)
+        else -> "$bytes B"
     }
 
     private fun showCrashLog() {

@@ -14,6 +14,7 @@ import me.kbai.zhenxunui.extends.logE
 import me.kbai.zhenxunui.model.BotMessageCount
 import me.kbai.zhenxunui.model.SystemStatus
 import me.kbai.zhenxunui.repository.ApiRepository
+import me.kbai.zhenxunui.repository.Resource
 import me.kbai.zhenxunui.tool.AlwaysDifferent
 import me.kbai.zhenxunui.tool.Ansi2SpannedHelper
 
@@ -57,11 +58,14 @@ class ConsoleViewModel : ViewModel() {
     }
 
     fun requestMessageCount(botId: String) = viewModelScope.launch {
-        ApiRepository.getMessageCount(botId)
-            .apiCollect { res ->
-                if (res.data == null) return@apiCollect
-                _messageCount.update { res.data }
-            }
+        var res = ApiRepository.getMessageCount(botId).apiCollect()
+        //旧版服务端路由名不同, 404时回退旧端点再试一次
+        if (res.status == Resource.Status.FAIL && res.httpStatusCode == 404) {
+            res = ApiRepository.getMessageCountLegacy(botId).apiCollect()
+        }
+        if (res.data != null) {
+            _messageCount.update { res.data!! }
+        }
     }
 
     fun requestActiveGroup() = viewModelScope.launch {

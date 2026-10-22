@@ -91,4 +91,12 @@ object Constants {
             .putString(SP_KEY_BOT_LIST_CACHE, gson.toJson(list))
             .apply()
     }
+
+    fun getUsername(): String =
+        mApplication.getSharedPreferences(SP_NAME_CONFIG, Context.MODE_PRIVATE)
+            .getString(SP_KEY_USERNAME, "").orEmpty()
+
+    fun getPassword(): String? =
+        mApplication.getSharedPreferences(SP_NAME_CONFIG, Context.MODE_PRIVATE)
+            .getString(SP_KEY_PASSWORD, null)
 }
