@@ -30,6 +30,7 @@ object Constants {
     private const val SP_KEY_API = "key0"
     const val SP_KEY_USERNAME = "key1"
     const val SP_KEY_PASSWORD = "key2"
+    private const val SP_KEY_BOT_LIST_CACHE = "key3"
 
     val gson: Gson = GsonBuilder()
         .registerTypeAdapterFactory(ErrorHandleAdapterFactory())
@@ -66,5 +67,28 @@ object Constants {
             .apply()
 
         return true
+    }
+
+    fun loadCachedBotList(): List<BotBaseInfo> {
+        val prefs = mApplication.getSharedPreferences(SP_NAME_CONFIG, Context.MODE_PRIVATE)
+        val cachedUrl = prefs.getString(SP_KEY_API, null)
+        if (cachedUrl.isNullOrEmpty() || cachedUrl != apiBaseUrl_.value) return emptyList()
+        val json = prefs.getString(SP_KEY_BOT_LIST_CACHE, null) ?: return emptyList()
+        return try {
+            gson.fromJson(
+                json,
+                Array<BotBaseInfo>::class.java
+            )?.filterNotNull().orEmpty()
+        } catch (e: Exception) {
+            emptyList()
+        }
+    }
+
+    fun cacheBotList(list: List<BotBaseInfo>) {
+        if (list.isEmpty()) return
+        mApplication.getSharedPreferences(SP_NAME_CONFIG, Context.MODE_PRIVATE)
+            .edit()
+            .putString(SP_KEY_BOT_LIST_CACHE, gson.toJson(list))
+            .apply()
     }
 }

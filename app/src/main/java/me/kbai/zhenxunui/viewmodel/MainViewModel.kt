@@ -41,13 +41,24 @@ class MainViewModel : ViewModel() {
                     val selected = list.find { it.isSelect } ?: list.first()
                     _currentBot.value = selected
                     Constants.currentBot = selected
+                    Constants.cacheBotList(list)
                     return@launch
                 }
 
-                if (attempt == 0) {
+                attempt++
+                if (attempt == 1) {
+                    //接口卡住或bot断线时先用上次成功的数据顶住, 保证页面可用
+                    val cached = Constants.loadCachedBotList()
+                    if (cached.isNotEmpty() && _botList.value.isNullOrEmpty()) {
+                        _botList.value = cached
+                        val selected = cached.find { it.isSelect } ?: cached.first()
+                        _currentBot.value = selected
+                        Constants.currentBot = selected
+                    }
+                    GlobalToast.showToast(R.string.bot_list_retry_hint)
+                } else if (attempt % 5 == 0) {
                     GlobalToast.showToast(R.string.bot_list_retry_hint)
                 }
-                attempt++
                 delay(minOf(2000L * attempt, 10000L))
             }
         }
