@@ -9,6 +9,7 @@ import me.kbai.zhenxunui.databinding.FragmentEditUserBinding
 import me.kbai.zhenxunui.extends.viewLifecycleScope
 import me.kbai.zhenxunui.model.UserDetail
 import me.kbai.zhenxunui.tool.GlobalToast
+import me.kbai.zhenxunui.tool.glide.GlideApp
 import me.kbai.zhenxunui.ui.console.ConsoleChartWebViewClient
 import me.kbai.zhenxunui.ui.console.ConsoleFragment
 import me.kbai.zhenxunui.viewmodel.EditUserViewModel
@@ -57,6 +58,9 @@ class EditUserFragment : BaseEditInfoFragment<FragmentEditUserBinding>() {
     }
 
     private fun FragmentEditUserBinding.bindData(data: UserDetail) {
+        GlideApp.with(ivAvatar)
+            .load(data.avatarUrl)
+            .into(ivAvatar)
         tvName.text = if (data.remark.isNotEmpty()) {
             "${data.remark}(${data.nickname})"
         } else {
