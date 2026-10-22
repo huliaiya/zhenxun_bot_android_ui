@@ -17,8 +17,10 @@ import okhttp3.Callback
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.Response
+import org.json.JSONObject
 import java.io.File
 import java.io.IOException
+import java.nio.charset.Charset
 import java.util.concurrent.TimeUnit
 import kotlin.coroutines.resume
 
@@ -71,11 +73,26 @@ object WallpaperStore {
                 val (code, bytes) = callForImage(scheme + HOST)
                 if (code > 0) lastCode = code
                 if (code in 200..299 && bytes != null) {
+                    // case 1: endpoint returns the image directly
                     val bmp = decodeBytes(bytes)
                     if (bmp != null) {
                         saveToCache(context, bytes)
                         _bitmap.value = bmp
                         return@withTimeoutOrNull FetchResult(true, code)
+                    }
+                    // case 2: endpoint returns JSON carrying the real image url
+                    val imageUrl = parseImageUrl(bytes)
+                    if (imageUrl != null) {
+                        val (imgCode, imgBytes) = fetchImage(imageUrl, scheme)
+                        if (imgCode > 0) lastCode = imgCode
+                        if (imgCode in 200..299 && imgBytes != null) {
+                            val imgBmp = decodeBytes(imgBytes)
+                            if (imgBmp != null) {
+                                saveToCache(context, imgBytes)
+                                _bitmap.value = imgBmp
+                                return@withTimeoutOrNull FetchResult(true, imgCode)
+                            }
+                        }
                     }
                 }
             }
@@ -83,6 +100,25 @@ object WallpaperStore {
         }
         return result ?: FetchResult(false, -1)
     }
+
+    /**
+     * Downloads the image url from the JSON payload.
+     * If the direct download fails, retries once with the endpoint's scheme
+     * (https <-> http) swapped in.
+     */
+    private suspend fun fetchImage(url: String, scheme: String): Pair<Int, ByteArray?> {
+        val (code, bytes) = callForImage(url)
+        if (code in 200..299 && bytes != null) return code to bytes
+        val swapped = url.replaceFirst(Regex("^https?://"), scheme)
+        if (swapped != url) return callForImage(swapped)
+        return code to bytes
+    }
+
+    private fun parseImageUrl(bytes: ByteArray): String? = runCatching {
+        JSONObject(String(bytes, Charset.forName("UTF-8")))
+            .optString("image_url")
+            .ifBlank { null }
+    }.getOrNull()
 
     private suspend fun callForImage(url: String): Pair<Int, ByteArray?> =
         suspendCancellableCoroutine { cont ->
