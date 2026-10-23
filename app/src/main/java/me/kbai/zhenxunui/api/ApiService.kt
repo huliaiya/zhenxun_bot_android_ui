@@ -1,8 +1,11 @@
 package me.kbai.zhenxunui.api
 
 import me.kbai.zhenxunui.model.BotBaseInfo
+import me.kbai.zhenxunui.model.BotBlockModule
 import me.kbai.zhenxunui.model.BotConnectLogPage
+import me.kbai.zhenxunui.model.BotManageUpdate
 import me.kbai.zhenxunui.model.BotMessageCount
+import me.kbai.zhenxunui.model.BotStatusParam
 import me.kbai.zhenxunui.model.DeleteRemoteFile
 import me.kbai.zhenxunui.model.EditRemoteFile
 import me.kbai.zhenxunui.model.ExecuteSql
@@ -114,6 +117,15 @@ interface ApiService {
 
     @POST("dashboard/get_connect_log")
     suspend fun getConnectLog(@Body query: GetConnectLog): ApiResponse<BotConnectLogPage>
+
+    @GET("main/get_bot_block_module")
+    suspend fun getBotBlockModule(@Query("bot_id") botId: String): ApiResponse<BotBlockModule>
+
+    @POST("main/change_bot_status")
+    suspend fun changeBotStatus(@Body param: BotStatusParam): ApiResponse<Unit>
+
+    @POST("main/update_bot_manage")
+    suspend fun updateBotManage(@Body param: BotManageUpdate): ApiResponse<Unit>
 
     @GET("main/get_active_group")
     suspend fun getActiveGroup(): RawApiResponse

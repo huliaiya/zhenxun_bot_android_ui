@@ -28,6 +28,12 @@
         tools:layout="@layout/fragment_backend_log" />
 
     <fragment
+        android:id="@+id/nav_zx_web"
+        android:name="me.kbai.zhenxunui.ui.zxconsole.ZxConsoleFragment"
+        android:label="@string/nav_zx_console"
+        tools:layout="@layout/fragment_zx_console" />
+
+    <fragment
         android:id="@+id/nav_plugin"
         android:name="me.kbai.zhenxunui.ui.plugin.PluginFragment"
         android:label="@string/nav_plugin"

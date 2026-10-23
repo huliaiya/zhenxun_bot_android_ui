@@ -10,6 +10,9 @@ import me.kbai.zhenxunui.api.RawApiResponse
 import me.kbai.zhenxunui.api.TypedWebSocketHolder
 import me.kbai.zhenxunui.api.WebSocketHolder
 import me.kbai.zhenxunui.extends.logE
+import me.kbai.zhenxunui.model.BotBlockModule
+import me.kbai.zhenxunui.model.BotManageUpdate
+import me.kbai.zhenxunui.model.BotStatusParam
 import me.kbai.zhenxunui.model.ChatMessage
 import me.kbai.zhenxunui.model.DeleteRemoteFile
 import me.kbai.zhenxunui.model.EditRemoteFile
@@ -90,6 +93,15 @@ object ApiRepository {
         networkFlow { BotApi.service.getBotMessageCountLegacy(botId) }
 
     fun getConnectLog() = networkFlow { BotApi.service.getConnectLog(GetConnectLog.DEFAULT) }
+
+    fun getBotBlockModule(botId: String) =
+        networkFlow { BotApi.service.getBotBlockModule(botId) }
+
+    fun changeBotStatus(botId: String, status: Boolean) =
+        networkFlow { BotApi.service.changeBotStatus(BotStatusParam(botId, status)) }
+
+    fun updateBotManage(update: BotManageUpdate) =
+        networkFlow { BotApi.service.updateBotManage(update) }
 
     fun getActiveGroup() = rawNetworkFlow { BotApi.service.getActiveGroup() }
 

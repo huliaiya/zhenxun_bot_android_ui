@@ -27,6 +27,7 @@ data class BotBaseInfo(
     val failPluginCount: Int,
     @SerializedName("is_select")
     val isSelect: Boolean,
+    val status: Boolean = false,
     val config: Config
 ) {
     data class Config(

@@ -178,6 +178,18 @@
     <string name="settings_sponsor">赞助</string>
     <string name="sponsor_description">如果这个应用帮到了你，欢迎到爱发电支持一下作者</string>
     <string name="sponsor_afdian">爱发电</string>
+
+    <string name="zx_console_global_switch">全局开关</string>
+    <string name="zx_console_web_version">网页版</string>
+    <string name="zx_console_hint_on">机器人正常运行中，关闭后将停止处理所有消息</string>
+    <string name="zx_console_hint_off">机器人已全局关闭，开启后恢复消息处理</string>
+    <string name="zx_console_block_tasks">全局禁用被动</string>
+    <string name="zx_console_block_tasks_hint">勾选的被动技能将对整个机器人禁用</string>
+    <string name="zx_console_block_plugins">全局禁用插件</string>
+    <string name="zx_console_block_plugins_hint">勾选的插件将对整个机器人禁用</string>
+    <string name="zx_console_search_plugin">搜索插件</string>
+    <string name="zx_console_apply">应用设置</string>
+    <string name="zx_console_apply_success">设置已保存</string>
     <string name="clear_cache_summary_format">图片缓存: %1$s · 安装包: %2$s</string>
     <string name="clear_cache_done_format">已清除 %1$s</string>
     <string name="clear">清除</string>

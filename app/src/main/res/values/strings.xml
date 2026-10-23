@@ -182,6 +182,18 @@
     <string name="settings_sponsor">Sponsor</string>
     <string name="sponsor_description">If this app helps you, you can support the developer on Afdian</string>
     <string name="sponsor_afdian">Afdian</string>
+
+    <string name="zx_console_global_switch">Global Switch</string>
+    <string name="zx_console_web_version">Web Version</string>
+    <string name="zx_console_hint_on">The bot is running. Turn off to stop handling all messages</string>
+    <string name="zx_console_hint_off">The bot is globally disabled. Turn on to resume message handling</string>
+    <string name="zx_console_block_tasks">Block Passive Tasks</string>
+    <string name="zx_console_block_tasks_hint">Checked tasks are disabled for the whole bot</string>
+    <string name="zx_console_block_plugins">Block Plugins</string>
+    <string name="zx_console_block_plugins_hint">Checked plugins are disabled for the whole bot</string>
+    <string name="zx_console_search_plugin">Search plugins</string>
+    <string name="zx_console_apply">Apply Settings</string>
+    <string name="zx_console_apply_success">Settings applied</string>
     <string name="clear_cache_summary_format">Image cache: %1$s · APK downloads: %2$s</string>
     <string name="clear_cache_done_format">Cleared %1$s</string>
     <string name="clear">Clear</string>
