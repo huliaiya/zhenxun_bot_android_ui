@@ -167,6 +167,8 @@
     <string name="about_app_summary">真寻 Bot WebUI 的 Android 客户端</string>
     <string name="about_bug_group">Bug 反馈群</string>
     <string name="about_bug_group_summary">点击加入 QQ 群反馈问题</string>
+    <string name="about_chat_group">聊天群</string>
+    <string name="about_chat_group_summary">点击加入 QQ 群聊天</string>
     <string name="about_github_issue">GitHub 提交 Bug</string>
     <string name="about_github_issue_summary">前往项目仓库提交 issue</string>
     <string name="clear_cache_summary_format">图片缓存: %1$s · 安装包: %2$s</string>

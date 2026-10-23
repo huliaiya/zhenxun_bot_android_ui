@@ -171,6 +171,8 @@
     <string name="about_app_summary">Android client for the Zhenxun Bot web UI</string>
     <string name="about_bug_group">Bug feedback QQ group</string>
     <string name="about_bug_group_summary">Tap to join the group and report issues</string>
+    <string name="about_chat_group">Chat group</string>
+    <string name="about_chat_group_summary">Tap to join the group chat</string>
     <string name="about_github_issue">Report a bug on GitHub</string>
     <string name="about_github_issue_summary">Open an issue in the project repository</string>
     <string name="clear_cache_summary_format">Image cache: %1$s · APK downloads: %2$s</string>

@@ -22,6 +22,8 @@ class AboutFragment : BaseFragment<FragmentAboutBinding>() {
     companion object {
         private const val BUG_GROUP_URL =
             "https://qun.qq.com/universal-share/share?ac=1&authKey=3QrO7Nz38wwywBGbsVvUgb5u%2Fm98uqdbTD2wnH6bwyi%2FGQisrwz3grfekRMKTm5H&busi_data=eyJncm91cENvZGUiOiI1NTk0MDUyNDAiLCJ0b2tlbiI6InBDTUIySCtYdFRZbnY1NU5iZmpmalVEekRDanYwVkcwS2pYSTZmNEVFZzZQUW9mRkxMRGdZV0FVd1VhK0ZCWHEiLCJ1aW4iOiIzODEyODA4NTI1In0%3D&data=T6MDnXKud_dmMoLA9nUiKounsVeXmliuwVw2ZjR6NYFebRp-CQPt7-C2QVM_p2pRKL7AfoLcYO6fcfMmaERF8Q&svctype=4&tempid=h5_group_info"
+        private const val CHAT_GROUP_URL =
+            "https://qun.qq.com/universal-share/share?ac=1&authKey=EhdZwEBrAl3R54Ed17I97clQhmnfVU76keNvJHNEO2Zi6swsKsWN8QXNdbYspybt&busi_data=eyJncm91cENvZGUiOiI1MTI4MTQ1NTEiLCJ0b2tlbiI6Ikw2SVdndUNMS2JKUlN5eEVYTFM1anlVMmxia05MZVN6TXM5RXRBc2NsWG9xcmV0MzlMYWw4OU05TDFKMnR1Y0YiLCJ1aW4iOiIzODEyODA4NTI1In0%3D&data=7GhKSO4ON0mbWdtIrPY6QXm3QthRzgIwTWaxeuM9_s5NzMOiAk69ppbi7MVD-KVLGz6CwiwFydAXVfv0dEilOQ&svctype=4&tempid=h5_group_info"
         private const val GITHUB_ISSUES_URL =
             "https://github.com/huliaiya/zhenxun_bot_android_ui/issues"
     }
@@ -35,6 +37,9 @@ class AboutFragment : BaseFragment<FragmentAboutBinding>() {
         tvVersion.text = getString(R.string.about_version_format, BuildConfig.VERSION_NAME)
         llBugGroup.setOnDebounceClickListener {
             WebViewActivity.start(requireContext(), BUG_GROUP_URL, getString(R.string.about_bug_group))
+        }
+        llChatGroup.setOnDebounceClickListener {
+            WebViewActivity.start(requireContext(), CHAT_GROUP_URL, getString(R.string.about_chat_group))
         }
         llGithubIssue.setOnDebounceClickListener { openUrl(GITHUB_ISSUES_URL) }
     }
