@@ -10,6 +10,7 @@ import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import kotlinx.coroutines.launch
+import me.kbai.zhenxunui.Constants
 import me.kbai.zhenxunui.R
 import me.kbai.zhenxunui.base.BaseActivity
 import me.kbai.zhenxunui.databinding.ActivityMainBinding
@@ -56,7 +57,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
             SelectAccountDialogFragment().show(supportFragmentManager)
         }
         mNavHeaderBinding.root.setOnDebounceClickListener {
-            mViewModel.requestBotList()
+            mViewModel.requestBotList(mViewModel.currentBot.value?.selfId)
         }
 
         lifecycleScope.launch {
@@ -89,7 +90,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
             consumable.get()?.let { mViewModel.selectBot(it) }
         }
 
-        mViewModel.requestBotList()
+        mViewModel.requestBotList(Constants.currentBot?.selfId)
         UpdateChecker.check(this, manual = false)
     }
 

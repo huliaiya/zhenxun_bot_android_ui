@@ -102,7 +102,9 @@ interface ApiService {
     suspend fun deleteRequest(@Body handleRequest: HandleRequest): ApiResponse<Unit>
 
     @GET("main/get_base_info")
-    suspend fun getBotList(): ApiResponse<List<BotBaseInfo>>
+    suspend fun getBotList(
+        @Query("bot_id") botId: String? = null
+    ): ApiResponse<List<BotBaseInfo>>
 
     @GET("main/get_all_chat_count")
     suspend fun getBotMessageCount(@Query("bot_id") botId: String): ApiResponse<BotMessageCount>

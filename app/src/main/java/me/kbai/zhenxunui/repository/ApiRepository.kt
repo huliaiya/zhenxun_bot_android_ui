@@ -81,7 +81,8 @@ object ApiRepository {
 
     fun deleteRequest(handle: HandleRequest) = networkFlow { BotApi.service.deleteRequest(handle) }
 
-    fun getBotList() = networkFlow { BotApi.service.getBotList() }
+    fun getBotList(botId: String? = null) =
+        networkFlow { BotApi.service.getBotList(botId) }
 
     fun getMessageCount(botId: String) = networkFlow { BotApi.service.getBotMessageCount(botId) }
 
