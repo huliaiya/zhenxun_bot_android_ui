@@ -184,7 +184,6 @@
     <string name="sponsor_afdian">Afdian</string>
 
     <string name="zx_console_global_switch">Global Switch</string>
-    <string name="zx_console_web_version">Web Version</string>
     <string name="zx_console_hint_on">The bot is running. Turn off to stop handling all messages</string>
     <string name="zx_console_hint_off">The bot is globally disabled. Turn on to resume message handling</string>
     <string name="zx_console_block_tasks">Block Passive Tasks</string>

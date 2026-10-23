@@ -180,7 +180,6 @@
     <string name="sponsor_afdian">爱发电</string>
 
     <string name="zx_console_global_switch">全局开关</string>
-    <string name="zx_console_web_version">网页版</string>
     <string name="zx_console_hint_on">机器人正常运行中，关闭后将停止处理所有消息</string>
     <string name="zx_console_hint_off">机器人已全局关闭，开启后恢复消息处理</string>
     <string name="zx_console_block_tasks">全局禁用被动</string>

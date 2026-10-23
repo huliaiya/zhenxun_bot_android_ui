@@ -19,7 +19,6 @@ import me.kbai.zhenxunui.model.BotBlockModule
 import me.kbai.zhenxunui.repository.Resource
 import me.kbai.zhenxunui.tool.GlobalToast
 import me.kbai.zhenxunui.tool.glide.GlideApp
-import me.kbai.zhenxunui.ui.WebViewActivity
 import me.kbai.zhenxunui.viewmodel.MainViewModel
 import me.kbai.zhenxunui.viewmodel.ZxConsoleViewModel
 
@@ -27,10 +26,6 @@ import me.kbai.zhenxunui.viewmodel.ZxConsoleViewModel
  * 真寻控制台, 对应webui的/#/command页面: 全局开关+全局禁用被动/插件
  */
 class ZxConsoleFragment : BaseFragment<FragmentZxConsoleBinding>() {
-
-    companion object {
-        const val WEB_CONSOLE_URL = "https://zhenxun.huliaiya.icu/#/command"
-    }
 
     private val mMainViewModel by viewModels<MainViewModel>({ requireActivity() })
     private val mViewModel by viewModels<ZxConsoleViewModel>()
@@ -57,10 +52,6 @@ class ZxConsoleFragment : BaseFragment<FragmentZxConsoleBinding>() {
 
         swStatus.setOnCheckedChangeListener { _, checked ->
             if (checked != mSwitchChecked) onSwitchToggled(checked)
-        }
-
-        tvWebVersion.setOnDebounceClickListener {
-            WebViewActivity.start(requireContext(), WEB_CONSOLE_URL, getString(R.string.nav_zx_console))
         }
 
         btnApply.setOnDebounceClickListener { applySettings() }

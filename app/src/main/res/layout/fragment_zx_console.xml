@@ -34,17 +34,6 @@
                     android:textColor="@color/dn_black"
                     android:textSize="@dimen/title_size_large"
                     android:textStyle="bold" />
-
-                <TextView
-                    android:id="@+id/tv_web_version"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="?attr/selectableItemBackgroundBorderless"
-                    android:paddingHorizontal="@dimen/margin_narrower"
-                    android:paddingVertical="@dimen/margin_narrower"
-                    android:text="@string/zx_console_web_version"
-                    android:textColor="@color/text_gray"
-                    android:textSize="@dimen/text_size_small" />
             </LinearLayout>
 
             <View
