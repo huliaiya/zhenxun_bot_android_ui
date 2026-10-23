@@ -166,6 +166,13 @@
     <string name="wallpaper_fetch_success">Today\'s wallpaper fetched (%1$d)\napi.huliaiya.icu/API/zhenxun.php</string>
     <string name="wallpaper_fetch_failed">Wallpaper fetch failed (%1$d), keeping previous</string>
     <string name="settings_clear_cache">Clear cache</string>
+    <string name="settings_about">About</string>
+    <string name="about_version_format">Version %1$s</string>
+    <string name="about_app_summary">Android client for the Zhenxun Bot web UI</string>
+    <string name="about_bug_group">Bug feedback QQ group</string>
+    <string name="about_bug_group_summary">Tap to join the group and report issues</string>
+    <string name="about_github_issue">Report a bug on GitHub</string>
+    <string name="about_github_issue_summary">Open an issue in the project repository</string>
     <string name="clear_cache_summary_format">Image cache: %1$s · APK downloads: %2$s</string>
     <string name="clear_cache_done_format">Cleared %1$s</string>
     <string name="clear">Clear</string>

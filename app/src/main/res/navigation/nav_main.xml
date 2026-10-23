@@ -107,6 +107,9 @@
         <action
             android:id="@+id/action_settings_to_update"
             app:destination="@id/nav_settings_update" />
+        <action
+            android:id="@+id/action_settings_to_about"
+            app:destination="@id/nav_about" />
     </fragment>
 
     <fragment
@@ -124,6 +127,12 @@
             android:id="@+id/action_update_to_history"
             app:destination="@id/nav_release_history" />
     </fragment>
+
+    <fragment
+        android:id="@+id/nav_about"
+        android:name="me.kbai.zhenxunui.ui.settings.AboutFragment"
+        android:label="@string/settings_about"
+        tools:layout="@layout/fragment_about" />
 
     <fragment
         android:id="@+id/nav_release_history"
