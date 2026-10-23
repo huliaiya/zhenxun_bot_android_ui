@@ -5,7 +5,9 @@ import android.view.MotionEvent
 import androidx.activity.viewModels
 import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
+import androidx.core.view.GravityCompat
 import androidx.navigation.ui.AppBarConfiguration
+import androidx.navigation.ui.NavigationUI
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
@@ -27,6 +29,10 @@ import me.kbai.zhenxunui.viewmodel.MainViewModel
  * @author Sean on 2023/5/30
  */
 class MainActivity : BaseActivity<ActivityMainBinding>() {
+
+    companion object {
+        private const val ZX_WEB_CONSOLE_URL = "https://zhenxun.huliaiya.icu/#/command"
+    }
     private lateinit var mAppBarConfiguration: AppBarConfiguration
 
     private val mViewModel by viewModels<MainViewModel>()
@@ -52,6 +58,17 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
         )
         setupActionBarWithNavController(navController, mAppBarConfiguration)
         viewBinding.navView.setupWithNavController(navController)
+        //真寻控制台是外部网页, 拦截菜单点击转给WebView, 其余仍走NavController
+        viewBinding.navView.setNavigationItemSelectedListener { item ->
+            val handled = if (item.itemId == R.id.nav_zx_web) {
+                WebViewActivity.start(this, ZX_WEB_CONSOLE_URL, getString(R.string.nav_zx_console))
+                true
+            } else {
+                NavigationUI.onNavDestinationSelected(item, navController)
+            }
+            if (handled) viewBinding.drawerLayout.closeDrawer(GravityCompat.START)
+            handled
+        }
 
         mNavHeaderBinding.tvChange.setOnDebounceClickListener {
             SelectAccountDialogFragment().show(supportFragmentManager)

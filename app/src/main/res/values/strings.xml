@@ -4,7 +4,8 @@
     <string name="nav_header_title" translatable="false">@string/app_name</string>
     <string name="nav_home">Home</string>
     <string name="nav_title_func"> </string>
-    <string name="nav_console">Console</string>
+    <string name="nav_console">Dashboard</string>
+    <string name="nav_zx_console">Zhenxun Console</string>
     <string name="nav_plugin">Plugin</string>
     <string name="nav_friend_list">Friend/Group</string>
     <string name="nav_request">Request</string>

@@ -2,7 +2,8 @@
 <resources>
     <string name="app_name">真寻酱的后台</string>
     <string name="nav_home">主页</string>
-    <string name="nav_console">控制台</string>
+    <string name="nav_console">信息看板</string>
+    <string name="nav_zx_console">真寻控制台</string>
     <string name="nav_plugin">插件列表</string>
     <string name="nav_request">请求管理</string>
     <string name="nav_friend_list">好友/群组</string>
