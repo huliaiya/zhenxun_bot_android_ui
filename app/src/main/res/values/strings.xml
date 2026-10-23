@@ -169,6 +169,7 @@
     <string name="settings_about">About</string>
     <string name="about_version_format">Version %1$s</string>
     <string name="about_signature_format">Signature %1$s</string>
+    <string name="about_package_format">Package %1$s</string>
     <string name="signature_copied">Signature copied</string>
     <string name="about_app_summary">Android client for the Zhenxun Bot web UI</string>
     <string name="about_bug_group">Bug feedback QQ group</string>

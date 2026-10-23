@@ -43,6 +43,7 @@ class AboutFragment : BaseFragment<FragmentAboutBinding>() {
     override fun initView() = viewBinding.runWithoutReturn {
         tvVersion.text = getString(R.string.about_version_format, BuildConfig.VERSION_NAME)
         initSignature()
+        tvPackage.text = getString(R.string.about_package_format, requireContext().packageName)
         llBugGroup.setOnDebounceClickListener {
             WebViewActivity.start(requireContext(), BUG_GROUP_URL, getString(R.string.about_bug_group))
         }

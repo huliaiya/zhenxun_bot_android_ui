@@ -2,7 +2,6 @@ package me.kbai.zhenxunui.ui.settings
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import android.widget.SeekBar
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import kotlinx.coroutines.Dispatchers
@@ -57,29 +56,9 @@ class SettingsFragment : BaseFragment<FragmentSettingsBinding>() {
         llCrashLog.setOnDebounceClickListener {
             runCatching { showCrashLog() }.onFailure { logE(it) }
         }
-        initScrimSeekBar()
         initClearCache()
     }
 
-    private fun initScrimSeekBar() = viewBinding.runWithoutReturn {
-        val appContext = requireContext().applicationContext
-        val savedAlpha = WallpaperStore.scrimAlpha.value
-        val savedPercent = savedAlpha * 100 / 255
-        sbWallpaperScrim.progress = savedPercent
-        tvScrimValue.text = getString(R.string.scrim_percent_format, savedPercent)
-        sbWallpaperScrim.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
-            override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
-                tvScrimValue.text = getString(R.string.scrim_percent_format, progress)
-                if (fromUser) {
-                    WallpaperStore.setScrimAlpha(appContext, progress * 255 / 100)
-                }
-            }
-
-            override fun onStartTrackingTouch(seekBar: SeekBar) {}
-
-            override fun onStopTrackingTouch(seekBar: SeekBar) {}
-        })
-    }
 
     private fun initClearCache() {
         viewBinding.llClearCache.setOnDebounceClickListener {

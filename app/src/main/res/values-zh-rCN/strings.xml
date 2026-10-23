@@ -165,6 +165,7 @@
     <string name="settings_about">关于</string>
     <string name="about_version_format">版本 %1$s</string>
     <string name="about_signature_format">签名 %1$s</string>
+    <string name="about_package_format">包名 %1$s</string>
     <string name="signature_copied">签名已复制</string>
     <string name="about_app_summary">真寻 Bot WebUI 的 Android 客户端</string>
     <string name="about_bug_group">Bug 反馈群</string>
