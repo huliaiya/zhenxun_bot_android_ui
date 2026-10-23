@@ -30,7 +30,8 @@ import kotlin.coroutines.resume
 object WallpaperStore {
     private const val HOST = "api.huliaiya.icu/API/zhenxun.php"
     private const val MAX_DIM = 2048
-    private const val FETCH_TIMEOUT_MS = 20_000L
+    //5秒内拿不到壁纸就直接放弃, 页面退回纯色底
+    private const val FETCH_TIMEOUT_MS = 5_000L
     private const val SP_KEY_SCRIM_ALPHA = "wallpaper_scrim_alpha"
 
     const val DEFAULT_SCRIM_ALPHA = 192
