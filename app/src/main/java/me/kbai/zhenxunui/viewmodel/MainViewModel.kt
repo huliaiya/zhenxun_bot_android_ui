@@ -37,7 +37,7 @@ class MainViewModel : ViewModel() {
                 }
 
                 if (res.status == Resource.Status.SUCCESS && !res.data.isNullOrEmpty()) {
-                    val list = res.data!!
+                    val list = mergeCachedNickname(res.data!!)
                     _botList.value = list
                     val selected = list.find { it.isSelect } ?: list.first()
                     _currentBot.value = selected
@@ -61,6 +61,23 @@ class MainViewModel : ViewModel() {
                     GlobalToast.showToast(R.string.bot_list_retry_hint)
                 }
                 delay(minOf(2000L * attempt, 10000L))
+            }
+        }
+    }
+
+    /**
+     * 服务端login_info调用失败时会把QQ号当成昵称返回, 用上次成功获取的真实昵称兜底
+     */
+    private fun mergeCachedNickname(fresh: List<BotBaseInfo>): List<BotBaseInfo> {
+        val cached = Constants.loadCachedBotList()
+        if (cached.isEmpty()) return fresh
+        return fresh.map { bot ->
+            if (bot.nickname == bot.selfId) {
+                cached.find { it.selfId == bot.selfId }
+                    ?.takeIf { it.nickname != it.selfId }
+                    ?.let { bot.copy(nickname = it.nickname) } ?: bot
+            } else {
+                bot
             }
         }
     }
