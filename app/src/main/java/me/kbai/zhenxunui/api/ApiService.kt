@@ -1,11 +1,13 @@
 package me.kbai.zhenxunui.api
 
 import me.kbai.zhenxunui.model.BotBaseInfo
+import me.kbai.zhenxunui.model.BotConnectLogPage
 import me.kbai.zhenxunui.model.BotMessageCount
 import me.kbai.zhenxunui.model.DeleteRemoteFile
 import me.kbai.zhenxunui.model.EditRemoteFile
 import me.kbai.zhenxunui.model.ExecuteSql
 import me.kbai.zhenxunui.model.FriendListItem
+import me.kbai.zhenxunui.model.GetConnectLog
 import me.kbai.zhenxunui.model.GetSqlLog
 import me.kbai.zhenxunui.model.GroupInfo
 import me.kbai.zhenxunui.model.GroupListItem
@@ -107,6 +109,9 @@ interface ApiService {
 
     @GET("main/get_all_ch_count")
     suspend fun getBotMessageCountLegacy(@Query("bot_id") botId: String): ApiResponse<BotMessageCount>
+
+    @POST("dashboard/get_connect_log")
+    suspend fun getConnectLog(@Body query: GetConnectLog): ApiResponse<BotConnectLogPage>
 
     @GET("main/get_active_group")
     suspend fun getActiveGroup(): RawApiResponse

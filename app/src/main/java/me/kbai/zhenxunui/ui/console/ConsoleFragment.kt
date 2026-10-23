@@ -51,6 +51,7 @@ class ConsoleFragment : BaseFragment<FragmentConsoleBinding>() {
     private val mViewModel by viewModels<ConsoleViewModel>()
 
     private var mCountdownJob: Job? = null
+    private var mFallbackRequestedBotId: String? = null
 
     private lateinit var mMessageCountWebClient: ConsoleChartWebViewClient
     private lateinit var mActiveGroupWebClient: ConsoleChartWebViewClient
@@ -163,10 +164,19 @@ class ConsoleFragment : BaseFragment<FragmentConsoleBinding>() {
                 tvId.text = info.selfId
                 tvFriendCount.text = info.friendCount.toString()
                 tvGroupCount.text = info.groupCount.toString()
-                startUpdateConnectedDuration(info.connectTime.toLong())
+                val connectTime = info.connectTime.toLong()
+                startUpdateConnectedDuration(connectTime)
+                if (connectTime <= 0L && mFallbackRequestedBotId != info.selfId) {
+                    //官方机器人走webhook, 服务端内存里没有连接时间, 从连接日志兜底
+                    mFallbackRequestedBotId = info.selfId
+                    mViewModel.requestConnectTimeFallback(info.selfId)
+                }
 
                 mViewModel.requestMessageCount(info.selfId)
             }
+        }
+        mViewModel.connectTimeFallback.launchAndCollectIn(this@ConsoleFragment) { time ->
+            if (time > 0L) startUpdateConnectedDuration(time)
         }
         mViewModel.messageCount.launchAndCollectIn(this@ConsoleFragment) { data ->
             mMessageCountWebClient.blockDuringLoading {

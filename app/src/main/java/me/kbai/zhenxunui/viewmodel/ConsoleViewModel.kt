@@ -9,6 +9,8 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import java.text.SimpleDateFormat
+import java.util.Locale
 import me.kbai.zhenxunui.extends.apiCollect
 import me.kbai.zhenxunui.extends.logE
 import me.kbai.zhenxunui.model.BotMessageCount
@@ -25,6 +27,10 @@ class ConsoleViewModel : ViewModel() {
 
     private val _messageCount = MutableStateFlow(BotMessageCount())
     val messageCount: StateFlow<BotMessageCount> = _messageCount
+
+    private val _connectTimeFallback = MutableStateFlow(0L)
+    val connectTimeFallback: StateFlow<Long> = _connectTimeFallback
+    private var mFallbackBotId: String? = null
 
     private val _activeGroup: MutableStateFlow<String> = MutableStateFlow("[]")
     val activeGroup: StateFlow<String> = _activeGroup
@@ -67,6 +73,24 @@ class ConsoleViewModel : ViewModel() {
             _messageCount.update { res.data!! }
         }
     }
+
+    fun requestConnectTimeFallback(botId: String) {
+        mFallbackBotId = botId
+        _connectTimeFallback.value = 0L
+        viewModelScope.launch {
+            val res = ApiRepository.getConnectLog().apiCollect()
+            val latest = res.data?.data?.firstOrNull { it.botId == botId } ?: return@launch
+            if (latest.type != 1) return@launch
+            val time = parseConnectTime(latest.connectTime) ?: return@launch
+            if (mFallbackBotId != botId) return@launch
+            _connectTimeFallback.value = time
+        }
+    }
+
+    private fun parseConnectTime(value: String): Long? = runCatching {
+        SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.getDefault())
+            .parse(value)?.time?.div(1000)
+    }.getOrNull()
 
     fun requestActiveGroup() = viewModelScope.launch {
         ApiRepository.getActiveGroup()

@@ -14,6 +14,7 @@ import me.kbai.zhenxunui.model.ChatMessage
 import me.kbai.zhenxunui.model.DeleteRemoteFile
 import me.kbai.zhenxunui.model.EditRemoteFile
 import me.kbai.zhenxunui.model.ExecuteSql
+import me.kbai.zhenxunui.model.GetConnectLog
 import me.kbai.zhenxunui.model.GetSqlLog
 import me.kbai.zhenxunui.model.HandleRequest
 import me.kbai.zhenxunui.model.PluginDetail
@@ -86,6 +87,8 @@ object ApiRepository {
 
     fun getMessageCountLegacy(botId: String) =
         networkFlow { BotApi.service.getBotMessageCountLegacy(botId) }
+
+    fun getConnectLog() = networkFlow { BotApi.service.getConnectLog(GetConnectLog.DEFAULT) }
 
     fun getActiveGroup() = rawNetworkFlow { BotApi.service.getActiveGroup() }
 
