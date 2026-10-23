@@ -1,9 +1,16 @@
 package me.kbai.zhenxunui.ui.settings
 
+import android.content.ClipData
+import android.content.ClipboardManager
+import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.net.Uri
+import android.os.Build
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.view.isVisible
+import java.security.MessageDigest
 import me.kbai.zhenxunui.BuildConfig
 import me.kbai.zhenxunui.R
 import me.kbai.zhenxunui.base.BaseFragment
@@ -35,6 +42,7 @@ class AboutFragment : BaseFragment<FragmentAboutBinding>() {
 
     override fun initView() = viewBinding.runWithoutReturn {
         tvVersion.text = getString(R.string.about_version_format, BuildConfig.VERSION_NAME)
+        initSignature()
         llBugGroup.setOnDebounceClickListener {
             WebViewActivity.start(requireContext(), BUG_GROUP_URL, getString(R.string.about_bug_group))
         }
@@ -43,6 +51,37 @@ class AboutFragment : BaseFragment<FragmentAboutBinding>() {
         }
         llGithubIssue.setOnDebounceClickListener { openUrl(GITHUB_ISSUES_URL) }
     }
+
+    private fun initSignature() = viewBinding.runWithoutReturn {
+        val signature = loadSignature()
+        if (signature.isNullOrEmpty()) {
+            tvSignature.isVisible = false
+            return@runWithoutReturn
+        }
+        tvSignature.text = getString(R.string.about_signature_format, signature)
+        tvSignature.setOnDebounceClickListener {
+            val clipboard = requireContext()
+                .getSystemService(Context.CLIPBOARD_SERVICE) as? ClipboardManager
+            clipboard?.setPrimaryClip(ClipData.newPlainText("sha256", signature))
+            showToast(R.string.signature_copied)
+        }
+    }
+
+    private fun loadSignature(): String? = runCatching {
+        val context = requireContext()
+        val packageManager = context.packageManager
+        val signatureBytes = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+            packageManager.getPackageInfo(context.packageName, PackageManager.GET_SIGNING_CERTIFICATES)
+                .signingInfo?.apkContentsSigners?.firstOrNull()
+        } else {
+            @Suppress("DEPRECATION")
+            packageManager.getPackageInfo(context.packageName, PackageManager.GET_SIGNATURES)
+                .signatures?.firstOrNull()
+        }?.toByteArray() ?: return@runCatching null
+        MessageDigest.getInstance("SHA-256")
+            .digest(signatureBytes)
+            .joinToString("") { "%02x".format(it.toInt() and 0xFF) }
+    }.onFailure { logE(it) }.getOrNull()
 
     private fun openUrl(url: String) {
         runCatching {

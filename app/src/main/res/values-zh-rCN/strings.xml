@@ -164,6 +164,8 @@
     <string name="settings_clear_cache">清除缓存</string>
     <string name="settings_about">关于</string>
     <string name="about_version_format">版本 %1$s</string>
+    <string name="about_signature_format">签名 %1$s</string>
+    <string name="signature_copied">签名已复制</string>
     <string name="about_app_summary">真寻 Bot WebUI 的 Android 客户端</string>
     <string name="about_bug_group">Bug 反馈群</string>
     <string name="about_bug_group_summary">点击加入 QQ 群反馈问题</string>
