@@ -6,8 +6,10 @@ import androidx.fragment.app.viewModels
 import kotlinx.coroutines.launch
 import me.kbai.zhenxunui.R
 import me.kbai.zhenxunui.databinding.FragmentEditUserBinding
+import me.kbai.zhenxunui.extends.apiCollect
 import me.kbai.zhenxunui.extends.viewLifecycleScope
 import me.kbai.zhenxunui.model.UserDetail
+import me.kbai.zhenxunui.repository.Resource
 import me.kbai.zhenxunui.tool.GlobalToast
 import me.kbai.zhenxunui.tool.glide.GlideApp
 import me.kbai.zhenxunui.ui.console.ConsoleChartWebViewClient
@@ -25,8 +27,23 @@ class EditUserFragment : BaseEditInfoFragment<FragmentEditUserBinding>() {
 
     private lateinit var mFavouriteWebViewClient: ConsoleChartWebViewClient
 
+    private var mSaving = false
+
     override fun getWebViews() = arrayOf(viewBinding.icFavouritePlugins.wvCharts)
-    override fun updateInfo() {
+
+    override fun updateInfo() = viewLifecycleScope.launch {
+        if (mSaving) return@launch
+        mSaving = true
+        val res = mViewModel.updateUser(mUserId, viewBinding.swBanned.isChecked)
+            .apiCollect(viewBinding.root)
+        mSaving = false
+        if (res.status == Resource.Status.SUCCESS) {
+            GlobalToast.showToast(
+                res.message.ifBlank { getString(R.string.zx_console_apply_success) }
+            )
+        } else {
+            GlobalToast.showToast(res.message)
+        }
     }
 
     override fun getViewBinding(
@@ -54,7 +71,7 @@ class EditUserFragment : BaseEditInfoFragment<FragmentEditUserBinding>() {
 
         mViewModel.requestPluginDetail(mUserId)
 
-        //addSaveButton()
+        addSaveButton()
     }
 
     private fun FragmentEditUserBinding.bindData(data: UserDetail) {

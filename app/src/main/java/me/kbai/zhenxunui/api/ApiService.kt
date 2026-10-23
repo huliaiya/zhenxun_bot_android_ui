@@ -28,6 +28,7 @@ import me.kbai.zhenxunui.model.SqlLogPage
 import me.kbai.zhenxunui.model.TableColumn
 import me.kbai.zhenxunui.model.TableListItem
 import me.kbai.zhenxunui.model.UpdateGroup
+import me.kbai.zhenxunui.model.UpdateUser
 import me.kbai.zhenxunui.model.UpdatePlugin
 import me.kbai.zhenxunui.model.UserDetail
 import retrofit2.http.Body
@@ -70,6 +71,9 @@ interface ApiService {
 
     @POST("manage/update_group")
     suspend fun updateGroup(@Body updateGroup: UpdateGroup): ApiResponse<Unit>
+
+    @POST("manage/update_user")
+    suspend fun updateUser(@Body updateUser: UpdateUser): ApiResponse<Unit>
 
     @GET("plugin/get_plugin_list")
     suspend fun getPluginList(

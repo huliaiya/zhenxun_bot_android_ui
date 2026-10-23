@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
 import me.kbai.zhenxunui.Constants
 import me.kbai.zhenxunui.extends.apiCollect
+import me.kbai.zhenxunui.model.UpdateUser
 import me.kbai.zhenxunui.model.UserDetail
 import me.kbai.zhenxunui.repository.ApiRepository
 import me.kbai.zhenxunui.repository.Resource
@@ -21,4 +22,7 @@ class EditUserViewModel : ViewModel() {
                 _userDetail.value = it
             }
     }
+
+    fun updateUser(userId: String, isBan: Boolean) =
+        ApiRepository.updateUser(UpdateUser(userId, isBan))
 }

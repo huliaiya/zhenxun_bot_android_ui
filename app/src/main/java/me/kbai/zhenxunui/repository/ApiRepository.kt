@@ -30,6 +30,7 @@ import me.kbai.zhenxunui.model.SendMessage
 import me.kbai.zhenxunui.model.SystemStatus
 import me.kbai.zhenxunui.model.UpdateGroup
 import me.kbai.zhenxunui.model.UpdatePlugin
+import me.kbai.zhenxunui.model.UpdateUser
 import org.json.JSONException
 import org.json.JSONObject
 import retrofit2.HttpException
@@ -52,6 +53,9 @@ object ApiRepository {
 
     fun updateGroup(updateGroup: UpdateGroup) =
         networkFlow { BotApi.service.updateGroup(updateGroup) }
+
+    fun updateUser(updateUser: UpdateUser) =
+        networkFlow { BotApi.service.updateUser(updateUser) }
 
     fun getUserDetail(botId: String, userId: String) =
         networkFlow { BotApi.service.getUserDetail(botId, userId) }
