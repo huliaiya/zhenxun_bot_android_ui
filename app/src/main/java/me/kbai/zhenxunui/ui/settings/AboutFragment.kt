@@ -12,6 +12,7 @@ import me.kbai.zhenxunui.extends.logE
 import me.kbai.zhenxunui.extends.runWithoutReturn
 import me.kbai.zhenxunui.extends.setOnDebounceClickListener
 import me.kbai.zhenxunui.tool.GlobalToast.showToast
+import me.kbai.zhenxunui.ui.WebViewActivity
 
 /**
  * @author Sean on 2026/10/23
@@ -32,7 +33,9 @@ class AboutFragment : BaseFragment<FragmentAboutBinding>() {
 
     override fun initView() = viewBinding.runWithoutReturn {
         tvVersion.text = getString(R.string.about_version_format, BuildConfig.VERSION_NAME)
-        llBugGroup.setOnDebounceClickListener { openUrl(BUG_GROUP_URL) }
+        llBugGroup.setOnDebounceClickListener {
+            WebViewActivity.start(requireContext(), BUG_GROUP_URL, getString(R.string.about_bug_group))
+        }
         llGithubIssue.setOnDebounceClickListener { openUrl(GITHUB_ISSUES_URL) }
     }
 
