@@ -53,6 +53,14 @@ class SettingsFragment : BaseFragment<FragmentSettingsBinding>() {
                 showToast(R.string.action_failed)
             }
         }
+        llSponsor.setOnDebounceClickListener {
+            runCatching {
+                findNavController().navigate(R.id.action_settings_to_sponsor)
+            }.onFailure { e ->
+                logE(e)
+                showToast(R.string.action_failed)
+            }
+        }
         llCrashLog.setOnDebounceClickListener {
             runCatching { showCrashLog() }.onFailure { logE(it) }
         }

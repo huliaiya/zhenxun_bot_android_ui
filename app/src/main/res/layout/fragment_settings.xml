@@ -186,5 +186,34 @@
                 android:src="@drawable/ic_arrow_right"
                 app:tint="@color/text_gray" />
         </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ll_sponsor"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_normal"
+            android:background="@drawable/bg_list_item_round"
+            android:gravity="center_vertical"
+            android:minHeight="64dp"
+            android:orientation="horizontal"
+            android:paddingHorizontal="@dimen/list_item_padding"
+            android:paddingVertical="@dimen/list_item_padding">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/settings_sponsor"
+                android:textColor="@color/dn_black"
+                android:textSize="@dimen/title_size_normal"
+                android:textStyle="bold" />
+
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:contentDescription="@null"
+                android:src="@drawable/ic_arrow_right"
+                app:tint="@color/text_gray" />
+        </LinearLayout>
     </LinearLayout>
 </androidx.core.widget.NestedScrollView>

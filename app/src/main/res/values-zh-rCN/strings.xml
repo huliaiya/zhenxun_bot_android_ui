@@ -174,6 +174,9 @@
     <string name="about_chat_group_summary">点击加入 QQ 群聊天</string>
     <string name="about_github_issue">GitHub 提交 Bug</string>
     <string name="about_github_issue_summary">前往项目仓库提交 issue</string>
+    <string name="settings_sponsor">赞助</string>
+    <string name="sponsor_description">如果这个应用帮到了你，欢迎到爱发电支持一下作者</string>
+    <string name="sponsor_afdian">爱发电</string>
     <string name="clear_cache_summary_format">图片缓存: %1$s · 安装包: %2$s</string>
     <string name="clear_cache_done_format">已清除 %1$s</string>
     <string name="clear">清除</string>
