@@ -16,35 +16,15 @@ class ConnectLogViewModel : ViewModel() {
     private val _logs = MutableStateFlow<List<BotConnectLog>>(emptyList())
     val logs: StateFlow<List<BotConnectLog>> = _logs
 
-    private val _hasMore = MutableStateFlow(true)
-    val hasMore: StateFlow<Boolean> = _hasMore
-
-    private var mIndex = 0
-    private var mLoading = false
-
-    fun requestNextPage(onError: (String) -> Unit = {}) {
-        if (mLoading || !_hasMore.value) return
-        mLoading = true
+    fun requestConnectLogs(onError: (String) -> Unit = {}) {
         viewModelScope.launch {
-            val res = ApiRepository.getConnectLog(GetConnectLog(mIndex + 1, PAGE_SIZE))
+            val res = ApiRepository.getConnectLog(GetConnectLog(index = 1, size = 100))
                 .apiCollect()
-            mLoading = false
             if (res.status != Resource.Status.SUCCESS) {
                 onError(res.message)
                 return@launch
             }
-            val list = res.data?.data.orEmpty()
-            if (list.isEmpty()) {
-                _hasMore.value = false
-                return@launch
-            }
-            mIndex++
-            _logs.value = _logs.value + list
-            if (list.size < PAGE_SIZE) _hasMore.value = false
+            _logs.value = res.data?.data.orEmpty()
         }
-    }
-
-    companion object {
-        const val PAGE_SIZE = 15
     }
 }

@@ -64,22 +64,10 @@
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rv_connect_log"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="200dp"
                 android:layout_marginTop="@dimen/margin_narrower"
                 tools:itemCount="4"
                 tools:listitem="@layout/item_connect_log" />
-
-            <TextView
-                android:id="@+id/tv_load_more"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/margin_narrower"
-                android:background="?attr/selectableItemBackground"
-                android:gravity="center"
-                android:paddingVertical="@dimen/margin_narrower"
-                android:text="@string/load_more"
-                android:textColor="@color/text_gray"
-                android:textSize="@dimen/text_size_small" />
         </LinearLayout>
 
         <LinearLayout

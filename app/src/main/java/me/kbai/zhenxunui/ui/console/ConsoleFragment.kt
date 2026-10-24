@@ -12,7 +12,6 @@ import android.webkit.WebResourceResponse
 import android.webkit.WebSettings
 import android.webkit.WebView
 import android.webkit.WebViewClient
-import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -127,9 +126,7 @@ class ConsoleFragment : BaseFragment<FragmentConsoleBinding>() {
         rvConnectLog.run {
             layoutManager = LinearLayoutManager(requireContext())
             adapter = mConnectLogAdapter
-            isNestedScrollingEnabled = false
         }
-        tvLoadMore.setOnDebounceClickListener { mConnectLogViewModel.requestNextPage() }
         llLogsCard.setOnDebounceClickListener {
             findNavController().navigate(R.id.action_console_to_backend_log)
         }
@@ -230,12 +227,8 @@ class ConsoleFragment : BaseFragment<FragmentConsoleBinding>() {
 
         mConnectLogViewModel.logs.launchAndCollectIn(this@ConsoleFragment) { logs ->
             mConnectLogAdapter.submit(logs)
-            tvLoadMore.isVisible = mConnectLogViewModel.hasMore.value && logs.isNotEmpty()
         }
-        mConnectLogViewModel.hasMore.launchAndCollectIn(this@ConsoleFragment) { hasMore ->
-            tvLoadMore.isVisible = hasMore && mConnectLogViewModel.logs.value.isNotEmpty()
-        }
-        mConnectLogViewModel.requestNextPage { GlobalToast.showToast(it) }
+        mConnectLogViewModel.requestConnectLogs { GlobalToast.showToast(it) }
     }
 
     override fun onStart() {
