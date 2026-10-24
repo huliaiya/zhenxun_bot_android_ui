@@ -130,6 +130,7 @@ class ConsoleFragment : BaseFragment<FragmentConsoleBinding>() {
         rvConnectLog.run {
             layoutManager = LinearLayoutManager(requireContext())
             adapter = mConnectLogAdapter
+            isNestedScrollingEnabled = false
             addItemDecoration(
                 DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL).apply {
                     setDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.bg_connect_log_divider)!!)
