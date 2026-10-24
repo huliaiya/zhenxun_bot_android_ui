@@ -38,9 +38,7 @@ class EditUserFragment : BaseEditInfoFragment<FragmentEditUserBinding>() {
             .apiCollect(viewBinding.root)
         mSaving = false
         if (res.status == Resource.Status.SUCCESS) {
-            GlobalToast.showToast(
-                res.message.ifBlank { getString(R.string.zx_console_apply_success) }
-            )
+            GlobalToast.showToast(getString(R.string.ban_saved_restart))
         } else {
             GlobalToast.showToast(res.message)
         }
