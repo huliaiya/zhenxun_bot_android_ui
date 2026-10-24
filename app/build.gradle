@@ -1,0 +1,137 @@
+plugins {
+    id 'com.android.application'
+    id 'org.jetbrains.kotlin.android'
+    id 'kotlin-kapt'
+}
+
+def keystorePropertiesFile = rootProject.file('keystore.properties')
+def keystoreProperties = new Properties()
+if (keystorePropertiesFile.exists()) {
+    keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+}
+def hasReleaseKeystore = keystoreProperties.containsKey('storeFile') &&
+        rootProject.file(keystoreProperties['storeFile']).exists()
+def versionNameOverride = project.findProperty('versionName')
+def gitSha = {
+    try {
+        def out = "git rev-parse --short HEAD".execute(null, rootDir).text.trim()
+        return out.isEmpty() ? null : out
+    } catch (Exception ignored) {
+        return null
+    }
+}()
+def fallbackVersionName = gitSha ?: "dev"
+
+android {
+    namespace 'me.kbai.zhenxunui'
+    compileSdk 34
+    ndkVersion '26.1.10909125'
+
+    defaultConfig {
+        applicationId "me.huli.zhenxun.webui"
+        minSdk 23
+        targetSdk 34
+        versionCode 5
+        versionName versionNameOverride ?: fallbackVersionName
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+        kotlinOptions {
+            freeCompilerArgs += [
+                    '-opt-in=kotlin.RequiresOptIn'
+            ]
+        }
+
+        externalNativeBuild {
+            cmake {
+                cppFlags "-std=c++17"
+            }
+        }
+
+        ndk { abiFilters /*"armeabi", "armeabi-v7a", */ "x86", "arm64-v8a", "x86_64" }
+    }
+
+    signingConfigs {
+        if (hasReleaseKeystore) {
+            release {
+                storeFile rootProject.file(keystoreProperties['storeFile'])
+                storePassword keystoreProperties['storePassword']
+                keyAlias keystoreProperties['keyAlias']
+                keyPassword keystoreProperties['keyPassword']
+            }
+        }
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled true
+            shrinkResources true
+            debuggable false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            if (hasReleaseKeystore) {
+                signingConfig signingConfigs.release
+            }
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+    kotlinOptions {
+        jvmTarget = '17'
+    }
+    buildFeatures {
+        viewBinding true
+        buildConfig true
+    }
+    externalNativeBuild {
+        cmake {
+            path file('src/main/cpp/CMakeLists.txt')
+            version '3.22.1'
+        }
+    }
+    sourceSets {
+        def commonDir = 'src/assets'
+        debug {
+            assets.srcDirs = ['src/debug/assets'] + commonDir
+        }
+        release {
+            assets.srcDirs = ['src/release/assets'] + commonDir
+        }
+    }
+    applicationVariants.configureEach { variant ->
+        variant.outputs.configureEach { output ->
+            def outputFile = output.outputFile
+            if (outputFile != null && outputFile.name.endsWith('.apk')) {
+                def fileName = "zxbot" + "-" + buildType.name + "-" + defaultConfig.versionName +
+                        (hasReleaseKeystore ? "" : "-unsigned") + ".apk"
+                outputFileName = fileName
+            }
+        }
+    }
+}
+
+dependencies {
+    implementation deps.kotlin.core
+    implementation deps.kotlin.stdlib
+    implementation deps.appcompat
+    implementation deps.material
+    testImplementation deps.junit.java
+    androidTestImplementation deps.junit.android
+    androidTestImplementation deps.espresso.core
+    implementation deps.navigation.runtime
+    implementation deps.navigation.fragment
+    implementation deps.navigation.ui
+    implementation deps.gson
+    implementation deps.okhttp
+    implementation deps.retrofit.runtime
+    implementation deps.retrofit.gson
+    implementation deps.glide.core
+    annotationProcessor deps.glide.compiler
+    kapt deps.glide.compiler
+    implementation deps.swiperefreshlayout
+    implementation deps.webkit
+    implementation deps.ansi4j_api
+    implementation deps.ansi4j_impl
+    implementation deps.viewpagerindicator
+}

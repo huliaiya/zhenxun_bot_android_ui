@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/tv_default_value"
+        style="@style/SingleLineText"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/normal_line_height"
+        android:layout_marginEnd="@dimen/margin_normal"
+        android:layout_weight="1"
+        android:gravity="center_vertical"
+        android:textColor="@color/dn_black"
+        tools:text="@string/default_value_format" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/normal_line_height"
+        android:layout_weight="2">
+
+        <TextView
+            android:id="@+id/tv_value"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:text="@string/value_label"
+            android:textColor="@color/dn_black"
+            android:textStyle="bold" />
+
+        <androidx.appcompat.widget.SwitchCompat
+            android:id="@+id/sw_value"
+            style="@style/Switch"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/normal_line_height"
+            android:layout_marginStart="@dimen/margin_normal"
+            android:layout_toEndOf="@id/tv_value"
+            app:switchPadding="@dimen/margin_normal" />
+    </RelativeLayout>
+</LinearLayout>

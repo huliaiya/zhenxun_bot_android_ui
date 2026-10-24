@@ -1,0 +1,28 @@
+<resources>
+    <!-- Base application theme. -->
+    <style name="Theme.ZhenxunBotManager" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <!-- Primary brand color. -->
+        <item name="colorPrimary">@color/pink_A100</item>
+        <item name="colorPrimaryDark">@color/pink_A100</item>
+        <item name="colorPrimaryVariant">@color/pink_A100</item>
+        <item name="colorOnPrimary">@color/white</item>
+        <!-- Secondary brand color. -->
+        <item name="colorSecondary">@color/teal_200</item>
+        <item name="colorSecondaryVariant">@color/teal_700</item>
+        <item name="colorOnSecondary">@color/black</item>
+        <!-- Glass surfaces. -->
+        <item name="colorSurface">@color/glass_surface_soft</item>
+        <item name="colorOnSurface">@color/dn_black</item>
+        <item name="android:windowBackground">@drawable/bg_glass_window</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:navigationBarColor">@android:color/transparent</item>
+        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+        <item name="android:windowLightStatusBar">true</item>
+        <item name="android:windowLightNavigationBar">true</item>
+        <!-- Customize your theme here. -->
+        <item name="android:textSize">@dimen/text_size_normal</item>
+        <item name="colorControlActivated">?attr/colorPrimaryDark</item>
+        <item name="materialButtonStyle">@style/Widget.Glass.Button</item>
+        <item name="materialAlertDialogTheme">@style/ThemeOverlay.Glass.Dialog</item>
+    </style>
+</resources>

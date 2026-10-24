@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation"
+    app:startDestination="@+id/nav_console">
+
+    <!--    <fragment-->
+    <!--        android:id="@+id/nav_home"-->
+    <!--        android:name="me.kbai.zhenxunui.ui.home.HomeFragment"-->
+    <!--        android:label="@string/nav_home"-->
+    <!--        tools:layout="@layout/fragment_home" />-->
+
+    <fragment
+        android:id="@+id/nav_console"
+        android:name="me.kbai.zhenxunui.ui.console.ConsoleFragment"
+        android:label="@string/nav_console"
+        tools:layout="@layout/fragment_console">
+        <action
+            android:id="@+id/action_console_to_backend_log"
+            app:destination="@id/nav_backend_log" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/nav_backend_log"
+        android:name="me.kbai.zhenxunui.ui.console.BackendLogFragment"
+        android:label="@string/bot_logs"
+        tools:layout="@layout/fragment_backend_log" />
+
+    <fragment
+        android:id="@+id/nav_zx_web"
+        android:name="me.kbai.zhenxunui.ui.zxconsole.ZxConsoleFragment"
+        android:label="@string/nav_zx_console"
+        tools:layout="@layout/fragment_zx_console" />
+
+    <fragment
+        android:id="@+id/nav_plugin"
+        android:name="me.kbai.zhenxunui.ui.plugin.PluginFragment"
+        android:label="@string/nav_plugin"
+        tools:layout="@layout/fragment_plugin" />
+
+    <fragment
+        android:id="@+id/nav_friend_list"
+        android:name="me.kbai.zhenxunui.ui.group.FriendListFragment"
+        android:label="@string/nav_friend_list"
+        tools:layout="@layout/fragment_group">
+        <action
+            android:id="@+id/action_nav_friend_list_to_conversationFragment"
+            app:destination="@id/conversationFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/nav_request"
+        android:name="me.kbai.zhenxunui.ui.request.RequestFragment"
+        android:label="@string/nav_request"
+        tools:layout="@layout/fragment_request" />
+
+    <fragment
+        android:id="@+id/nav_db_manage"
+        android:name="me.kbai.zhenxunui.ui.db.DbManageFragment"
+        android:label="@string/nav_database_manage"
+        tools:layout="@layout/fragment_db_manage" />
+
+    <!--    <fragment-->
+    <!--        android:id="@+id/nav_info"-->
+    <!--        android:name="me.kbai.zhenxunui.ui.info.InfoFragment"-->
+    <!--        android:label="@string/nav_info"-->
+    <!--        tools:layout="@layout/fragment_info" />-->
+
+    <fragment
+        android:id="@+id/conversationFragment"
+        android:name="me.kbai.zhenxunui.ui.group.ConversationFragment"
+        android:label=""
+        tools:layout="@layout/fragment_conversation">
+        <action
+            android:id="@+id/action_conversationFragment_to_editGroupFragment"
+            app:destination="@id/editGroupFragment" />
+        <action
+            android:id="@+id/action_conversationFragment_to_editUserFragment"
+            app:destination="@id/editUserFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/editGroupFragment"
+        android:name="me.kbai.zhenxunui.ui.group.EditGroupFragment"
+        android:label="@string/group_information"
+        tools:layout="@layout/fragment_edit_group" />
+
+    <fragment
+        android:id="@+id/editUserFragment"
+        android:name="me.kbai.zhenxunui.ui.group.EditUserFragment"
+        android:label="@string/user_information"
+        tools:layout="@layout/fragment_edit_user" />
+
+    <fragment
+        android:id="@+id/nav_file_explorer"
+        android:name="me.kbai.zhenxunui.ui.file.FileExplorerFragment"
+        android:label="@string/nav_file_explorer"
+        tools:layout="@layout/fragment_file_explorer">
+        <action
+            android:id="@+id/action_fileExplorerFragment_self"
+            app:destination="@id/nav_file_explorer" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/nav_settings"
+        android:name="me.kbai.zhenxunui.ui.settings.SettingsFragment"
+        android:label="@string/nav_settings"
+        tools:layout="@layout/fragment_settings">
+        <action
+            android:id="@+id/action_settings_to_theme"
+            app:destination="@id/nav_settings_theme" />
+        <action
+            android:id="@+id/action_settings_to_update"
+            app:destination="@id/nav_settings_update" />
+        <action
+            android:id="@+id/action_settings_to_about"
+            app:destination="@id/nav_about" />
+        <action
+            android:id="@+id/action_settings_to_sponsor"
+            app:destination="@id/nav_sponsor" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/nav_settings_theme"
+        android:name="me.kbai.zhenxunui.ui.settings.SettingsThemeFragment"
+        android:label="@string/settings_theme_title"
+        tools:layout="@layout/fragment_settings_theme" />
+
+    <fragment
+        android:id="@+id/nav_settings_update"
+        android:name="me.kbai.zhenxunui.ui.settings.UpdateFragment"
+        android:label="@string/settings_update"
+        tools:layout="@layout/fragment_update">
+        <action
+            android:id="@+id/action_update_to_history"
+            app:destination="@id/nav_release_history" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/nav_sponsor"
+        android:name="me.kbai.zhenxunui.ui.settings.SponsorFragment"
+        android:label="@string/settings_sponsor"
+        tools:layout="@layout/fragment_sponsor" />
+
+    <fragment
+        android:id="@+id/nav_about"
+        android:name="me.kbai.zhenxunui.ui.settings.AboutFragment"
+        android:label="@string/settings_about"
+        tools:layout="@layout/fragment_about" />
+
+    <fragment
+        android:id="@+id/nav_release_history"
+        android:name="me.kbai.zhenxunui.ui.settings.ReleaseHistoryFragment"
+        android:label="@string/update_history"
+        tools:layout="@layout/fragment_release_history" />
+</navigation>

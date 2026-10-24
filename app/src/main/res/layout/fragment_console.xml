@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.console.ConsoleFragment">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:paddingHorizontal="@dimen/activity_horizontal_margin"
+        android:paddingVertical="@dimen/activity_vertical_margin">
+
+        <include
+            android:id="@+id/ic_information"
+            layout="@layout/layout_console_account_information" />
+
+        <include
+            android:id="@+id/ic_system_status"
+            layout="@layout/layout_console_system_status"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/block_margin" />
+
+        <include
+            android:id="@+id/ic_message_count"
+            layout="@layout/layout_console_charts"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/block_margin" />
+
+        <include
+            android:id="@+id/ic_active_group"
+            layout="@layout/layout_console_charts"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/block_margin" />
+
+        <include
+            android:id="@+id/ic_popular_plugin"
+            layout="@layout/layout_console_charts"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/block_margin" />
+
+        <LinearLayout
+            android:id="@+id/ll_connect_log_card"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/block_margin"
+            android:background="@drawable/bg_list_item_round"
+            android:orientation="vertical"
+            android:padding="@dimen/margin_normal">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/connect_log"
+                android:textColor="@color/dn_black"
+                android:textSize="@dimen/title_size_large"
+                android:textStyle="bold" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_connect_log"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:layout_marginTop="@dimen/margin_narrower"
+                tools:itemCount="4"
+                tools:listitem="@layout/item_connect_log" />
+
+            <TextView
+                android:id="@+id/tv_connect_log_placeholder"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:layout_marginTop="@dimen/margin_narrower"
+                android:gravity="center"
+                android:text="@string/loading"
+                android:textColor="@color/text_gray"
+                android:textSize="@dimen/text_size_normal" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ll_logs_card"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/block_margin"
+            android:background="@drawable/bg_list_item_round"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingStart="@dimen/margin_normal"
+                android:paddingTop="@dimen/margin_normal"
+                android:paddingEnd="@dimen/margin_normal_half">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/bot_logs"
+                    android:textColor="@color/dn_black"
+                    android:textSize="@dimen/title_size_large"
+                    android:textStyle="bold" />
+
+                <ImageView
+                    android:id="@+id/btn_logs_fullscreen"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:contentDescription="@string/bot_logs_fullscreen"
+                    android:padding="10dp"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/ic_fullscreen"
+                    app:tint="@color/dn_black" />
+            </LinearLayout>
+
+            <HorizontalScrollView
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:layout_margin="@dimen/margin_normal"
+                android:background="@drawable/bg_console_logs">
+
+                <TextView
+                    android:id="@+id/tv_logs"
+                    android:layout_width="wrap_content"
+                    android:layout_height="200dp"
+                    android:padding="@dimen/margin_normal"
+                    android:scrollbars="vertical"
+                    android:textColor="@color/white" />
+            </HorizontalScrollView>
+        </LinearLayout>
+    </LinearLayout>
+</androidx.core.widget.NestedScrollView>

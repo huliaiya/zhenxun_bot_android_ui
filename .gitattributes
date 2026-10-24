@@ -1,0 +1,3 @@
+echarts.js linguist-detectable=false
+gradle/** linguist-detectable=false
+.idea/** linguist-detectable=false

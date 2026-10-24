@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<!--    <group android:checkableBehavior="single">-->
+<!--        <item-->
+<!--            android:id="@+id/nav_home"-->
+<!--            android:icon="@drawable/ic_home_24"-->
+<!--            android:title="@string/nav_home" />-->
+<!--    </group>-->
+
+<!--    <item android:title="@string/nav_title_func">-->
+<!--        <menu>-->
+            <group android:checkableBehavior="single">
+                <item
+                    android:id="@+id/nav_console"
+                    android:title="@string/nav_console"/>
+                <item
+                    android:id="@+id/nav_zx_web"
+                    android:checkable="false"
+                    android:title="@string/nav_zx_console"/>
+                <item
+                    android:id="@+id/nav_plugin"
+                    android:title="@string/nav_plugin" />
+                <item
+                    android:id="@+id/nav_friend_list"
+                    android:title="@string/nav_friend_list" />
+                <item
+                    android:id="@+id/nav_request"
+                    android:title="@string/nav_request" />
+
+                <item
+                    android:id="@+id/nav_db_manage"
+                    android:title="@string/nav_database_manage" />
+
+                <item
+                    android:id="@+id/nav_file_explorer"
+                    android:title="@string/nav_file_explorer" />
+
+                <item
+                    android:id="@+id/nav_settings"
+                    android:title="@string/nav_settings" />
+            </group>
+<!--        </menu>-->
+<!--    </item>-->
+</menu>

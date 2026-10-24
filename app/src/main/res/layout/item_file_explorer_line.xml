@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="64dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:ignore="RtlHardcoded">
+
+    <TextView
+        android:id="@+id/tv_file"
+        style="@style/SingleLineText"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/bg_glass_row"
+        android:drawablePadding="12dp"
+        android:gravity="center_vertical"
+        android:paddingHorizontal="12dp"
+        android:textColor="@color/dn_black"
+        android:textSize="@dimen/title_size_large"
+        android:textStyle="bold"
+        app:drawableLeftCompat="@drawable/ic_file_32"
+        tools:text="bot.py" />
+</FrameLayout>

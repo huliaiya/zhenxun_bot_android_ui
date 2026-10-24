@@ -1,0 +1,32 @@
+package me.kbai.zhenxunui;
+
+import android.app.Application;
+
+import me.kbai.zhenxunui.tool.CrashHandler;
+import me.kbai.zhenxunui.tool.GlobalToast;
+import me.kbai.zhenxunui.tool.ThemeMode;
+import me.kbai.zhenxunui.tool.UpdateChecker;
+import me.kbai.zhenxunui.tool.WallpaperStore;
+
+/**
+ * @author Sean on 2023/5/31
+ */
+public class ZxApplication extends Application {
+    private static Application mApp;
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        mApp = this;
+        Constants.init(this);
+        GlobalToast.init(this);
+        ThemeMode.INSTANCE.init();
+        CrashHandler.INSTANCE.init(this);
+        UpdateChecker.INSTANCE.cleanApkDir(this);
+        WallpaperStore.INSTANCE.loadPrefs(this);
+    }
+
+    public static Application getApplication() {
+        return mApp;
+    }
+}

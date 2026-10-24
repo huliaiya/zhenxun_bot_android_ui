@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="AppBarLayoutStyle" parent="Widget.MaterialComponents.AppBarLayout.Primary">
+        <item name="android:background">@android:color/transparent</item>
+        <item name="android:elevation">0dp</item>
+        <item name="android:stateListAnimator">@null</item>
+        <item name="liftOnScroll">false</item>
+    </style>
+
+    <style name="TextInputLayout" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense">
+        <item name="errorTextColor">@color/color_error</item>
+        <item name="errorIconTint">@color/color_error</item>
+        <item name="boxStrokeErrorColor">@color/color_error</item>
+        <item name="boxBackgroundColor">@color/glass_input</item>
+        <item name="boxStrokeColor">@color/glass_input_stroke</item>
+        <item name="boxStrokeWidth">1dp</item>
+        <item name="boxStrokeWidthFocused">1.5dp</item>
+        <item name="boxCornerRadiusTopStart">12dp</item>
+        <item name="boxCornerRadiusTopEnd">12dp</item>
+        <item name="boxCornerRadiusBottomStart">12dp</item>
+        <item name="boxCornerRadiusBottomEnd">12dp</item>
+        <!--        <item name="expandedHintEnabled">false</item>-->
+        <item name="endIconMinSize">42dp</item>
+        <item name="startIconMinSize">42dp</item>
+        <item name="android:minHeight">72dp</item>
+    </style>
+
+    <style name="TextInputLayout.Thin" parent="TextInputLayout">
+        <item name="endIconMinSize">24dp</item>
+        <item name="startIconMinSize">24dp</item>
+        <item name="android:minHeight">0dp</item>
+    </style>
+
+    <style name="Widget.Glass.Button" parent="Widget.MaterialComponents.Button">
+        <item name="backgroundTint">@color/glass_button_tint</item>
+        <item name="android:textColor">@color/glass_button_text</item>
+        <item name="rippleColor">@color/glass_ripple</item>
+        <item name="cornerRadius">20dp</item>
+        <item name="strokeWidth">0dp</item>
+        <item name="android:minHeight">42dp</item>
+        <item name="android:insetTop">0dp</item>
+        <item name="android:insetBottom">0dp</item>
+        <item name="android:elevation">0dp</item>
+        <item name="android:paddingStart">20dp</item>
+        <item name="android:paddingEnd">20dp</item>
+        <item name="android:paddingTop">10dp</item>
+        <item name="android:paddingBottom">10dp</item>
+    </style>
+
+    <style name="AutoSizeButton">
+        <item name="autoSizeMinTextSize">10sp</item>
+        <item name="autoSizeMaxTextSize">14sp</item>
+        <item name="autoSizeTextType">uniform</item>
+        <item name="android:padding">0dp</item>
+        <item name="android:paddingTop">4dp</item>
+        <item name="android:paddingBottom">4dp</item>
+        <item name="android:paddingStart">8dp</item>
+        <item name="android:paddingEnd">8dp</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:minWidth">48dp</item>
+        <item name="android:minHeight">24dp</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textColor">@color/dn_white</item>
+    </style>
+
+    <style name="Switch">
+        <item name="android:thumb">@drawable/switch_thumb</item>
+        <item name="track">@drawable/switch_track</item>
+        <item name="textAllCaps">false</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">@dimen/title_size_small</item>
+    </style>
+
+    <style name="SingleLineText">
+        <item name="android:maxLines">1</item>
+        <item name="android:ellipsize">end</item>
+    </style>
+
+    <style name="PopupAnim" parent="android:Animation">
+        <item name="android:windowEnterAnimation">@anim/anim_top_enter</item>
+        <item name="android:windowExitAnimation">@anim/anim_top_exit</item>
+    </style>
+
+    <style name="ThemeOverlay.Glass.Dialog" parent="ThemeOverlay.MaterialComponents.MaterialAlertDialog">
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="colorSurface">@color/glass_dialog</item>
+        <item name="buttonBarButtonStyle">@style/Widget.Glass.Dialog.Button</item>
+    </style>
+
+    <style name="Widget.Glass.Dialog.Button" parent="Widget.MaterialComponents.Button.TextButton.Dialog">
+        <item name="android:textColor">?attr/colorPrimary</item>
+        <item name="rippleColor">@color/glass_ripple</item>
+    </style>
+</resources>
