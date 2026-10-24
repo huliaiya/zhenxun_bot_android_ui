@@ -190,6 +190,10 @@
     <string name="zx_console_apply">应用设置</string>
     <string name="zx_console_apply_success">设置已保存</string>
     <string name="ban_saved_restart">已保存，重启机器人后生效（约5分钟内也会自动同步）</string>
+    <string name="connect_log">连接日志</string>
+    <string name="connect_log_on">连接</string>
+    <string name="connect_log_off">断开</string>
+    <string name="load_more">加载更多</string>
     <string name="clear_cache_summary_format">图片缓存: %1$s · 安装包: %2$s</string>
     <string name="clear_cache_done_format">已清除 %1$s</string>
     <string name="clear">清除</string>

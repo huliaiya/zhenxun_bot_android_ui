@@ -194,6 +194,10 @@
     <string name="zx_console_apply">Apply Settings</string>
     <string name="zx_console_apply_success">Settings applied</string>
     <string name="ban_saved_restart">Saved. Takes effect after the bot restarts (auto-syncs within ~5 minutes)</string>
+    <string name="connect_log">Connection Log</string>
+    <string name="connect_log_on">Connect</string>
+    <string name="connect_log_off">Disconnect</string>
+    <string name="load_more">Load more</string>
     <string name="clear_cache_summary_format">Image cache: %1$s · APK downloads: %2$s</string>
     <string name="clear_cache_done_format">Cleared %1$s</string>
     <string name="clear">Clear</string>

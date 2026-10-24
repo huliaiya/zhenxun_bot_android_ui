@@ -96,7 +96,8 @@ object ApiRepository {
     fun getMessageCountLegacy(botId: String) =
         networkFlow { BotApi.service.getBotMessageCountLegacy(botId) }
 
-    fun getConnectLog() = networkFlow { BotApi.service.getConnectLog(GetConnectLog.DEFAULT) }
+    fun getConnectLog(query: GetConnectLog = GetConnectLog.DEFAULT) =
+        networkFlow { BotApi.service.getConnectLog(query) }
 
     fun getBotBlockModule(botId: String) =
         networkFlow { BotApi.service.getBotBlockModule(botId) }
