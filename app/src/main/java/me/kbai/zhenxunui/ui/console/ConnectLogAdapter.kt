@@ -7,9 +7,9 @@ import me.kbai.zhenxunui.R
 import me.kbai.zhenxunui.databinding.ItemConnectLogBinding
 import me.kbai.zhenxunui.model.BotConnectLog
 
-class ConnectLogAdapter(
-    private val items: List<BotConnectLog>
-) : RecyclerView.Adapter<ConnectLogAdapter.ViewHolder>() {
+class ConnectLogAdapter : RecyclerView.Adapter<ConnectLogAdapter.ViewHolder>() {
+
+    private val items = mutableListOf<BotConnectLog>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = ViewHolder(
         ItemConnectLogBinding.inflate(LayoutInflater.from(parent.context), parent, false)
@@ -26,6 +26,12 @@ class ConnectLogAdapter(
         tvType.setBackgroundResource(
             if (connected) R.drawable.bg_tag_connect else R.drawable.bg_tag_disconnect
         )
+    }
+
+    fun submit(list: List<BotConnectLog>) {
+        items.clear()
+        items.addAll(list)
+        notifyDataSetChanged()
     }
 
     class ViewHolder(val binding: ItemConnectLogBinding) : RecyclerView.ViewHolder(binding.root)

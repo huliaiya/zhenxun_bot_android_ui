@@ -55,7 +55,7 @@ class ConsoleFragment : BaseFragment<FragmentConsoleBinding>() {
     private val mViewModel by viewModels<ConsoleViewModel>()
     private val mConnectLogViewModel by viewModels<ConnectLogViewModel>()
 
-    private val mConnectLogAdapter by lazy { ConnectLogAdapter(mConnectLogViewModel.logs.value) }
+    private val mConnectLogAdapter by lazy { ConnectLogAdapter() }
 
     private var mCountdownJob: Job? = null
     private var mFallbackRequestedBotId: String? = null
@@ -229,7 +229,7 @@ class ConsoleFragment : BaseFragment<FragmentConsoleBinding>() {
         mViewModel.requestPopularPlugin()
 
         mConnectLogViewModel.logs.launchAndCollectIn(this@ConsoleFragment) { logs ->
-            mConnectLogAdapter.notifyDataSetChanged()
+            mConnectLogAdapter.submit(logs)
             tvLoadMore.isVisible = mConnectLogViewModel.hasMore.value && logs.isNotEmpty()
         }
         mConnectLogViewModel.hasMore.launchAndCollectIn(this@ConsoleFragment) { hasMore ->
