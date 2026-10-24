@@ -12,8 +12,10 @@ import android.webkit.WebResourceResponse
 import android.webkit.WebSettings
 import android.webkit.WebView
 import android.webkit.WebViewClient
+import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.webkit.WebViewAssetLoader
 import androidx.webkit.WebViewAssetLoader.AssetsPathHandler
 import kotlinx.coroutines.Job
@@ -30,7 +32,9 @@ import me.kbai.zhenxunui.extends.logI
 import me.kbai.zhenxunui.extends.runWithoutReturn
 import me.kbai.zhenxunui.extends.setOnDebounceClickListener
 import me.kbai.zhenxunui.extends.viewLifecycleScope
+import me.kbai.zhenxunui.tool.GlobalToast
 import me.kbai.zhenxunui.tool.glide.GlideApp
+import me.kbai.zhenxunui.viewmodel.ConnectLogViewModel
 import me.kbai.zhenxunui.viewmodel.ConsoleViewModel
 import me.kbai.zhenxunui.viewmodel.MainViewModel
 import kotlin.math.abs
@@ -49,6 +53,9 @@ class ConsoleFragment : BaseFragment<FragmentConsoleBinding>() {
 
     private val mMainViewModel by viewModels<MainViewModel>({ requireActivity() })
     private val mViewModel by viewModels<ConsoleViewModel>()
+    private val mConnectLogViewModel by viewModels<ConnectLogViewModel>()
+
+    private val mConnectLogAdapter by lazy { ConnectLogAdapter(mConnectLogViewModel.logs.value) }
 
     private var mCountdownJob: Job? = null
     private var mFallbackRequestedBotId: String? = null
@@ -117,6 +124,12 @@ class ConsoleFragment : BaseFragment<FragmentConsoleBinding>() {
                 false
             }
         }
+        rvConnectLog.run {
+            layoutManager = LinearLayoutManager(requireContext())
+            adapter = mConnectLogAdapter
+            isNestedScrollingEnabled = false
+        }
+        tvLoadMore.setOnDebounceClickListener { mConnectLogViewModel.requestNextPage() }
         llLogsCard.setOnDebounceClickListener {
             findNavController().navigate(R.id.action_console_to_backend_log)
         }
@@ -214,6 +227,15 @@ class ConsoleFragment : BaseFragment<FragmentConsoleBinding>() {
 
         mViewModel.requestActiveGroup()
         mViewModel.requestPopularPlugin()
+
+        mConnectLogViewModel.logs.launchAndCollectIn(this@ConsoleFragment) { logs ->
+            mConnectLogAdapter.notifyDataSetChanged()
+            tvLoadMore.isVisible = mConnectLogViewModel.hasMore.value && logs.isNotEmpty()
+        }
+        mConnectLogViewModel.hasMore.launchAndCollectIn(this@ConsoleFragment) { hasMore ->
+            tvLoadMore.isVisible = hasMore && mConnectLogViewModel.logs.value.isNotEmpty()
+        }
+        mConnectLogViewModel.requestNextPage { GlobalToast.showToast(it) }
     }
 
     override fun onStart() {

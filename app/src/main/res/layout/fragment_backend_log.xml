@@ -1,54 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:padding="@dimen/margin_normal"
     tools:context=".ui.console.BackendLogFragment">
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@drawable/bg_list_item_round"
-        android:orientation="vertical"
-        android:padding="@dimen/margin_normal">
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/connect_log"
-            android:textColor="@color/dn_black"
-            android:textSize="@dimen/title_size_normal"
-            android:textStyle="bold" />
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rv_connect_log"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/margin_narrower"
-            tools:itemCount="4"
-            tools:listitem="@layout/item_connect_log" />
-
-        <TextView
-            android:id="@+id/tv_load_more"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/margin_narrower"
-            android:background="?attr/selectableItemBackground"
-            android:gravity="center"
-            android:paddingVertical="@dimen/margin_narrower"
-            android:text="@string/load_more"
-            android:textColor="@color/text_gray"
-            android:textSize="@dimen/text_size_small" />
-    </LinearLayout>
 
     <androidx.core.widget.NestedScrollView
         android:id="@+id/nsv_log"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_marginTop="@dimen/margin_normal"
-        android:layout_weight="1"
+        android:layout_height="match_parent"
         android:background="@drawable/bg_console_logs"
         android:fillViewport="true"
         android:scrollbars="vertical">
@@ -67,4 +28,4 @@
                 android:textColor="@color/white" />
         </HorizontalScrollView>
     </androidx.core.widget.NestedScrollView>
-</LinearLayout>
+</FrameLayout>
