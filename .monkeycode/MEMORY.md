@@ -53,3 +53,4 @@ This file records user instructions, preferences, and teachings for reference in
 - Instructions:
   - Do not include monkeycode co-author trailers or signatures in commit messages
   - The repo had .git/hooks/prepare-commit-msg adding Co-authored-by from coauthor.* git config; config entries were removed so no trailer is appended
+  - On 2026-10-24 the full commit history was squashed into a single "init" commit and force-pushed to master; local safety branch `backup-before-squash` still holds the old history (not pushed)
