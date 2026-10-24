@@ -12,8 +12,11 @@ import android.webkit.WebResourceResponse
 import android.webkit.WebSettings
 import android.webkit.WebView
 import android.webkit.WebViewClient
+import androidx.core.content.ContextCompat
+import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.webkit.WebViewAssetLoader
 import androidx.webkit.WebViewAssetLoader.AssetsPathHandler
@@ -33,6 +36,7 @@ import me.kbai.zhenxunui.extends.setOnDebounceClickListener
 import me.kbai.zhenxunui.extends.viewLifecycleScope
 import me.kbai.zhenxunui.tool.GlobalToast
 import me.kbai.zhenxunui.tool.glide.GlideApp
+import me.kbai.zhenxunui.viewmodel.ConnectLogState
 import me.kbai.zhenxunui.viewmodel.ConnectLogViewModel
 import me.kbai.zhenxunui.viewmodel.ConsoleViewModel
 import me.kbai.zhenxunui.viewmodel.MainViewModel
@@ -126,6 +130,14 @@ class ConsoleFragment : BaseFragment<FragmentConsoleBinding>() {
         rvConnectLog.run {
             layoutManager = LinearLayoutManager(requireContext())
             adapter = mConnectLogAdapter
+            addItemDecoration(
+                DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL).apply {
+                    setDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.bg_connect_log_divider)!!)
+                }
+            )
+        }
+        tvConnectLogPlaceholder.setOnDebounceClickListener {
+            mConnectLogViewModel.requestConnectLogs { GlobalToast.showToast(it) }
         }
         llLogsCard.setOnDebounceClickListener {
             findNavController().navigate(R.id.action_console_to_backend_log)
@@ -226,7 +238,30 @@ class ConsoleFragment : BaseFragment<FragmentConsoleBinding>() {
         mViewModel.requestPopularPlugin()
 
         mConnectLogViewModel.logs.launchAndCollectIn(this@ConsoleFragment) { logs ->
-            mConnectLogAdapter.submit(logs)
+            mConnectLogAdapter.submitList(logs)
+        }
+        mConnectLogViewModel.state.launchAndCollectIn(this@ConsoleFragment) { state ->
+            when (state) {
+                ConnectLogState.Loading -> {
+                    rvConnectLog.isVisible = false
+                    tvConnectLogPlaceholder.isVisible = true
+                    tvConnectLogPlaceholder.text = getString(R.string.loading)
+                }
+                ConnectLogState.Success -> {
+                    rvConnectLog.isVisible = true
+                    tvConnectLogPlaceholder.isVisible = false
+                }
+                ConnectLogState.Empty -> {
+                    rvConnectLog.isVisible = false
+                    tvConnectLogPlaceholder.isVisible = true
+                    tvConnectLogPlaceholder.text = getString(R.string.connect_log_empty)
+                }
+                ConnectLogState.Error -> {
+                    rvConnectLog.isVisible = false
+                    tvConnectLogPlaceholder.isVisible = true
+                    tvConnectLogPlaceholder.text = getString(R.string.connect_log_load_failed)
+                }
+            }
         }
         mConnectLogViewModel.requestConnectLogs { GlobalToast.showToast(it) }
     }

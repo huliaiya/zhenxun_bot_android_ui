@@ -197,6 +197,8 @@
     <string name="connect_log">Connection Log</string>
     <string name="connect_log_on">Connect</string>
     <string name="connect_log_off">Disconnect</string>
+    <string name="connect_log_empty">No connection logs yet</string>
+    <string name="connect_log_load_failed">Load failed, tap to retry</string>
     <string name="clear_cache_summary_format">Image cache: %1$s · APK downloads: %2$s</string>
     <string name="clear_cache_done_format">Cleared %1$s</string>
     <string name="clear">Clear</string>

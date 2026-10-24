@@ -68,6 +68,16 @@
                 android:layout_marginTop="@dimen/margin_narrower"
                 tools:itemCount="4"
                 tools:listitem="@layout/item_connect_log" />
+
+            <TextView
+                android:id="@+id/tv_connect_log_placeholder"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:layout_marginTop="@dimen/margin_narrower"
+                android:gravity="center"
+                android:text="@string/loading"
+                android:textColor="@color/text_gray"
+                android:textSize="@dimen/text_size_normal" />
         </LinearLayout>
 
         <LinearLayout

@@ -2,23 +2,22 @@ package me.kbai.zhenxunui.ui.console
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import me.kbai.zhenxunui.R
 import me.kbai.zhenxunui.databinding.ItemConnectLogBinding
 import me.kbai.zhenxunui.model.BotConnectLog
 
-class ConnectLogAdapter : RecyclerView.Adapter<ConnectLogAdapter.ViewHolder>() {
-
-    private val items = mutableListOf<BotConnectLog>()
+class ConnectLogAdapter :
+    ListAdapter<BotConnectLog, ConnectLogAdapter.ViewHolder>(DIFF) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = ViewHolder(
         ItemConnectLogBinding.inflate(LayoutInflater.from(parent.context), parent, false)
     )
 
-    override fun getItemCount() = items.size
-
     override fun onBindViewHolder(holder: ViewHolder, position: Int) = holder.binding.run {
-        val log = items[position]
+        val log = getItem(position)
         tvTime.text = log.connectTime.replace('T', ' ')
         tvBotId.text = log.botId
         val connected = log.type == 1
@@ -28,11 +27,15 @@ class ConnectLogAdapter : RecyclerView.Adapter<ConnectLogAdapter.ViewHolder>() {
         )
     }
 
-    fun submit(list: List<BotConnectLog>) {
-        items.clear()
-        items.addAll(list)
-        notifyDataSetChanged()
-    }
-
     class ViewHolder(val binding: ItemConnectLogBinding) : RecyclerView.ViewHolder(binding.root)
+
+    companion object {
+        private val DIFF = object : DiffUtil.ItemCallback<BotConnectLog>() {
+            override fun areItemsTheSame(oldItem: BotConnectLog, newItem: BotConnectLog) =
+                oldItem.connectTime == newItem.connectTime && oldItem.botId == newItem.botId
+
+            override fun areContentsTheSame(oldItem: BotConnectLog, newItem: BotConnectLog) =
+                oldItem == newItem
+        }
+    }
 }
