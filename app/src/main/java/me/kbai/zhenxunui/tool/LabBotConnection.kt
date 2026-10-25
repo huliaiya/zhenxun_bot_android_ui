@@ -123,6 +123,9 @@ object LabBotConnection {
         val request = Request.Builder()
             .url(config.url)
             .apply {
+                if (config.selfId.isNotBlank()) {
+                    header("X-Self-ID", config.selfId)
+                }
                 if (config.token.isNotBlank()) {
                     header("Authorization", "Bearer ${config.token}")
                     url("${config.url}${if (config.url.contains('?')) '&' else '?'}access_token=${config.token}")
@@ -220,7 +223,7 @@ object LabBotConnection {
         val params = payload.optJSONObject("params") ?: JSONObject()
         val echo = payload.opt("echo")
 
-        fun reply(data: JSONObject? = null) {
+        fun reply(data: Any? = null) {
             webSocket.send(
                 JSONObject()
                     .put("status", "ok")
@@ -232,22 +235,28 @@ object LabBotConnection {
         }
 
         when (action) {
-            "send_group_msg" -> {
-                val peerId = params.optString("group_id")
-                val text = extractMessageText(params.opt("message"))
-                LabStore.findGroupByPeerId(peerId)?.let { LabStore.emitBotMessage(it, text) }
-                reply(JSONObject().put("message_id", mMessageId.incrementAndGet()))
-            }
-            "send_private_msg" -> {
-                val userId = params.optString("user_id")
-                val text = extractMessageText(params.opt("message"))
-                LabStore.findFriendByUserId(userId)?.let { LabStore.emitBotMessage(it, text) }
+            "send_msg", "send_group_msg", "send_private_msg" -> {
+                val message = extractMessageText(params.opt("message"))
+                val peerId = when {
+                    action == "send_group_msg" || params.optString("message_type") == "group" ->
+                        params.optString("group_id")
+                    else -> params.optString("user_id")
+                }
+                val conversation = LabStore.findGroupByPeerId(peerId)
+                    ?: LabStore.findFriendByUserId(peerId)
+                conversation?.let { LabStore.emitBotMessage(it, message) }
                 reply(JSONObject().put("message_id", mMessageId.incrementAndGet()))
             }
             "get_login_info" -> reply(
                 JSONObject()
-                    .put("user_id", mConfig?.selfId ?: "")
+                    .put("user_id", numericOrString(mConfig?.selfId.orEmpty()))
                     .put("nickname", LabStore.defaultBotName())
+            )
+            "get_group_list", "get_friend_list" -> reply(JSONArray())
+            "get_version_info" -> reply(
+                JSONObject()
+                    .put("app_name", "zhenxun-android-lab")
+                    .put("app_version", "v11")
             )
             "get_status" -> reply(
                 JSONObject().put("online", true).put("good", true)

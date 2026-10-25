@@ -63,6 +63,11 @@ class ConnectionDialogFragment : BaseDialogFragment() {
         if (url.isEmpty()) return
         val token = etWsToken.text?.toString()?.trim().orEmpty()
         val selfId = etSelfId.text?.toString()?.trim().orEmpty()
+        if (selfId.toLongOrNull() == null) {
+            tilSelfId.error = getString(R.string.lab_self_id_invalid)
+            return
+        }
+        tilSelfId.error = null
         LabBotConnection.saveConfig(
             requireContext(),
             LabBotConnectionConfig(url, token, selfId)
