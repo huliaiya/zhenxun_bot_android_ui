@@ -246,6 +246,8 @@
     <string name="lab_disconnect">Disconnect</string>
     <string name="lab_delete_conversation">Delete this conversation? Chat history will be removed as well.</string>
     <string name="lab_bot_section">Bot account</string>
+    <string name="lab_my_account_section">My account</string>
+    <string name="lab_my_name_label">My nickname (optional)</string>
     <string name="lab_bot_name_label">Bot name</string>
     <string name="lab_bot_avatar">Bot avatar</string>
     <string name="lab_group_name">Group name</string>

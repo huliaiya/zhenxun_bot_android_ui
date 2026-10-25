@@ -43,6 +43,51 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/margin_wider"
+            android:text="@string/lab_my_account_section"
+            android:textColor="@color/dn_black"
+            android:textSize="@dimen/text_size_normal"
+            android:textStyle="bold" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_normal"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <me.kbai.zhenxunui.widget.CornerImageView
+                android:id="@+id/iv_account_avatar"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="@string/lab_choose_avatar"
+                android:src="@drawable/ic_lab_group_avatar"
+                app:cornerRadius="999dp" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                style="@style/TextInputLayout"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/margin_normal"
+                android:layout_weight="1"
+                android:hint="@string/lab_my_name_label"
+                app:expandedHintEnabled="false">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/et_account_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="text"
+                    android:maxLength="24"
+                    android:textColorHint="@color/text_gray"
+                    android:textSize="@dimen/et_text_size" />
+            </com.google.android.material.textfield.TextInputLayout>
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_wider"
             android:text="@string/lab_bot_section"
             android:textColor="@color/dn_black"
             android:textSize="@dimen/text_size_normal"

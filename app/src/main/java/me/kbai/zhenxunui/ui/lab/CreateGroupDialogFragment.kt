@@ -20,6 +20,7 @@ class CreateGroupDialogFragment : BaseDialogFragment() {
     var onCreated: ((LabConversation) -> Unit)? = null
 
     private lateinit var mBinding: DialogLabCreateGroupBinding
+    private var mAccountAvatar: String = LabAvatarResolver.BUILTIN_GROUP_MEMBER
     private var mBotAvatar: String = LabAvatarResolver.BUILTIN_BOT
     private val mAvatarPicker = LabAvatarPicker(this)
 
@@ -41,6 +42,12 @@ class CreateGroupDialogFragment : BaseDialogFragment() {
         mBinding.run {
             etGroupName.setText(getString(R.string.lab_group_default_name, LabStore.nextGroupIndex()))
             etBotName.setText(LabStore.defaultBotName())
+            ivAccountAvatar.setOnDebounceClickListener {
+                mAvatarPicker.launch { path ->
+                    mAccountAvatar = path
+                    GlideApp.with(ivAccountAvatar).load(path).into(ivAccountAvatar)
+                }
+            }
             ivBotAvatar.setOnDebounceClickListener {
                 mAvatarPicker.launch { path ->
                     mBotAvatar = path
@@ -60,10 +67,11 @@ class CreateGroupDialogFragment : BaseDialogFragment() {
 
     private fun save(): Unit = mBinding.run {
         val title = etGroupName.text?.toString()?.trim().orEmpty()
+        val accountName = etAccountName.text?.toString()?.trim().orEmpty()
         val botName = etBotName.text?.toString()?.trim().orEmpty()
             .ifEmpty { LabStore.defaultBotName() }
         if (title.isEmpty()) return
-        val conversation = LabStore.addGroup(title, botName, mBotAvatar)
+        val conversation = LabStore.addGroup(title, accountName, mAccountAvatar, botName, mBotAvatar)
         onCreated?.invoke(conversation)
         dismiss()
     }

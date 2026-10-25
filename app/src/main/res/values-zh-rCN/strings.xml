@@ -242,6 +242,8 @@
     <string name="lab_disconnect">断开连接</string>
     <string name="lab_delete_conversation">确认删除该会话吗？聊天记录将一并清除。</string>
     <string name="lab_bot_section">机器人账号</string>
+    <string name="lab_my_account_section">我的账号</string>
+    <string name="lab_my_name_label">我的昵称（选填）</string>
     <string name="lab_bot_name_label">机器人名称</string>
     <string name="lab_bot_avatar">机器人头像</string>
     <string name="lab_group_name">群名称</string>
