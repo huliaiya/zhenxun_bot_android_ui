@@ -156,7 +156,13 @@ object LabStore {
         return true
     }
 
-    fun emitBotMessage(conversation: LabConversation, text: String) {
+    fun emitBotMessage(
+        conversation: LabConversation,
+        text: String,
+        reply: String? = null,
+        images: List<String>? = null,
+        videos: List<String>? = null
+    ) {
         val message = LabMessage(
             conversationId = conversation.id,
             userId = "lab_bot",
@@ -164,7 +170,10 @@ object LabStore {
             avatar = botAvatarOf(conversation),
             text = text,
             fromBot = true,
-            time = System.currentTimeMillis()
+            time = System.currentTimeMillis(),
+            reply = reply,
+            images = images,
+            videos = videos
         )
         appendMessage(message)
         _botMessageEvents.tryEmit(message)

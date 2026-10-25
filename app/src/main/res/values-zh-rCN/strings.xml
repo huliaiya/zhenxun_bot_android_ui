@@ -234,6 +234,7 @@
     <string name="lab_history_cleared">聊天记录已清空</string>
     <string name="lab_delete_message">删除消息</string>
     <string name="lab_delete_message_confirm">确定删除这条消息？</string>
+    <string name="lab_view_video">点击播放视频</string>
     <string name="lab_ws_url">WS 地址，如 ws://IP:8088/onebot/v11/ws</string>
     <string name="lab_ws_token">access_token（可选）</string>
     <string name="lab_ws_self_id">机器人 QQ 号</string>

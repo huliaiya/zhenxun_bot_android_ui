@@ -238,6 +238,7 @@
     <string name="lab_history_cleared">Chat history cleared</string>
     <string name="lab_delete_message">Delete message</string>
     <string name="lab_delete_message_confirm">Delete this message?</string>
+    <string name="lab_view_video">Tap to play video</string>
     <string name="lab_ws_url">WS URL, e.g. ws://host:8088/onebot/v11/ws</string>
     <string name="lab_ws_token">Access token (optional)</string>
     <string name="lab_ws_self_id">Bot QQ number</string>

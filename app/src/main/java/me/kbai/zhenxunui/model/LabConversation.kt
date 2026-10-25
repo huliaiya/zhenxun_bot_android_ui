@@ -19,5 +19,8 @@ data class LabMessage(
     val avatar: String,
     val text: String,
     val fromBot: Boolean,
-    val time: Long
+    val time: Long,
+    val reply: String? = null,
+    val images: List<String>? = null,
+    val videos: List<String>? = null
 )

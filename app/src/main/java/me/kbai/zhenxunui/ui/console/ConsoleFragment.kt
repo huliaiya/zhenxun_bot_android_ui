@@ -130,7 +130,35 @@ class ConsoleFragment : BaseFragment<FragmentConsoleBinding>() {
         rvConnectLog.run {
             layoutManager = LinearLayoutManager(requireContext())
             adapter = mConnectLogAdapter
-            isNestedScrollingEnabled = false
+
+            var lastPoint: PointF? = null
+            setOnTouchListener { v, event ->
+                when (event.action) {
+                    MotionEvent.ACTION_DOWN -> {
+                        lastPoint = PointF(event.x, event.y)
+                        v.parent.parent.requestDisallowInterceptTouchEvent(true)
+                    }
+                    MotionEvent.ACTION_MOVE -> lastPoint?.let {
+                        val dy = event.y - it.y
+                        if (abs(dy) > 10) {
+                            v.parent.requestDisallowInterceptTouchEvent(true)
+                        }
+                        if (dy > 0) {
+                            v.parent.parent.requestDisallowInterceptTouchEvent(canScrollVertically(-1))
+                        } else if (dy < 0) {
+                            v.parent.parent.requestDisallowInterceptTouchEvent(canScrollVertically(1))
+                        }
+                        it.set(event.x, event.y)
+                    }
+                    MotionEvent.ACTION_UP -> {
+                        lastPoint = null
+                        v.parent.requestDisallowInterceptTouchEvent(false)
+                        v.parent.parent.requestDisallowInterceptTouchEvent(false)
+                    }
+                }
+                false
+            }
+
             addItemDecoration(
                 DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL).apply {
                     setDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.bg_connect_log_divider)!!)

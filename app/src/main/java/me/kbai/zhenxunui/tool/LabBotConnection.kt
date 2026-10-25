@@ -236,7 +236,7 @@ object LabBotConnection {
 
         when (action) {
             "send_msg", "send_group_msg", "send_private_msg" -> {
-                val message = extractMessageText(params.opt("message"))
+                val parsed = extractMessage(params.opt("message"))
                 val peerId = when {
                     action == "send_group_msg" || params.optString("message_type") == "group" ->
                         params.optString("group_id")
@@ -244,8 +244,18 @@ object LabBotConnection {
                 }
                 val conversation = LabStore.findGroupByPeerId(peerId)
                     ?: LabStore.findFriendByUserId(peerId)
-                conversation?.let { LabStore.emitBotMessage(it, message) }
-                reply(JSONObject().put("message_id", mMessageId.incrementAndGet()))
+                val botMessageId = mMessageId.incrementAndGet()
+                rememberMessage(botMessageId.toLong(), parsed.text)
+                conversation?.let {
+                    LabStore.emitBotMessage(
+                        it,
+                        parsed.text,
+                        parsed.reply,
+                        parsed.images,
+                        parsed.videos
+                    )
+                }
+                reply(JSONObject().put("message_id", botMessageId))
             }
             "get_login_info" -> reply(
                 JSONObject()
@@ -272,43 +282,98 @@ object LabBotConnection {
         }
     }
 
-    private fun extractMessageText(message: Any?): String = when (message) {
-        is String -> convertCqCode(message)
-        is JSONArray -> buildString {
-            for (i in 0 until message.length()) {
-                val segment = message.optJSONObject(i) ?: continue
-                when (val type = segment.optString("type")) {
-                    "text" -> append(segment.optJSONObject("data")?.optString("text").orEmpty())
-                    "at" -> append("@${segment.optJSONObject("data")?.optString("qq").orEmpty()} ")
-                    "image" -> append("[图片]")
-                    "face" -> append("[表情]")
-                    "record" -> append("[语音]")
-                    "video" -> append("[视频]")
-                    "forward" -> append("[合并转发]")
-                    "json" -> append("[卡片]")
-                    "reply" -> append("[回复]")
-                    else -> append("[$type]")
-                }
-            }
-        }.trim()
-        else -> ""
+    private class ParsedMessage(
+        val text: String,
+        val reply: String? = null,
+        val images: List<String> = emptyList(),
+        val videos: List<String> = emptyList()
+    )
+
+    private val mMessageTexts = object : LinkedHashMap<Long, String>(64, 0.75f, false) {
+        override fun removeEldestEntry(eldest: MutableMap.MutableEntry<Long, String>) = size > 200
     }
 
-    private fun convertCqCode(raw: String): String {
-        val regex = Regex("\\[CQ:([a-zA-Z]+)(?:,[^\\]]*)?\\]")
-        return regex.replace(raw) { match ->
-            when (match.groupValues[1].lowercase()) {
-                "image" -> "[图片]"
-                "face" -> "[表情]"
-                "at" -> "[@]"
-                "record" -> "[语音]"
-                "video" -> "[视频]"
-                "forward" -> "[合并转发]"
-                "json" -> "[卡片]"
-                "reply" -> "[回复]"
-                else -> "[${match.groupValues[1]}]"
+    private fun rememberMessage(id: Long, text: String) {
+        synchronized(mMessageTexts) { mMessageTexts[id] = text }
+    }
+
+    private fun replyTextOf(id: Long): String? =
+        synchronized(mMessageTexts) { mMessageTexts[id] }
+
+    private fun extractMessage(message: Any?): ParsedMessage = when (message) {
+        is String -> parseCqString(message)
+        is JSONArray -> parseSegmentArray(message)
+        else -> ParsedMessage("")
+    }
+
+    private fun parseSegmentArray(segments: JSONArray): ParsedMessage {
+        val text = StringBuilder()
+        val images = mutableListOf<String>()
+        val videos = mutableListOf<String>()
+        var replyId = -1L
+        for (i in 0 until segments.length()) {
+            val segment = segments.optJSONObject(i) ?: continue
+            val data = segment.optJSONObject("data") ?: JSONObject()
+            when (segment.optString("type")) {
+                "text" -> text.append(data.optString("text"))
+                "reply" -> replyId = data.optLong("id", -1L)
+                "image" -> mediaUrl(data)?.let { images += it }
+                "video" -> mediaUrl(data)?.let { videos += it }
             }
-        }.trim()
+        }
+        return ParsedMessage(
+            text = text.toString().trim(),
+            reply = replyTextOf(replyId),
+            images = images,
+            videos = videos
+        )
+    }
+
+    private fun parseCqString(raw: String): ParsedMessage {
+        val text = StringBuilder()
+        val images = mutableListOf<String>()
+        val videos = mutableListOf<String>()
+        var replyId = -1L
+        val regex = Regex("\\[CQ:([a-zA-Z]+)((?:,[a-zA-Z]+=[^,\\]]*)*)\\]")
+        var lastEnd = 0
+        for (match in regex.findAll(raw)) {
+            text.append(raw.substring(lastEnd, match.range.first))
+            lastEnd = match.range.last + 1
+            val attrs = parseCqAttrs(match.groupValues[2])
+            when (match.groupValues[1].lowercase()) {
+                "reply" -> replyId = attrs["id"]?.toLongOrNull() ?: -1L
+                "image" -> attrs["url"]?.let { images += it }
+                "video" -> attrs["url"]?.let { videos += it }
+            }
+        }
+        text.append(raw.substring(lastEnd))
+        return ParsedMessage(
+            text = text.toString().trim(),
+            reply = replyTextOf(replyId),
+            images = images,
+            videos = videos
+        )
+    }
+
+    private fun parseCqAttrs(raw: String): Map<String, String> =
+        raw.split(',').mapNotNull { part ->
+            val idx = part.indexOf('=')
+            if (idx <= 0) null
+            else part.substring(0, idx) to unescapeCq(part.substring(idx + 1))
+        }.toMap()
+
+    private fun unescapeCq(value: String): String = value
+        .replace("&#44;", ",")
+        .replace("&#93;", "]")
+        .replace("&#91;", "[")
+        .replace("&#38;", "&")
+
+    private fun mediaUrl(data: JSONObject): String? {
+        val url = data.optString("url")
+        if (url.startsWith("http")) return url
+        val file = data.optString("file")
+        if (file.startsWith("http")) return file
+        return null
     }
 
     private fun buildMessageEvent(
@@ -320,13 +385,15 @@ object LabBotConnection {
         text: String
     ): JSONObject {
         val config = mConfig
+        val messageId = mMessageId.incrementAndGet()
+        rememberMessage(messageId.toLong(), text)
         val event = JSONObject()
             .put("time", System.currentTimeMillis() / 1000)
             .put("self_id", numericOrString(config?.selfId.orEmpty()))
             .put("post_type", "message")
             .put("message_type", messageType)
             .put("sub_type", "normal")
-            .put("message_id", mMessageId.incrementAndGet())
+            .put("message_id", messageId)
             .put("user_id", numericOrString(senderId))
             .put("message", text)
             .put("raw_message", text)
