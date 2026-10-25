@@ -227,4 +227,19 @@
     <string name="export_log">Export</string>
     <string name="copied">Copied to clipboard</string>
     <string name="close">Close</string>
+    <string name="lab_connection">Bot Connection</string>
+    <string name="lab_connection_status_idle">Not connected. Tap to configure.</string>
+    <string name="lab_connection_status_connecting">Connecting…</string>
+    <string name="lab_connection_status_connected">Connected to Zhenxun</string>
+    <string name="lab_connection_status_failed">Connection failed. Tap to retry.</string>
+    <string name="lab_connection_hint">Configure the OneBot v11 WebSocket address of Zhenxun. Once connected, lab messages are sent to the real bot and replies come back live. Leave it empty to keep using local simulation.</string>
+    <string name="lab_ws_url">WS URL, e.g. ws://host:8088/onebot/v11/ws</string>
+    <string name="lab_ws_token">Access token (optional)</string>
+    <string name="lab_ws_self_id">Bot QQ number</string>
+    <string name="lab_disconnect">Disconnect</string>
+    <string name="lab_delete_conversation">Delete this conversation? Chat history will be removed as well.</string>
+    <string name="lab_bot_section">Bot account</string>
+    <string name="lab_bot_name_label">Bot name</string>
+    <string name="lab_bot_avatar">Bot avatar</string>
+    <string name="lab_group_name">Group name</string>
 </resources>

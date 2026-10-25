@@ -1,18 +1,14 @@
 package me.kbai.zhenxunui.ui.lab
 
-import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.widget.addTextChangedListener
 import me.kbai.zhenxunui.R
 import me.kbai.zhenxunui.base.BaseDialogFragment
 import me.kbai.zhenxunui.databinding.DialogLabCreateFriendBinding
 import me.kbai.zhenxunui.extends.dp
-import me.kbai.zhenxunui.extends.logE
 import me.kbai.zhenxunui.extends.setOnDebounceClickListener
 import me.kbai.zhenxunui.model.LabConversation
 import me.kbai.zhenxunui.tool.GlobalToast
@@ -26,22 +22,8 @@ class CreateFriendDialogFragment : BaseDialogFragment() {
 
     private lateinit var mBinding: DialogLabCreateFriendBinding
     private var mAvatar: String = LabAvatarResolver.BUILTIN_FRIEND
-
-    private val mPickAvatar = registerForActivityResult(
-        ActivityResultContracts.OpenDocument()
-    ) { uri: Uri? ->
-        if (uri == null) return@registerForActivityResult
-        runCatching {
-            requireContext().contentResolver.takePersistableUriPermission(
-                uri,
-                Intent.FLAG_GRANT_READ_URI_PERMISSION
-            )
-        }.onFailure { logE(it) }
-        mAvatar = uri.toString()
-        GlideApp.with(mBinding.ivAvatar)
-            .load(uri)
-            .into(mBinding.ivAvatar)
-    }
+    private var mBotAvatar: String = LabAvatarResolver.BUILTIN_BOT
+    private val mAvatarPicker by lazy { LabAvatarPicker(this) }
 
     init {
         maxWidth = 320.dp.toInt()
@@ -57,9 +39,20 @@ class CreateFriendDialogFragment : BaseDialogFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        LabStore.ensureInit(requireContext())
         mBinding.run {
+            etBotName.setText(LabStore.defaultBotName())
             ivAvatar.setOnDebounceClickListener {
-                mPickAvatar.launch(arrayOf("image/*"))
+                mAvatarPicker.launch { path ->
+                    mAvatar = path
+                    GlideApp.with(ivAvatar).load(path).into(ivAvatar)
+                }
+            }
+            ivBotAvatar.setOnDebounceClickListener {
+                mAvatarPicker.launch { path ->
+                    mBotAvatar = path
+                    GlideApp.with(ivBotAvatar).load(path).into(ivBotAvatar)
+                }
             }
             btnCancel.setOnDebounceClickListener { dismiss() }
             etName.addTextChangedListener { updateSaveState() }
@@ -75,12 +68,14 @@ class CreateFriendDialogFragment : BaseDialogFragment() {
     private fun save(): Unit = mBinding.run {
         val name = etName.text?.toString()?.trim().orEmpty()
         val qq = etQq.text?.toString()?.trim().orEmpty()
+        val botName = etBotName.text?.toString()?.trim().orEmpty()
+            .ifEmpty { LabStore.defaultBotName() }
         if (name.isEmpty() || qq.isEmpty()) return
         if (LabStore.isFriendQqExists(qq)) {
             GlobalToast.showToast(getString(R.string.lab_friend_qq_exists))
             return
         }
-        val conversation = LabStore.addFriend(name, qq, mAvatar)
+        val conversation = LabStore.addFriend(name, qq, mAvatar, botName, mBotAvatar)
         onCreated?.invoke(conversation)
         dismiss()
     }

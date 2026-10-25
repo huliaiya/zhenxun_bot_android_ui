@@ -6,7 +6,10 @@ data class LabConversation(
     val title: String,
     val accountId: String,
     val accountName: String,
-    val accountAvatar: String
+    val accountAvatar: String,
+    val peerId: String? = null,
+    val botName: String? = null,
+    val botAvatar: String? = null
 )
 
 data class LabMessage(

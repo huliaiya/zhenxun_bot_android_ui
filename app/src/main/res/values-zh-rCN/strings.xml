@@ -223,4 +223,19 @@
     <string name="lab_reply_checkin">签到成功！幸运值 +1（实验室模拟）</string>
     <string name="lab_reply_plugin">实验室插件列表（模拟数据，仅演示）</string>
     <string name="lab_reply_default">（实验室模拟）收到：%1$s</string>
+    <string name="lab_connection">机器人连接</string>
+    <string name="lab_connection_status_idle">未连接，点击配置</string>
+    <string name="lab_connection_status_connecting">连接中…</string>
+    <string name="lab_connection_status_connected">已连接真寻</string>
+    <string name="lab_connection_status_failed">连接失败，点击重试</string>
+    <string name="lab_connection_hint">填写真寻的 OneBot v11 WebSocket 地址（如 ws://IP:8088/onebot/v11/ws），连接后实验室消息会发给真实机器人并实时回显回复；留空则继续使用本地模拟。</string>
+    <string name="lab_ws_url">WS 地址，如 ws://IP:8088/onebot/v11/ws</string>
+    <string name="lab_ws_token">access_token（可选）</string>
+    <string name="lab_ws_self_id">机器人 QQ 号</string>
+    <string name="lab_disconnect">断开连接</string>
+    <string name="lab_delete_conversation">确认删除该会话吗？聊天记录将一并清除。</string>
+    <string name="lab_bot_section">机器人账号</string>
+    <string name="lab_bot_name_label">机器人名称</string>
+    <string name="lab_bot_avatar">机器人头像</string>
+    <string name="lab_group_name">群名称</string>
 </resources>

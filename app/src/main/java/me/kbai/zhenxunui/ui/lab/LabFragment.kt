@@ -11,19 +11,31 @@ import me.kbai.zhenxunui.base.BaseFragment
 import me.kbai.zhenxunui.databinding.FragmentLabBinding
 import me.kbai.zhenxunui.extends.launchAndCollectIn
 import me.kbai.zhenxunui.model.LabConversation
+import me.kbai.zhenxunui.tool.LabBotConnection
 import me.kbai.zhenxunui.tool.LabStore
+import me.kbai.zhenxunui.ui.common.PromptDialog
 
 class LabFragment : BaseFragment<FragmentLabBinding>() {
 
+    private var mStatusText: String = ""
+
     private val mAdapter by lazy {
         LabAdapter(
-            onCreateGroup = { openConversation(LabStore.addGroup()) },
+            onOpenConnection = {
+                ConnectionDialogFragment().show(childFragmentManager, "lab_connection")
+            },
+            onCreateGroup = {
+                CreateGroupDialogFragment().apply {
+                    onCreated = { openConversation(it) }
+                }.show(childFragmentManager, "create_group")
+            },
             onCreateFriend = {
                 CreateFriendDialogFragment().apply {
                     onCreated = { openConversation(it) }
                 }.show(childFragmentManager, "create_friend")
             },
-            onOpenConversation = { openConversation(it) }
+            onOpenConversation = { openConversation(it) },
+            onDeleteConversation = { confirmDelete(it) }
         )
     }
 
@@ -37,13 +49,22 @@ class LabFragment : BaseFragment<FragmentLabBinding>() {
 
     override fun initData() {
         LabStore.ensureInit(requireContext())
-        LabStore.conversations.launchAndCollectIn(this@LabFragment) { list ->
-            bindConversations(list)
+        LabStore.conversations.launchAndCollectIn(this@LabFragment) { bindList() }
+        LabBotConnection.status.launchAndCollectIn(this@LabFragment) { status ->
+            mStatusText = when (status) {
+                LabBotConnection.Status.Connecting -> getString(R.string.lab_connection_status_connecting)
+                LabBotConnection.Status.Connected -> getString(R.string.lab_connection_status_connected)
+                is LabBotConnection.Status.Failed -> getString(R.string.lab_connection_status_failed)
+                LabBotConnection.Status.Idle -> getString(R.string.lab_connection_status_idle)
+            }
+            bindList()
         }
     }
 
-    private fun bindConversations(list: List<LabConversation>): Unit = viewBinding.run {
+    private fun bindList(): Unit = viewBinding.run {
+        val list = LabStore.conversations.value
         val items = ArrayList<LabItem>()
+        items += LabItem.Connection(mStatusText)
         items += LabItem.Header(
             getString(R.string.lab_groups),
             getString(R.string.lab_create_group),
@@ -58,6 +79,18 @@ class LabFragment : BaseFragment<FragmentLabBinding>() {
         items += list.filter { !it.isGroup }.map { LabItem.Row(it) }
         mAdapter.submit(items)
         tvLabEmpty.isVisible = list.isEmpty()
+    }
+
+    private fun confirmDelete(conversation: LabConversation) {
+        PromptDialog(requireContext())
+            .setTitle(getString(R.string.delete))
+            .setText(getString(R.string.lab_delete_conversation))
+            .setOnCancelClickListener { it.dismiss() }
+            .setOnConfirmClickListener { dialog ->
+                dialog.dismiss()
+                LabStore.deleteConversation(conversation.id)
+            }
+            .show()
     }
 
     private fun openConversation(conversation: LabConversation) {

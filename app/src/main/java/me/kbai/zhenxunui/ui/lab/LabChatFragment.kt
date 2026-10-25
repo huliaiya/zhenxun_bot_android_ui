@@ -6,9 +6,12 @@ import androidx.appcompat.widget.Toolbar
 import androidx.core.widget.addTextChangedListener
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import me.kbai.zhenxunui.R
 import me.kbai.zhenxunui.base.BaseFragment
 import me.kbai.zhenxunui.databinding.FragmentLabChatBinding
+import me.kbai.zhenxunui.extends.launchAndCollectIn
 import me.kbai.zhenxunui.extends.setOnDebounceClickListener
 import me.kbai.zhenxunui.extends.viewLifecycleScope
 import me.kbai.zhenxunui.model.LabConversation
@@ -16,16 +19,15 @@ import me.kbai.zhenxunui.model.LabMessage
 import me.kbai.zhenxunui.tool.GlobalToast
 import me.kbai.zhenxunui.tool.LabAvatarResolver
 import me.kbai.zhenxunui.tool.LabBot
+import me.kbai.zhenxunui.tool.LabBotConnection
 import me.kbai.zhenxunui.tool.LabStore
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 
 class LabChatFragment : BaseFragment<FragmentLabChatBinding>() {
 
     companion object {
         const val ARG_CONVERSATION_ID = "conversationId"
         private const val BOT_USER_ID = "lab_bot"
-        private const val BOT_REPLY_DELAY_MS = 400L
+        private const val LOCAL_REPLY_DELAY_MS = 400L
     }
 
     private val mAdapter = LabMessageAdapter()
@@ -55,9 +57,15 @@ class LabChatFragment : BaseFragment<FragmentLabChatBinding>() {
         }
         mConversation = conversation
         requireActivity().findViewById<Toolbar>(R.id.toolbar).title = conversation.title
-        val history = LabStore.messages(conversation.id)
-        mAdapter.setData(history)
+        mAdapter.setData(LabStore.messages(conversation.id))
         scrollToBottom()
+
+        LabStore.botMessageEvents.launchAndCollectIn(this@LabChatFragment) { message ->
+            if (message.conversationId == conversation.id) {
+                mAdapter.addData(message)
+                scrollToBottom()
+            }
+        }
     }
 
     private fun send(): Unit = viewBinding.run {
@@ -78,19 +86,22 @@ class LabChatFragment : BaseFragment<FragmentLabChatBinding>() {
             )
         )
 
-        viewLifecycleScope.launch {
-            delay(BOT_REPLY_DELAY_MS)
-            appendMessage(
-                LabMessage(
-                    conversationId = conversation.id,
-                    userId = BOT_USER_ID,
-                    name = getString(R.string.lab_bot_name),
-                    avatar = LabAvatarResolver.BUILTIN_BOT,
-                    text = LabBot.reply(requireContext(), text),
-                    fromBot = true,
-                    time = System.currentTimeMillis()
+        val sentViaBot = LabBotConnection.sendUserMessage(conversation, text)
+        if (!sentViaBot) {
+            viewLifecycleScope.launch {
+                delay(LOCAL_REPLY_DELAY_MS)
+                appendMessage(
+                    LabMessage(
+                        conversationId = conversation.id,
+                        userId = BOT_USER_ID,
+                        name = LabStore.botNameOf(conversation),
+                        avatar = LabStore.botAvatarOf(conversation),
+                        text = LabBot.reply(requireContext(), text),
+                        fromBot = true,
+                        time = System.currentTimeMillis()
+                    )
                 )
-            )
+            }
         }
     }
 

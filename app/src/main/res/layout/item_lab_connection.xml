@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginHorizontal="@dimen/list_item_margin"
+    android:layout_marginTop="@dimen/margin_normal"
+    android:background="@drawable/bg_list_item_round"
+    android:gravity="center_vertical"
+    android:orientation="horizontal"
+    android:padding="@dimen/list_item_padding">
+
+    <me.kbai.zhenxunui.widget.CornerImageView
+        android:id="@+id/iv_icon"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        app:cornerRadius="999dp"
+        android:src="@drawable/ic_lab_bot_avatar" />
+
+    <TextView
+        android:id="@+id/tv_title"
+        style="@style/SingleLineText"
+        android:layout_width="match_parent"
+        android:layout_height="24dp"
+        android:layout_marginStart="@dimen/margin_normal"
+        android:layout_toEndOf="@id/iv_icon"
+        android:gravity="center_vertical"
+        android:text="@string/lab_connection"
+        android:textColor="@color/dn_black"
+        android:textSize="@dimen/title_size_normal" />
+
+    <TextView
+        android:id="@+id/tv_status"
+        style="@style/SingleLineText"
+        android:layout_width="match_parent"
+        android:layout_height="24dp"
+        android:layout_below="@id/tv_title"
+        android:layout_marginStart="@dimen/margin_normal"
+        android:layout_toEndOf="@id/iv_icon"
+        android:gravity="center_vertical"
+        android:textColor="@color/text_gray"
+        android:textSize="@dimen/title_size_small"
+        tools:text="已连接" />
+</RelativeLayout>
