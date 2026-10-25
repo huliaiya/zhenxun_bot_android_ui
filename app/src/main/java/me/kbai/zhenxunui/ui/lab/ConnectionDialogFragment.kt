@@ -48,9 +48,14 @@ class ConnectionDialogFragment : BaseDialogFragment() {
     }
 
     private fun deriveDefaultUrl(): String {
-        val base = Constants.apiBaseUrl.value ?: return ""
-        val host = runCatching { java.net.URI(base).host }.getOrNull() ?: return ""
-        return "ws://$host:8088/onebot/v11/ws"
+        val base = Constants.apiBaseUrl.value
+        if (base.isNullOrBlank()) return "ws://127.0.0.1:8080/onebot/v11/ws"
+        val uri = runCatching { java.net.URI(base) }.getOrNull()
+            ?: return "ws://127.0.0.1:8080/onebot/v11/ws"
+        val scheme = if (uri.scheme == "https") "wss" else "ws"
+        val host = uri.host ?: "127.0.0.1"
+        val port = if (uri.port > 0) uri.port else 8080
+        return "$scheme://$host:$port/onebot/v11/ws"
     }
 
     private fun save(): Unit = mBinding.run {
