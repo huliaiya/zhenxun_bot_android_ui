@@ -36,6 +36,10 @@
                     android:title="@string/nav_file_explorer" />
 
                 <item
+                    android:id="@+id/nav_lab"
+                    android:title="@string/nav_lab" />
+
+                <item
                     android:id="@+id/nav_settings"
                     android:title="@string/nav_settings" />
             </group>

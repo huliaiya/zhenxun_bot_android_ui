@@ -9,6 +9,7 @@
     <string name="nav_friend_list">好友/群组</string>
     <string name="nav_database_manage">数据库管理</string>
     <string name="nav_file_explorer">浏览文件</string>
+    <string name="nav_lab">实验室</string>
     <string name="nav_title_func">" "</string>
     <string name="username_hint">请输入用户名</string>
     <string name="password_hint">请输入密码</string>
@@ -204,4 +205,22 @@
     <string name="export_log">导出</string>
     <string name="copied">已复制到剪贴板</string>
     <string name="close">关闭</string>
+    <string name="lab_groups">群聊</string>
+    <string name="lab_friends">好友</string>
+    <string name="lab_create_group">创建群聊</string>
+    <string name="lab_create_friend">创建好友</string>
+    <string name="lab_empty_hint">还没有实验室会话，先创建一个吧</string>
+    <string name="lab_group_default_name">实验室群聊 %1$d</string>
+    <string name="lab_group_default_account">群友%1$d</string>
+    <string name="lab_friend_name">昵称</string>
+    <string name="lab_friend_qq">QQ 号</string>
+    <string name="lab_choose_avatar">选择头像</string>
+    <string name="lab_friend_qq_exists">该 QQ 号已存在</string>
+    <string name="lab_conversation_missing">会话不存在</string>
+    <string name="lab_bot_name">真寻</string>
+    <string name="lab_reply_help">实验室指令：帮助 / 你好 / 签到 / 插件，试试看</string>
+    <string name="lab_reply_hello">你好呀，我是真寻（实验室模拟）</string>
+    <string name="lab_reply_checkin">签到成功！幸运值 +1（实验室模拟）</string>
+    <string name="lab_reply_plugin">实验室插件列表（模拟数据，仅演示）</string>
+    <string name="lab_reply_default">（实验室模拟）收到：%1$s</string>
 </resources>

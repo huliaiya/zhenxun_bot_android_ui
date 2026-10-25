@@ -103,6 +103,26 @@
     </fragment>
 
     <fragment
+        android:id="@+id/nav_lab"
+        android:name="me.kbai.zhenxunui.ui.lab.LabFragment"
+        android:label="@string/nav_lab"
+        tools:layout="@layout/fragment_lab">
+        <action
+            android:id="@+id/action_lab_to_labChat"
+            app:destination="@id/nav_lab_chat" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/nav_lab_chat"
+        android:name="me.kbai.zhenxunui.ui.lab.LabChatFragment"
+        android:label="@string/nav_lab"
+        tools:layout="@layout/fragment_lab_chat">
+        <argument
+            android:name="conversationId"
+            app:argType="string" />
+    </fragment>
+
+    <fragment
         android:id="@+id/nav_settings"
         android:name="me.kbai.zhenxunui.ui.settings.SettingsFragment"
         android:label="@string/nav_settings"
