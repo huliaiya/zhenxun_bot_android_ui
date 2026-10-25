@@ -21,7 +21,7 @@ class CreateGroupDialogFragment : BaseDialogFragment() {
 
     private lateinit var mBinding: DialogLabCreateGroupBinding
     private var mBotAvatar: String = LabAvatarResolver.BUILTIN_BOT
-    private val mAvatarPicker by lazy { LabAvatarPicker(this) }
+    private val mAvatarPicker = LabAvatarPicker(this)
 
     init {
         maxWidth = 320.dp.toInt()

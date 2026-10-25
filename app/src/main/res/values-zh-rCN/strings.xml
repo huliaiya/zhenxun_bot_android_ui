@@ -229,6 +229,11 @@
     <string name="lab_connection_status_connected">已连接真寻</string>
     <string name="lab_connection_status_failed">连接失败，点击重试</string>
     <string name="lab_connection_hint">填写真寻的 OneBot v11 WebSocket 地址（如 ws://IP:8088/onebot/v11/ws），连接后实验室消息会发给真实机器人并实时回显回复；留空则继续使用本地模拟。</string>
+    <string name="lab_clear_history">清空聊天记录</string>
+    <string name="lab_clear_history_confirm">确定清空当前会话的全部聊天记录？此操作不可恢复。</string>
+    <string name="lab_history_cleared">聊天记录已清空</string>
+    <string name="lab_delete_message">删除消息</string>
+    <string name="lab_delete_message_confirm">确定删除这条消息？</string>
     <string name="lab_ws_url">WS 地址，如 ws://IP:8088/onebot/v11/ws</string>
     <string name="lab_ws_token">access_token（可选）</string>
     <string name="lab_ws_self_id">机器人 QQ 号</string>

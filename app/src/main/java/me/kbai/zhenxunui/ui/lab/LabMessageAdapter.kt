@@ -15,6 +15,8 @@ class LabMessageAdapter : RecyclerView.Adapter<LabMessageAdapter.ViewHolder>() {
 
     private val mData = mutableListOf<LabMessage>()
 
+    var onItemLongClick: ((LabMessage) -> Unit)? = null
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val inflater = LayoutInflater.from(parent.context)
         val layout = if (viewType == TYPE_SEND) {
@@ -45,6 +47,10 @@ class LabMessageAdapter : RecyclerView.Adapter<LabMessageAdapter.ViewHolder>() {
                     root.text = item.text
                 }
             }
+            root.setOnLongClickListener {
+                onItemLongClick?.invoke(item)
+                true
+            }
         }
     }
 
@@ -57,6 +63,25 @@ class LabMessageAdapter : RecyclerView.Adapter<LabMessageAdapter.ViewHolder>() {
     fun addData(message: LabMessage) {
         mData.add(message)
         notifyItemInserted(mData.size - 1)
+    }
+
+    fun removeAt(position: Int) {
+        if (position < 0 || position >= mData.size) return
+        mData.removeAt(position)
+        notifyItemRemoved(position)
+    }
+
+    fun indexOf(message: LabMessage): Int {
+        if (message.time > 0) {
+            val exact = mData.indexOfFirst {
+                it.time == message.time &&
+                    it.userId == message.userId &&
+                    it.text == message.text &&
+                    it.fromBot == message.fromBot
+            }
+            if (exact >= 0) return exact
+        }
+        return mData.indexOf(message)
     }
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {

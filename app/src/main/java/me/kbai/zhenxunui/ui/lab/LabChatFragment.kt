@@ -1,8 +1,12 @@
 package me.kbai.zhenxunui.ui.lab
 
 import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
 import android.view.ViewGroup
 import androidx.appcompat.widget.Toolbar
+import androidx.core.view.MenuProvider
 import androidx.core.widget.addTextChangedListener
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -21,6 +25,7 @@ import me.kbai.zhenxunui.tool.LabAvatarResolver
 import me.kbai.zhenxunui.tool.LabBot
 import me.kbai.zhenxunui.tool.LabBotConnection
 import me.kbai.zhenxunui.tool.LabStore
+import me.kbai.zhenxunui.ui.common.PromptDialog
 
 class LabChatFragment : BaseFragment<FragmentLabChatBinding>() {
 
@@ -33,6 +38,20 @@ class LabChatFragment : BaseFragment<FragmentLabChatBinding>() {
     private val mAdapter = LabMessageAdapter()
 
     private var mConversation: LabConversation? = null
+
+    private val mMenuProvider = object : MenuProvider {
+        override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+            menuInflater.inflate(R.menu.menu_lab_chat, menu)
+        }
+
+        override fun onMenuItemSelected(menuItem: MenuItem) = when (menuItem.itemId) {
+            R.id.menu_lab_clear_history -> {
+                confirmClearHistory()
+                true
+            }
+            else -> false
+        }
+    }
 
     override fun getViewBinding(inflater: LayoutInflater, container: ViewGroup?) =
         FragmentLabChatBinding.inflate(inflater, container, false)
@@ -57,7 +76,9 @@ class LabChatFragment : BaseFragment<FragmentLabChatBinding>() {
         }
         mConversation = conversation
         requireActivity().findViewById<Toolbar>(R.id.toolbar).title = conversation.title
+        requireActivity().addMenuProvider(mMenuProvider)
         mAdapter.setData(LabStore.messages(conversation.id))
+        mAdapter.onItemLongClick = { message -> confirmDeleteMessage(message) }
         scrollToBottom()
 
         LabStore.botMessageEvents.launchAndCollectIn(this@LabChatFragment) { message ->
@@ -66,6 +87,36 @@ class LabChatFragment : BaseFragment<FragmentLabChatBinding>() {
                 scrollToBottom()
             }
         }
+    }
+
+    private fun confirmClearHistory() {
+        val conversation = mConversation ?: return
+        PromptDialog(requireContext())
+            .setTitle(getString(R.string.lab_clear_history))
+            .setText(getString(R.string.lab_clear_history_confirm))
+            .setOnCancelClickListener { it.dismiss() }
+            .setOnConfirmClickListener { dialog ->
+                dialog.dismiss()
+                LabStore.clearMessages(conversation.id)
+                mAdapter.setData(emptyList())
+                GlobalToast.showToast(getString(R.string.lab_history_cleared))
+            }
+            .show()
+    }
+
+    private fun confirmDeleteMessage(message: LabMessage) {
+        PromptDialog(requireContext())
+            .setTitle(getString(R.string.lab_delete_message))
+            .setText(getString(R.string.lab_delete_message_confirm))
+            .setOnCancelClickListener { it.dismiss() }
+            .setOnConfirmClickListener { dialog ->
+                dialog.dismiss()
+                val position = mAdapter.indexOf(message)
+                if (position >= 0 && LabStore.deleteMessage(message)) {
+                    mAdapter.removeAt(position)
+                }
+            }
+            .show()
     }
 
     private fun send(): Unit = viewBinding.run {
@@ -115,5 +166,10 @@ class LabChatFragment : BaseFragment<FragmentLabChatBinding>() {
         if (mAdapter.itemCount > 0) {
             viewBinding.rvMessage.scrollToPosition(mAdapter.itemCount - 1)
         }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        runCatching { requireActivity().removeMenuProvider(mMenuProvider) }
     }
 }

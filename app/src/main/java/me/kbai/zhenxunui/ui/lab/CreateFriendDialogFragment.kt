@@ -23,7 +23,7 @@ class CreateFriendDialogFragment : BaseDialogFragment() {
     private lateinit var mBinding: DialogLabCreateFriendBinding
     private var mAvatar: String = LabAvatarResolver.BUILTIN_FRIEND
     private var mBotAvatar: String = LabAvatarResolver.BUILTIN_BOT
-    private val mAvatarPicker by lazy { LabAvatarPicker(this) }
+    private val mAvatarPicker = LabAvatarPicker(this)
 
     init {
         maxWidth = 320.dp.toInt()

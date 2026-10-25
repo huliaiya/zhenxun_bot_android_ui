@@ -133,6 +133,29 @@ object LabStore {
         }.onFailure { logE(it) }
     }
 
+    fun clearMessages(conversationId: String) {
+        mPrefs?.edit()?.remove(KEY_MESSAGES_PREFIX + conversationId)?.apply()
+    }
+
+    fun deleteMessage(message: LabMessage): Boolean {
+        val prefs = mPrefs ?: return false
+        val list = messages(message.conversationId).toMutableList()
+        val index = list.indexOfFirst {
+            it.time == message.time &&
+                it.userId == message.userId &&
+                it.text == message.text &&
+                it.fromBot == message.fromBot
+        }
+        if (index < 0) return false
+        list.removeAt(index)
+        runCatching {
+            prefs.edit()
+                .putString(KEY_MESSAGES_PREFIX + message.conversationId, Constants.gson.toJson(list))
+                .apply()
+        }.onFailure { logE(it); return false }
+        return true
+    }
+
     fun emitBotMessage(conversation: LabConversation, text: String) {
         val message = LabMessage(
             conversationId = conversation.id,
