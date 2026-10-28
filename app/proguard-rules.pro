@@ -45,3 +45,11 @@
 -keep class me.kbai.zhenxunui.model.** {*;}
 -keep class me.kbai.zhenxunui.api.** {*;}
 -keep class me.kbai.zhenxunui.repository.** {*;}
+# Gson
+-keep class com.google.gson.reflect.TypeToken { *; }
+-keep class * extends com.google.gson.reflect.TypeToken
+-keep,allowobfuscation,allowshrinking class com.google.gson.reflect.TypeToken
+-keepattributes Signature
+-keepattributes *Annotation*
+-dontwarn sun.misc.**
+-keep class com.google.gson.stream.** { *; }

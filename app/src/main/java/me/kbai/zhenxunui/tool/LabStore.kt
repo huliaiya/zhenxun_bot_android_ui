@@ -1,7 +1,6 @@
 package me.kbai.zhenxunui.tool
 
 import android.content.Context
-import com.google.gson.reflect.TypeToken
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
@@ -190,6 +189,14 @@ object LabStore {
         _botMessageEvents.tryEmit(message)
     }
 
+    private fun decodeMessages(json: String): List<LabMessage> =
+        Constants.gson.fromJson(json, Array<LabMessage>::class.java)
+            ?.filterNotNull().orEmpty()
+
+    private fun decodeConversations(json: String): List<LabConversation> =
+        Constants.gson.fromJson(json, Array<LabConversation>::class.java)
+            ?.filterNotNull().orEmpty()
+
     private fun messageFile(conversationId: String): File =
         File(mMessagesDir, "$conversationId.json")
 
@@ -216,8 +223,7 @@ object LabStore {
                 val id = key.removePrefix(KEY_MESSAGES_PREFIX)
                 val list = runCatching {
                     mPrefs!!.getString(key, null)?.let { json ->
-                        val type = object : TypeToken<List<LabMessage>>() {}.type
-                        Constants.gson.fromJson<List<LabMessage>>(json, type)
+                        decodeMessages(json)
                     }
                 }.onFailure { logE(it) }.getOrNull() ?: emptyList()
                 if (list.isNotEmpty()) migrated[id] = list
@@ -225,8 +231,7 @@ object LabStore {
             dir.listFiles()?.filter { it.name.endsWith(".json") }?.forEach { file ->
                 val id = file.name.removeSuffix(".json")
                 val list = runCatching {
-                    val type = object : TypeToken<List<LabMessage>>() {}.type
-                    Constants.gson.fromJson<List<LabMessage>>(file.readText(), type)
+                    decodeMessages(file.readText())
                 }.onFailure { logE(it) }.getOrNull() ?: emptyList()
                 if (list.isNotEmpty()) {
                     mMessageCache[id] = list.toMutableList()
@@ -253,16 +258,14 @@ object LabStore {
         mConversationsFile?.let { file ->
             if (file.exists()) {
                 list = runCatching {
-                    val type = object : TypeToken<List<LabConversation>>() {}.type
-                    Constants.gson.fromJson<List<LabConversation>>(file.readText(), type)
+                    decodeConversations(file.readText())
                 }.onFailure { logE(it) }.getOrNull()
             }
         }
         if (list == null) {
             list = runCatching {
                 mPrefs?.getString(KEY_CONVERSATIONS, null)?.let { json ->
-                    val type = object : TypeToken<List<LabConversation>>() {}.type
-                    Constants.gson.fromJson<List<LabConversation>>(json, type)
+                    decodeConversations(json)
                 }
             }.onFailure { logE(it) }.getOrNull()
             list?.let {
